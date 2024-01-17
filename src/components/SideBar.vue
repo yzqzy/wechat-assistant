@@ -76,6 +76,7 @@ const onRoutes = computed(() => {
 
         .el-menu-item {
             border-radius: 14px;
+            margin-bottom: 10px;
         }
     }
 

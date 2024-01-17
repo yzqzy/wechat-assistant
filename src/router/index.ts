@@ -3,6 +3,8 @@ import Home from '../views/home.vue'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
+import { checkLogin } from '../api/index'
+
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -45,8 +47,16 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   NProgress.start()
+
+  const loginRes = await checkLogin()
+
+  if (loginRes.code != 1) {
+    next('/login')
+    return
+  }
+
   next()
 })
 

@@ -24,7 +24,7 @@ import logo from '../assets/img/logo.png';
   align-items: center;
   justify-content: center;
   width: 100%;
-  line-height: 80px;
+  line-height: 70px;
 
   .user-avator {
     margin-right: 18px;
