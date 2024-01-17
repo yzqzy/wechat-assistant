@@ -1,0 +1,19 @@
+<template>
+  <v-header />
+  <v-sidebar />
+
+  <div class="content-box">
+    <div class="content">
+      <router-view v-slot="{ Component }">
+        <transition name="move" mode="out-in">
+          <component :is="Component"></component>
+        </transition>
+      </router-view>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import vHeader from '../components/Header.vue';
+import vSidebar from '../components/SideBar.vue';
+</script>

@@ -1,0 +1,30 @@
+:root {
+  --el-menu-bg-color: #fff;
+  
+  --el-menu-hover-bg-color: #5932EA;
+
+  --el-menu-text-color: #9197B3;
+  --el-menu-active-color: #fff;
+}
+
+.el-menu-item {
+  &.is-active {
+    background-color: #5932EA;
+  }
+  &:hover {
+    color: #fff;
+
+    .el-sub-menu__title {
+      color: #fff;
+    }
+  }
+}
+.el-sub-menu {
+  &:hover {
+    color: #fff;
+
+    .el-sub-menu__title {
+      color: #fff;
+    }
+  }
+}
