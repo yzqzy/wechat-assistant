@@ -25,8 +25,8 @@ const items = [
     },
     {
         icon: 'User',
-        index: '/403',
-        title: '好友管理',
+        index: '/contact',
+        title: '联系人管理',
     },
     {
         icon: 'ChatSquare',

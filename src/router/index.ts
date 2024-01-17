@@ -17,9 +17,18 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '/dashboard',
-        name: 'dashboard',
+        name: '看板',
         component: () =>
           import(/* webpackChunkName: "dashboard" */ '../views/dashboard.vue')
+      },
+      {
+        path: '/contact',
+        name: 'Contact',
+        meta: {
+          title: '联系人'
+        },
+        component: () =>
+          import(/* webpackChunkName: "contact" */ '../views/contact.vue')
       }
     ]
   },

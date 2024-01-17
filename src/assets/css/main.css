@@ -26,10 +26,11 @@ a {
   right: 0;
   top: 0;
   bottom: 0;
-  padding-bottom: 30px;
+  padding: 30px;
   -webkit-transition: left .3s ease-in-out;
   transition: left .3s ease-in-out;
   background: #FAFBFF;
+  box-sizing: border-box;
 }
 
 .content {
@@ -39,14 +40,17 @@ a {
   box-sizing: border-box;
 }
 
+.content::-webkit-scrollbar {
+  /* Chrome Safari */
+  display: none;
+}
+
 .content-collapse {
   left: 65px;
 }
 
 .container {
-  padding: 30px;
   background: #fff;
-  border: 1px solid #ddd;
   border-radius: 5px;
 }
 

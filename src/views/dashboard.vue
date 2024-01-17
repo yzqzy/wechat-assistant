@@ -34,26 +34,25 @@
 </template>
 
 <script setup lang="ts" name="dashboard">
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import { getUserInfo, UserInfo } from '../api/index'
 
 const userInfo = ref<UserInfo>()
 
-onMounted(() => {
-  getUserInfo().then(res => {
+getUserInfo()
+  .then(res => {
     if (res.code == 1) {
       userInfo.value = res.data
     } else {
       console.log('获取用户信息失败')
     }
   })
-})
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .wrapper {
-  padding-top: 61px;
-  padding-left: 81px;
+  padding-top: 31px;
+  padding-left: 51px;
   box-sizing: border-box;
 }
 

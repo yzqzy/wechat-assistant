@@ -44,6 +44,7 @@
     "axios": "^1.6.5",
     "element-plus": "^2.5.1",
     "nprogress": "^0.2.0",
-    "vue-router": "^4.2.5"
+    "vue-router": "^4.2.5",
+    "xlsx": "^0.18.5"
   }
 }
