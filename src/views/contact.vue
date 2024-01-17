@@ -88,9 +88,6 @@ const handlePat = (index: number) => {
     type: 'warning'
   })
     .then(async () => {
-      console.log('confirm', item)
-
-      return
       const res = await sendPatMsg(item.wxid, item.wxid);
 
       if (res.code === 1) {
