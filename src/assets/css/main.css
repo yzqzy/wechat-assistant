@@ -52,6 +52,8 @@ a {
 .container {
   background: #fff;
   border-radius: 5px;
+  padding: 10px;
+  box-sizing: border-box;
 }
 
 .crumbs {

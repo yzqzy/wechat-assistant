@@ -15,7 +15,7 @@
 
 <style scoped>
 .container {
-  padding: 20px 40px;
+  padding: 20px;
 }
 
 .plugins-tips {

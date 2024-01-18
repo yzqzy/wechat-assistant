@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="container">
     <el-row>
       <div class="welcome"> Hello {{ userInfo?.name || userInfo?.account }} 👋🏼，欢迎使用微信助手！</div>.
     </el-row>
@@ -50,14 +50,8 @@ getUserInfo()
 </script>
 
 <style scoped>
-.wrapper {
-  padding-top: 31px;
-  padding-left: 51px;
-  box-sizing: border-box;
-}
-
-.el-row {
-  margin-bottom: 20px;
+.container {
+  padding: 20px;
 }
 
 .welcome {
