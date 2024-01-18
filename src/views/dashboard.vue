@@ -3,30 +3,30 @@
     <el-row>
       <div class="welcome"> Hello {{ userInfo?.name || userInfo?.account }} 👋🏼，欢迎使用微信助手！</div>.
     </el-row>
+    <el-row class="mgb20">
+      <el-avatar :size="120" :src="userInfo?.headImage" />
+    </el-row>
     <el-row>
-      <el-col :span="4" class="mgb20">
-        <el-avatar :size="120" :src="userInfo?.headImage" />
-      </el-col>
-      <el-col>
+      <el-col :span="6">
         <div class="user-info-list">
-          微信ID：
-          <span>{{ userInfo?.wxid }}</span>
+          <span>微信ID：</span>
+          {{ userInfo?.wxid }}
         </div>
         <div class="user-info-list">
-          微信号：
-          <span>{{ userInfo?.account }}</span>
+          <span>微信号：</span>
+          {{ userInfo?.account }}
         </div>
         <div class="user-info-list">
-          手机号：
-          <span>{{ userInfo?.mobile }}</span>
+          <span>手机号：</span>
+          {{ userInfo?.mobile }}
         </div>
         <div class="user-info-list">
-          地区：
-          <span>{{ userInfo?.country }}-{{ userInfo?.province }}-{{ userInfo?.city }}</span>
+          <span>地区：</span>
+          {{ userInfo?.country }}-{{ userInfo?.province }}-{{ userInfo?.city }}
         </div>
         <div class="user-info-list">
-          个性签名：
-          <span>{{ userInfo?.signature }}</span>
+          <span>个性签名：</span>
+          {{ userInfo?.signature }}
         </div>
       </el-col>
     </el-row>
@@ -73,6 +73,7 @@ getUserInfo()
 }
 
 .user-info-list span {
-  margin-left: 70px;
+  display: inline-block;
+  width: 120px;
 }
 </style>
