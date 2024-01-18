@@ -21,19 +21,20 @@
         <el-table-column prop="pinyinAll" label="拼音" align="center"></el-table-column>
         <el-table-column label="操作" width="320" align="center">
           <template #default="scope">
-            <el-button type="info" plain @click="handlePat(scope.$index)">
+            <el-button v-if="!scope.row.wxid.includes('chatroom')" class="btn" type="info" plain
+              @click="handlePat(scope.$index)">
               拍一拍
             </el-button>
-            <el-button type="warning" plain @click="handleShowDialog(scope.$index, 'image')">
+            <el-button type="warning" class="btn" plain @click="handleShowDialog(scope.$index, 'image')">
               发图片
             </el-button>
-            <el-button type="warning" plain @click="handleShowDialog(scope.$index, 'file')">
+            <el-button type="warning" class="btn" plain @click="handleShowDialog(scope.$index, 'file')">
               发文件
             </el-button>
-            <el-button type="primary" class="mt10" plain @click="handleShowDialog(scope.$index)">
+            <el-button type="primary" class="btn" plain @click="handleShowDialog(scope.$index)">
               发消息
             </el-button>
-            <el-button type="primary" class="mt10" plain @click="handleShowDialog(scope.$index, 'wx_article')">
+            <el-button type="primary" class="btn" plain @click="handleShowDialog(scope.$index, 'wx_article')">
               发公众号消息
             </el-button>
           </template>
@@ -157,7 +158,7 @@ const handlePat = (index: number) => {
   margin-right: 10px;
 }
 
-.mt10 {
-  margin-top: 10px;
+.btn {
+  margin: 5px;
 }
 </style>
