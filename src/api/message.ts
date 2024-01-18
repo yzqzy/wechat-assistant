@@ -33,3 +33,14 @@ export const sendImagesMsg = async (
       imagePath
     })
   ).data
+
+export const sendFileMsg = async (
+  wxid: string,
+  filePath: string
+): Promise<Result<null>> =>
+  (
+    await request.post('/api/sendFileMsg', {
+      wxid,
+      filePath
+    })
+  ).data

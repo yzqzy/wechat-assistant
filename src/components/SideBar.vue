@@ -30,12 +30,12 @@ const items = [
     },
     {
         icon: 'ChatSquare',
-        index: '/403',
+        index: '/chatroom',
         title: '群聊管理',
     },
     {
         icon: 'CoffeeCup',
-        index: '/403',
+        index: '/donate',
         title: '支持作者',
     },
 ];

@@ -67,11 +67,6 @@ a {
   text-align: right;
 }
 
-.plugins-tips {
-  padding: 20px 10px;
-  margin-bottom: 20px;
-}
-
 .el-button+.el-tooltip {
   margin-left: 10px;
 }

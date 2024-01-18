@@ -29,6 +29,26 @@ const routes: RouteRecordRaw[] = [
         },
         component: () =>
           import(/* webpackChunkName: "contact" */ '../views/contact/index.vue')
+      },
+      {
+        path: '/chatroom',
+        name: 'ChatRoom',
+        meta: {
+          title: '群聊管理'
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "chatroom" */ '../views/chatroom/index.vue'
+          )
+      },
+      {
+        path: '/donate',
+        name: 'donate',
+        meta: {
+          title: '鼓励作者'
+        },
+        component: () =>
+          import(/* webpackChunkName: "donate" */ '../views/donate.vue')
       }
     ]
   },

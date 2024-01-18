@@ -13,6 +13,14 @@
         </el-icon>
       </el-upload>
     </el-form-item>
+    <el-form-item v-if="mode === 'file'" label="文件" prop="file_url">
+      <el-upload class="file-uploader" action="" :before-upload="beforeFileUpload">
+        <template v-if="fileList.length">
+          <p v-for="(file, index) in fileList" :key="index" :src="file.url" class="name">{{ file.name }}</p>
+        </template>
+        <el-button v-else plain>Click to upload</el-button>
+      </el-upload>
+    </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="saveEdit(formRef)">发 送</el-button>
     </el-form-item>
@@ -20,7 +28,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ElMessage, FormInstance, UploadProps } from 'element-plus';
+import { ElMessage, FormInstance, UploadProps, UploadRawFile } from 'element-plus';
 import { ref } from 'vue';
 
 const props = defineProps({
@@ -46,7 +54,8 @@ const props = defineProps({
 const defaultData = {
   mode: props.mode,
   message: '',
-  image_url: [],
+  image_url: '',
+  file_url: ''
 };
 
 const form = ref({ ...(props.edit ? props.data : defaultData) });
@@ -63,6 +72,16 @@ const saveEdit = (formEl: FormInstance | undefined) => {
 
 const fileList = ref<UploadProps['fileList']>([]);
 
+const addFile = (rawFile: UploadRawFile): void => {
+  fileList.value = [{
+    name: rawFile.name,
+    url: URL.createObjectURL(rawFile),
+    raw: rawFile,
+    status: 'success',
+    uid: new Date().getTime()
+  }];
+}
+
 const beforeAvatarUpload: UploadProps['beforeUpload'] = rawFile => {
   if (rawFile.type !== 'image/jpeg' && rawFile.type !== 'image/png') {
     ElMessage.error('Avatar picture must be JPG or PNG format!');
@@ -71,38 +90,47 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = rawFile => {
     ElMessage.error('Avatar picture size can not exceed 2MB!');
     return false;
   }
-
-  fileList.value = [{
-    name: rawFile.name,
-    url: URL.createObjectURL(rawFile),
-    raw: rawFile,
-    status: 'ready',
-    uid: new Date().getTime()
-  }];
+  addFile(rawFile)
   form.value.image_url = rawFile.path
+  return false;
+};
 
+const beforeFileUpload: UploadProps['beforeUpload'] = rawFile => {
+  addFile(rawFile)
+  form.value.file_url = rawFile.path
   return false;
 };
 </script>
 
 <style lang="scss">
-.avatar-uploader {
-  .el-upload {
-    border: 1px dashed var(--el-border-color);
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    transition: var(--el-transition-duration-fast);
-  }
+.el-upload {
+  border: 1px dashed var(--el-border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: var(--el-transition-duration-fast);
 
-  .el-upload:hover {
+  &:hover {
     border-color: var(--el-color-primary);
   }
+}
 
+.avatar-uploader {
   .avatar {
     width: 178px;
     height: 178px;
+  }
+}
+
+.file-uploader {
+  .el-upload {
+    border: 1px solid var(--el-border-color);
+  }
+
+  .name {
+    width: 220px;
+    padding: 5px 10px;
   }
 }
 

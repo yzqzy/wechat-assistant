@@ -44,7 +44,7 @@ export const useSearchTable = () => {
     query,
     pageTotal,
     tableData,
-    allTableData,
+    filterData,
 
     handleSearch,
     handlePageSizeChange,
