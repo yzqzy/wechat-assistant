@@ -11,3 +11,25 @@ export const sendPatMsg = async (
       receiver
     })
   ).data
+
+export const sendTextMsg = async (
+  wxid: string,
+  msg: string
+): Promise<Result<null>> =>
+  (
+    await request.post('/api/sendTextMsg', {
+      wxid,
+      msg
+    })
+  ).data
+
+export const sendImagesMsg = async (
+  wxid: string,
+  imagePath: string
+): Promise<Result<null>> =>
+  (
+    await request.post('/api/sendImagesMsg', {
+      wxid,
+      imagePath
+    })
+  ).data

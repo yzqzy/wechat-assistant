@@ -28,7 +28,7 @@ const routes: RouteRecordRaw[] = [
           title: '联系人'
         },
         component: () =>
-          import(/* webpackChunkName: "contact" */ '../views/contact.vue')
+          import(/* webpackChunkName: "contact" */ '../views/contact/index.vue')
       }
     ]
   },
