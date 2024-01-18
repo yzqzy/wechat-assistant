@@ -1,9 +1,12 @@
 <template>
   <el-form ref="formRef" label-position="left" :model="form" label-width="120px">
+    <!-- 文本消息 -->
     <el-form-item v-if="mode === 'text'" label="内容" prop="message">
-      <el-input type="textarea" v-model="form.message"></el-input>
+      <el-input type="textarea" placeholder="请输入消息内容" v-model="form.message" />
     </el-form-item>
-    <el-form-item v-if="mode === 'image'" label="图片" prop="image_url">
+
+    <!-- 图片消息 -->
+    <el-form-item v-else-if="mode === 'image'" label="图片" prop="image_url">
       <el-upload class="avatar-uploader" action="" :before-upload="beforeAvatarUpload">
         <template v-if="fileList.length">
           <img v-for="(file, index) in fileList" :key="index" :src="file.url" class="avatar" />
@@ -13,7 +16,9 @@
         </el-icon>
       </el-upload>
     </el-form-item>
-    <el-form-item v-if="mode === 'file'" label="文件" prop="file_url">
+
+    <!-- 文件消息 -->
+    <el-form-item v-else-if="mode === 'file'" label="文件" prop="file_url">
       <el-upload class="file-uploader" action="" :before-upload="beforeFileUpload">
         <template v-if="fileList.length">
           <p v-for="(file, index) in fileList" :key="index" :src="file.url" class="name">{{ file.name }}</p>
@@ -21,6 +26,24 @@
         <el-button v-else plain>Click to upload</el-button>
       </el-upload>
     </el-form-item>
+
+    <!-- 公众号消息 -->
+    <template v-if="mode === 'wx_article'">
+      <el-form-item label="名称" prop="title">
+        <el-input v-model="form.title" placeholder="请输入文章名称" />
+      </el-form-item>
+      <el-form-item label="文章地址" prop="url">
+        <el-input v-model="form.url" placeholder="请输入文章地址" />
+      </el-form-item>
+      <el-form-item label="缩略图地址" prop="thumb_url">
+        <el-input v-model="form.thumb_url" placeholder="请输入缩略图地址" />
+      </el-form-item>
+      <el-form-item label="摘要" prop="digest">
+        <el-input v-model="form.digest" placeholder="请输入摘要" />
+      </el-form-item>
+    </template>
+
+    <!-- 确认按钮 -->
     <el-form-item>
       <el-button type="primary" @click="saveEdit(formRef)">发 送</el-button>
     </el-form-item>
@@ -35,7 +58,7 @@ const props = defineProps({
   mode: {
     type: String,
     required: false,
-    default: 'text' // or 'image' or 'file'
+    default: 'text' // or 'image' or 'file' or 'wx_article'
   },
   data: {
     type: Object,
@@ -53,9 +76,17 @@ const props = defineProps({
 
 const defaultData = {
   mode: props.mode,
+
   message: '',
   image_url: '',
-  file_url: ''
+  file_url: '',
+
+  app_name: '',
+  user_name: '',
+  title: '',
+  url: '',
+  thumb_url: '',
+  digest: '',
 };
 
 const form = ref({ ...(props.edit ? props.data : defaultData) });
@@ -118,9 +149,17 @@ const beforeFileUpload: UploadProps['beforeUpload'] = rawFile => {
 
 .avatar-uploader {
   .avatar {
-    width: 178px;
-    height: 178px;
+    width: 138px;
+    height: 138px;
   }
+}
+
+.el-icon.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 138px;
+  height: 138px;
+  text-align: center;
 }
 
 .file-uploader {
@@ -132,13 +171,5 @@ const beforeFileUpload: UploadProps['beforeUpload'] = rawFile => {
     width: 220px;
     padding: 5px 10px;
   }
-}
-
-.el-icon.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 178px;
-  height: 178px;
-  text-align: center;
 }
 </style>

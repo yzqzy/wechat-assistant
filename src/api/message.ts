@@ -44,3 +44,26 @@ export const sendFileMsg = async (
       filePath
     })
   ).data
+
+interface ForwardPublicMsgParams {
+  wxid: string
+  appName?: string
+  userName?: string
+  title: string
+  url: string
+  thumbUrl: string
+  digest: string
+}
+
+export const forwardPublicMsg = async ({
+  appName = '',
+  userName = '',
+  ...args
+}: ForwardPublicMsgParams): Promise<Result<null>> =>
+  (
+    await request.post('/api/forwardPublicMsg', {
+      appName,
+      userName,
+      ...args
+    })
+  ).data

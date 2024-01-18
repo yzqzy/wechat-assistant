@@ -33,7 +33,7 @@
             <el-button type="primary" class="mt10" plain @click="handleShowDialog(scope.$index)">
               发消息
             </el-button>
-            <el-button type="primary" class="mt10" plain @click="handleShowDialog(scope.$index, 'article')">
+            <el-button type="primary" class="mt10" plain @click="handleShowDialog(scope.$index, 'wx_article')">
               发公众号消息
             </el-button>
           </template>
@@ -62,7 +62,7 @@ import { Search } from '@element-plus/icons-vue';
 import ContactForm from './ContactForm.vue';
 
 import { Contact } from '../../api'
-import { sendPatMsg, sendTextMsg, sendImagesMsg, sendFileMsg } from '../../api/index';
+import { sendPatMsg, sendTextMsg, sendImagesMsg, sendFileMsg, forwardPublicMsg } from '../../api/index';
 import { useSearchTable } from './useSearch';
 import { useExport } from './useExport';
 
@@ -73,7 +73,7 @@ const {
 const { exportXlsx } = useExport()
 
 const visible = ref(false)
-const editMode = ref('text') // or 'image' or 'file' or 'article'
+const editMode = ref('text') // or 'image' or 'file' or 'wx_article'
 const editData = ref<Contact>()
 
 const handleExportXlsx = () => exportXlsx(filterData.value)
@@ -100,8 +100,14 @@ const handleConfirm = async (data: any) => {
     res = await sendImagesMsg(editData.value.wxid, data.image_url)
   } else if (data.mode === 'file') {
     res = await sendFileMsg(editData.value.wxid, data.file_url)
-  } else if (data.mode === 'article') {
-    // TODO: handle send article
+  } else if (data.mode === 'wx_article') {
+    res = await forwardPublicMsg({
+      wxid: editData.value.wxid,
+      title: data.title,
+      url: data.url,
+      thumbUrl: data.thumb_url,
+      digest: data.digest
+    })
   }
 
   if (res.code === 1) {
