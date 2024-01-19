@@ -1,6 +1,6 @@
 <template>
   <div class="error-page">
-    <div class="error-code">4<span>0</span>3</div>
+    <div class="error-code">403</div>
     <div class="error-desc">啊哦~ 你没有权限访问该页面哦</div>
     <div class="error-handle">
       <router-link to="/">
@@ -38,10 +38,6 @@ const goBack = () => {
   font-size: 250px;
   font-weight: bolder;
   color: #f02d2d;
-
-  span {
-    color: #00a854;
-  }
 }
 
 .error-desc {

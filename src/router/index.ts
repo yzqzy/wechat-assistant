@@ -1,4 +1,9 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
+import {
+  createRouter,
+  createWebHashHistory,
+  NavigationGuardNext,
+  RouteRecordRaw
+} from 'vue-router'
 import Home from '../views/home.vue'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
@@ -53,13 +58,13 @@ const routes: RouteRecordRaw[] = [
     ]
   },
   {
-    path: '/login',
-    name: 'Login',
+    path: '/injector',
+    name: 'Injector',
     meta: {
-      title: '登录'
+      title: '微信注入页面'
     },
     component: () =>
-      import(/* webpackChunkName: "login" */ '../views/login.vue')
+      import(/* webpackChunkName: "injector" */ '../views/injector.vue')
   },
   {
     path: '/403',
@@ -76,13 +81,25 @@ const router = createRouter({
   routes
 })
 
+const redirect = (next: NavigationGuardNext) => next('/injector')
+
 router.beforeEach(async (to, from, next) => {
   NProgress.start()
 
-  const loginRes = await checkLogin()
+  if (to.path != '/injector') {
+    try {
+      const loginRes = await checkLogin()
 
-  if (loginRes.code != 1) {
-    next('/login')
+      if (loginRes.code != 1) {
+        redirect(next)
+        return
+      }
+    } catch (error) {
+      redirect(next)
+      return
+    }
+
+    next()
     return
   }
 

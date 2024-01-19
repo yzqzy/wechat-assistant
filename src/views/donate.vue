@@ -5,8 +5,8 @@
         <CoffeeCup />
       </el-icon> 加微信号 _heora 探讨问题。
     </div>
-    <div>
-      <img width="240px" src="https://img.yueluo.club/icons/donate.png" />
+    <div class="donate-img">
+      <img alt="donate" src="https://img.yueluo.club/icons/donate.png" />
     </div>
   </div>
 </template>
@@ -20,5 +20,15 @@
 
 .plugins-tips {
   padding: 20px 0;
+}
+
+.donate-img {
+  width: 240px;
+  height: 240px;
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
 }
 </style>
