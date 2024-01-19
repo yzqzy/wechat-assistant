@@ -1,13 +1,11 @@
-import { computed, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 
 import { Contact, getContactList } from '../../api'
-
-const includes = (v1: string, v2: string) =>
-  v1.toLocaleLowerCase().includes(v2.toLocaleLowerCase())
+import { textIncludes } from '../../utils/tools'
 
 export const useSearchTable = () => {
   const query = reactive({
-    name: '',
+    keyword: '',
     pageIndex: 1,
     pageSize: 10
   })
@@ -15,9 +13,11 @@ export const useSearchTable = () => {
   const allTableData = ref<Contact[]>([])
 
   const filterData = computed(() => {
-    const { name } = query
+    const { keyword } = query
     return allTableData.value.filter(item => {
-      return includes(item.nickname, name) && item.wxid.includes('@chatroom')
+      return (
+        textIncludes(item.nickname, keyword) && item.wxid.includes('@chatroom')
+      )
     })
   })
 
@@ -30,7 +30,7 @@ export const useSearchTable = () => {
   })
 
   const reset = () => {
-    query.name = ''
+    query.keyword = ''
     query.pageIndex = 1
     query.pageSize = 10
   }
@@ -59,7 +59,7 @@ export const useSearchTable = () => {
     }, 2000)
   }
 
-  fetchData()
+  onMounted(fetchData)
 
   return {
     query,

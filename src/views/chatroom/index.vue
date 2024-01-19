@@ -5,7 +5,7 @@
     </div>
     <div class="container">
       <div class="search-box">
-        <el-input v-model="query.name" placeholder="请输入群聊名称" class="search-input mr10" clearable></el-input>
+        <el-input v-model="query.keyword" placeholder="请输入群聊名称" class="search-input mr10" clearable></el-input>
         <el-button type="primary" plain :icon="Search" @click="handleSearch">搜索</el-button>
         <el-button type="warning" plain @click="handleExportXlsx">导出Excel</el-button>
       </div>
@@ -17,10 +17,10 @@
         <el-table-column label="操作" width="340" align="center">
           <template #default="scope">
             <div>
-              <el-button type="success" class="btn" plain @click="handleShowDialog(scope, 'view')">
+              <el-button type="success" class="btn" plain @click="handleViewDetail(scope.$index)">
                 查看群成员
               </el-button>
-              <el-button type="info" class="btn" plain>
+              <el-button type="info" disabled class="btn" plain>
                 添加成员
               </el-button>
             </div>
@@ -57,6 +57,11 @@
       @close="visible = false">
       <chat-room-form :mode="optMode" :data="{}" :confirm="handleConfirm"></chat-room-form>
     </el-dialog>
+
+    <el-dialog :title="roomTitle" v-model="roomVisible" width="800px" destroy-on-close :close-on-click-modal="false"
+      @close="roomVisible = false">
+      <chat-room-table :chatroom="roomData" :confirm="handleConfirm"></chat-room-table>
+    </el-dialog>
   </div>
 </template>
 
@@ -66,9 +71,10 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
 
 import ChatRoomForm from './ChatRoomForm.vue';
+import ChatRoomTable from './ChatRoomTable.vue';
 
-import { Contact } from '../../api'
-import { sendTextMsg, sendImagesMsg, sendFileMsg, forwardPublicMsg, quitChatRoom } from '../../api/index';
+import type { Contact, ChatRoom } from '../../api'
+import { sendTextMsg, sendImagesMsg, sendFileMsg, forwardPublicMsg, getMemberFromChatRoom, quitChatRoom } from '../../api';
 import { useSearchTable } from './useSearch';
 import { useExport } from './useExport';
 
@@ -80,10 +86,14 @@ const { exportXlsx } = useExport()
 
 const loading = ref(false)
 
-const visible = ref(false)
 const optMode = ref('') //  'text' or 'image' or 'file' or 'wx_article'
 
+const visible = ref(false)
 const contactData = ref<Contact>()
+
+const roomTitle = ref('')
+const roomVisible = ref(false)
+const roomData = ref<ChatRoom>()
 
 const reset = () => {
   contactData.value = undefined;
@@ -91,6 +101,26 @@ const reset = () => {
 }
 
 const handleExportXlsx = () => exportXlsx(filterData.value)
+
+const handleViewDetail = async (index: number) => {
+  try {
+    const contact = tableData.value[index]
+    const chatroom = await getMemberFromChatRoom(contact.wxid)
+
+    if (!chatroom) {
+      ElMessage.error('查看详情失败');
+      return
+    }
+
+    console.log(chatroom)
+
+    roomTitle.value = `成员列表 - ${contact.nickname}` +
+      `${chatroom.adminNickname && `(管理员：${chatroom.adminNickname})`}`
+
+    roomData.value = chatroom
+    roomVisible.value = true
+  } catch (error) { }
+}
 
 const handleShowDialog = (index: number, mode: string) => {
   optMode.value = mode;

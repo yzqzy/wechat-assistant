@@ -5,7 +5,7 @@
     </div>
     <div class="container">
       <div class="search-box">
-        <el-input v-model="query.name" placeholder="请输入昵称或微信号" class="search-input mr10" clearable></el-input>
+        <el-input v-model="query.keyword" placeholder="请输入昵称或微信号" class="search-input mr10" clearable></el-input>
         <el-button type="primary" plain :icon="Search" @click="handleSearch">搜索</el-button>
         <el-button type="warning" plain @click="handleExportXlsx">导出Excel</el-button>
       </div>
@@ -65,8 +65,8 @@ import { Search } from '@element-plus/icons-vue';
 
 import ContactForm from './ContactForm.vue';
 
-import { Contact } from '../../api'
-import { sendPatMsg, sendTextMsg, sendImagesMsg, sendFileMsg, forwardPublicMsg } from '../../api/index';
+import type { Contact } from '../../api'
+import { sendPatMsg, sendTextMsg, sendImagesMsg, sendFileMsg, forwardPublicMsg } from '../../api';
 import { useSearchTable } from './useSearch';
 import { useExport } from './useExport';
 
@@ -79,7 +79,6 @@ const { exportXlsx } = useExport()
 const visible = ref(false)
 const optMode = ref('text') // 'text' or 'image' or 'file' or 'wx_article'
 const contactData = ref<Contact>()
-
 
 const reset = () => {
   contactData.value = undefined;

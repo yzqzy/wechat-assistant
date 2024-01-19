@@ -5,3 +5,6 @@ export const addDateSuffixToFileName = (fileName: string) => {
 
   return `${name}_${suffix}.${ext}`
 }
+
+export const textIncludes = (v1: string, v2: string) =>
+  v1.toLocaleLowerCase().includes(v2.toLocaleLowerCase())
