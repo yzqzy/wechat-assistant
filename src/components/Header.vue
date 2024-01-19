@@ -14,9 +14,10 @@ import logo from '../assets/img/logo.png';
 <style lang="scss" scoped>
 .header {
   position: relative;
-  box-sizing: border-box;
   width: 306px;
   height: 80px;
+  padding-top: 10px;
+  box-sizing: border-box;
 }
 
 .header .logo {
@@ -24,7 +25,7 @@ import logo from '../assets/img/logo.png';
   align-items: center;
   justify-content: center;
   width: 100%;
-  line-height: 70px;
+  height: 100%;
 
   .user-avator {
     margin-right: 18px;

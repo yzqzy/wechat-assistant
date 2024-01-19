@@ -17,7 +17,7 @@ export const useSearchTable = () => {
   const filterData = computed(() => {
     const { name } = query
     return allTableData.value.filter(item => {
-      return includes(item.nickname, name) || includes(item.customAccount, name)
+      return includes(item.nickname, name) && item.wxid.includes('@chatroom')
     })
   })
 
@@ -29,9 +29,17 @@ export const useSearchTable = () => {
     return filterData.value.slice(startIndex, endIndex)
   })
 
-  getContactList().then(res => {
-    allTableData.value = res.data
-  })
+  const reset = () => {
+    query.name = ''
+    query.pageIndex = 1
+    query.pageSize = 10
+  }
+
+  const fetchData = () => {
+    getContactList().then(res => {
+      allTableData.value = res.data
+    })
+  }
 
   const handleSearch = () => {
     query.pageIndex = 1
@@ -42,6 +50,16 @@ export const useSearchTable = () => {
   const handlePageChange = (val: number) => {
     query.pageIndex = val
   }
+  const handleRefreshData = (callback: () => void) => {
+    reset()
+
+    setTimeout(() => {
+      fetchData()
+      callback && callback()
+    }, 2000)
+  }
+
+  fetchData()
 
   return {
     query,
@@ -49,6 +67,7 @@ export const useSearchTable = () => {
     tableData,
     filterData,
 
+    handleRefreshData,
     handleSearch,
     handlePageSizeChange,
     handlePageChange

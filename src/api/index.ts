@@ -3,6 +3,7 @@ import { Result } from './common'
 
 export * from './common'
 export * from './message'
+export * from './chatroom'
 
 export const checkLogin = async (): Promise<Result<null>> =>
   (await request.post('/api/checkLogin')).data

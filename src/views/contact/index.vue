@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="title">
-      <h2>联系人管理</h2>
+      <h2>联系人列表</h2>
     </div>
     <div class="container">
       <div class="search-box">
@@ -21,22 +21,26 @@
         <el-table-column prop="pinyinAll" label="拼音" align="center"></el-table-column>
         <el-table-column label="操作" width="320" align="center">
           <template #default="scope">
-            <el-button v-if="!scope.row.wxid.includes('chatroom')" class="btn" type="info" plain
-              @click="handlePat(scope.$index)">
-              拍一拍
-            </el-button>
-            <el-button type="warning" class="btn" plain @click="handleShowDialog(scope.$index, 'image')">
-              发图片
-            </el-button>
-            <el-button type="warning" class="btn" plain @click="handleShowDialog(scope.$index, 'file')">
-              发文件
-            </el-button>
-            <el-button type="primary" class="btn" plain @click="handleShowDialog(scope.$index)">
-              发消息
-            </el-button>
-            <el-button type="primary" class="btn" plain @click="handleShowDialog(scope.$index, 'wx_article')">
-              发公众号消息
-            </el-button>
+            <div>
+              <el-button v-if="!scope.row.wxid.includes('chatroom')" class="btn" type="info" plain
+                @click="handlePat(scope.$index)">
+                拍一拍
+              </el-button>
+              <el-button type="warning" class="btn" plain @click="handleShowDialog(scope.$index, 'image')">
+                发图片
+              </el-button>
+              <el-button type="warning" class="btn" plain @click="handleShowDialog(scope.$index, 'file')">
+                发文件
+              </el-button>
+            </div>
+            <div>
+              <el-button type="primary" class="btn" plain @click="handleShowDialog(scope.$index)">
+                发消息
+              </el-button>
+              <el-button type="primary" class="btn" plain @click="handleShowDialog(scope.$index, 'wx_article')">
+                发公众号消息
+              </el-button>
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -47,10 +51,9 @@
       </div>
     </div>
 
-
     <el-dialog title="编辑消息" v-model="visible" width="500px" destroy-on-close :close-on-click-modal="false"
       @close="visible = false">
-      <contact-form :mode="editMode" :data="{}" :confirm="handleConfirm"></contact-form>
+      <contact-form :mode="optMode" :data="{}" :confirm="handleConfirm"></contact-form>
     </el-dialog>
   </div>
 </template>
@@ -74,36 +77,37 @@ const {
 const { exportXlsx } = useExport()
 
 const visible = ref(false)
-const editMode = ref('text') // or 'image' or 'file' or 'wx_article'
-const editData = ref<Contact>()
+const optMode = ref('text') // 'text' or 'image' or 'file' or 'wx_article'
+const contactData = ref<Contact>()
 
-const handleExportXlsx = () => exportXlsx(filterData.value)
 
-const resetEditData = () => {
-  editData.value = undefined;
+const reset = () => {
+  contactData.value = undefined;
   visible.value = false;
 }
 
+const handleExportXlsx = () => exportXlsx(filterData.value)
+
 const handleShowDialog = (index: number, mode = 'text') => {
-  editMode.value = mode;
-  editData.value = tableData.value[index];
+  optMode.value = mode;
+  contactData.value = tableData.value[index];
   visible.value = true;
 }
 
 const handleConfirm = async (data: any) => {
-  if (!editData.value) return
+  if (!contactData.value) return
 
   let res: any;
 
   if (data.mode === 'text') {
-    res = await sendTextMsg(editData.value.wxid, data.message)
+    res = await sendTextMsg(contactData.value.wxid, data.message)
   } else if (data.mode === 'image') {
-    res = await sendImagesMsg(editData.value.wxid, data.image_url)
+    res = await sendImagesMsg(contactData.value.wxid, data.image_url)
   } else if (data.mode === 'file') {
-    res = await sendFileMsg(editData.value.wxid, data.file_url)
+    res = await sendFileMsg(contactData.value.wxid, data.file_url)
   } else if (data.mode === 'wx_article') {
     res = await forwardPublicMsg({
-      wxid: editData.value.wxid,
+      wxid: contactData.value.wxid,
       title: data.title,
       url: data.url,
       thumbUrl: data.thumb_url,
@@ -117,7 +121,7 @@ const handleConfirm = async (data: any) => {
     ElMessage.error('发送失败');
   }
 
-  resetEditData()
+  reset()
 }
 
 const handlePat = (index: number) => {
@@ -131,14 +135,13 @@ const handlePat = (index: number) => {
 
       if (res.code === 1) {
         ElMessage.success('拍一拍成功');
-      } else {
-        ElMessage.error('拍一拍失败');
+        return
       }
+
+      ElMessage.error('拍一拍失败');
     })
     .catch(() => { });
 }
-
-
 </script>
 
 <style scoped>

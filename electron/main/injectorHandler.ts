@@ -1,10 +1,10 @@
 import { IpcMainEvent, ipcMain } from 'electron'
 import { execFile } from 'child_process'
 
-const ok = (event: IpcMainEvent) =>
+const okHandler = (event: IpcMainEvent) =>
   event.sender.send('inject-wxhelper-reply', 'ok')
 
-const error = (event: IpcMainEvent, message: string) =>
+const errorHandler = (event: IpcMainEvent, message: string) =>
   event.sender.send('inject-wxhelper-reply', 'error')
 
 export const injector = () => {
@@ -20,7 +20,7 @@ export const injector = () => {
     execFile(injectPath, exec_args, (error: any, stdout: any, stderr: any) => {
       if (error) {
         console.error(`[inject-wxhelper] error: ${error.message}`)
-        error(event, error.message)
+        errorHandler(event, error.message)
         return
       }
 
@@ -28,11 +28,11 @@ export const injector = () => {
       console.log(`[inject-wxhelper] stderr: ${stderr}`)
 
       if (stdout.includes('Successfully injected module!')) {
-        ok(event)
+        okHandler(event)
         return
       }
 
-      error(event, 'inject failed')
+      errorHandler(event, 'inject failed')
     })
   })
 }
