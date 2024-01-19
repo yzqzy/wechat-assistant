@@ -7,7 +7,7 @@
       <el-avatar :size="120" :src="userInfo?.headImage" />
     </el-row>
     <el-row>
-      <el-col :span="6">
+      <el-col>
         <div class="user-info-list">
           <span>微信ID：</span>
           {{ userInfo?.wxid }}
@@ -51,6 +51,7 @@ getUserInfo()
 
 <style scoped>
 .container {
+  margin-top: 20px;
   padding: 20px;
 }
 

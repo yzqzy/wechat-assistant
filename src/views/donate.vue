@@ -1,6 +1,9 @@
 <template>
   <div class="container">
     <div class="plugins-tips">
+      喜欢新事物，关注前端动态，对新的技术有追求，喜欢 Coding。
+    </div>
+    <div class="plugins-tips">
       如果该项目对你有帮助，那就请作者喝杯咖啡吧！<el-icon>
         <CoffeeCup />
       </el-icon> 加微信号 _heora 探讨问题。
@@ -15,6 +18,7 @@
 
 <style scoped>
 .container {
+  margin-top: 20px;
   padding: 20px;
 }
 
