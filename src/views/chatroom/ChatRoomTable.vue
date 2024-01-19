@@ -1,12 +1,12 @@
 <template>
   <div class="chatroom-search">
-    <el-input v-model="query.name" placeholder="请输入群聊名称" class="search-input mr10" clearable></el-input>
+    <el-input v-model="query.name" placeholder="请输入昵称或微信号" class="search-input mr10" clearable></el-input>
     <el-button type="primary" plain :icon="Search" @click="handleSearch">搜索</el-button>
   </div>
   <div class="chatroom-table">
     <el-table :data="tableData" height="440px" class="table" header-cell-class-name="table-header">
       <el-table-column prop="wxid" label="ID" width="220"></el-table-column>
-      <el-table-column prop="nickname" label="群聊名称" align="center"></el-table-column>
+      <el-table-column prop="nickname" label="昵称" align="center"></el-table-column>
       <el-table-column prop="account" label="微信号" align="center">
         <template #default="scope">
           <div>{{ scope.row.account || '--' }}</div>
@@ -14,7 +14,7 @@
       </el-table-column>
       <el-table-column label="头像" align="center">
         <template #default="scope">
-          <el-image width="100px" height="100px" class="table-td-thumb" :src="scope.row.headImage" :z-index="10"
+          <el-image class="table-td-thumb" :src="scope.row.headImage" :z-index="9999"
             :preview-src-list="[scope.row.headImage]" preview-teleported>
           </el-image>
         </template>
@@ -119,6 +119,19 @@ const handleDelete = (item: any) => {
     margin-right: 10px;
   }
 }
+
+.chatroom-table {
+  .table-header {
+    background-color: #f5f5f5;
+    font-weight: bold;
+  }
+
+  .table-td-thumb {
+    width: 80px;
+    height: 80px;
+  }
+}
+
 
 .chatroom-pagination {
   padding-top: 30px;

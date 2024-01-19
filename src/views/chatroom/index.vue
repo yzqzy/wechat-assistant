@@ -112,10 +112,8 @@ const handleViewDetail = async (index: number) => {
       return
     }
 
-    console.log(chatroom)
-
     roomTitle.value = `成员列表 - ${contact.nickname}` +
-      `${chatroom.adminNickname && `(管理员：${chatroom.adminNickname})`}`
+      `${chatroom.adminNickname && `(${chatroom.adminNickname})`}`
 
     roomData.value = chatroom
     roomVisible.value = true
