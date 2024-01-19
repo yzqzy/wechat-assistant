@@ -59,7 +59,7 @@
     </el-dialog>
 
     <el-dialog :title="roomTitle" v-model="roomVisible" width="800px" destroy-on-close :close-on-click-modal="false"
-      @close="roomVisible = false">
+      @close="handleCloseRoom">
       <chat-room-table :chatroom="roomData" :confirm="handleConfirm"></chat-room-table>
     </el-dialog>
   </div>
@@ -118,6 +118,10 @@ const handleViewDetail = async (index: number) => {
     roomData.value = chatroom
     roomVisible.value = true
   } catch (error) { }
+}
+const handleCloseRoom = () => {
+  roomData.value = undefined;
+  roomVisible.value = false;
 }
 
 const handleShowDialog = (index: number, mode: string) => {
