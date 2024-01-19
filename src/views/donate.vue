@@ -19,7 +19,7 @@
 }
 
 .plugins-tips {
-  padding: 20px 0;
+  padding-bottom: 20px;
 }
 
 .donate-img {

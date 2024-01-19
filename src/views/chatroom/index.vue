@@ -188,7 +188,9 @@ const handleQuitChatRoom = (index: number) => {
 
 <style scoped>
 .title {
+  padding-left: 10px;
   margin-bottom: 20px;
+  box-sizing: border-box;
 }
 
 .search-box {
