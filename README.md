@@ -4,7 +4,7 @@ PC 微信助手，基于 Electron、WeChat Hook 实现。
 
 > 本仓库发布内容仅供学习研究，请勿用于非法或商业用途！ 如因此引起任何法律纠纷，与作者无关！ 没有后门或木马，也不会获取或存储任何信息。 请按照国家法律法规及腾讯的相关原则学习研究！ 我们不对用户的任何下载或任何行为负责。 请下载后24小时内删除！
 
-## 功能一览
+## 一、功能一览
 
 - 联系人管理
   *	[x] 发送 “文本、图片、文件、公众号” 消息
@@ -20,7 +20,7 @@ PC 微信助手，基于 Electron、WeChat Hook 实现。
   * [ ] 天气定时推送
   * [ ] 消息备份、防撤回
 
-## 使用说明
+## 二、使用说明
 
 ### 1. Hook 注入
 
@@ -46,9 +46,28 @@ Successfully injected module!
 
 如果你已经操作成功注入 dll，可以直接使用应用。如果没有注入 dll，会进入以下页面。
 
+<img src="https://img.yueluo.club/wechat-assistant/injector.png" style="zoom: 50%" />
 
+注入成功后，即可正常使用程序。
 
-## 参考
+<img src="https://img.yueluo.club/wechat-assistant/application.png" style="zoom: 50%" />
+
+## 三、环境配置
+
+### 开发环境
+
+```bash
+npm install
+npm run dev
+```
+
+### 打包构建
+
+```bash
+npm run build
+```
+
+## 四、参考
 
 * [wxhelper](https://github.com/ttttupup/wxhelper) : Hook WeChat / 微信逆向
 * [Injector](https://github.com/nefarius/Injector) : 注入和弹出 DLL
