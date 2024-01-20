@@ -1,16 +1,15 @@
 import { computed, onMounted, reactive, ref } from 'vue'
 
-import { Contact, getContactList } from '../../api'
-import { textIncludes } from '../../utils/tools'
+import { Contact, getContactList, getMembers } from '../../api'
+import { delaySync, textIncludes } from '../../utils/tools'
 
 export const useSearchTable = () => {
-  const keyword = ref('')
-
   const query = reactive({
     keyword: '',
     pageIndex: 1,
     pageSize: 10
   })
+  const initialSize = Math.min(query.pageSize * 2, 50)
 
   const allTableData = ref<Contact[]>([])
 
@@ -32,7 +31,6 @@ export const useSearchTable = () => {
   })
 
   const reset = () => {
-    keyword.value = ''
     query.keyword = ''
     query.pageIndex = 1
     query.pageSize = 10
@@ -46,7 +44,6 @@ export const useSearchTable = () => {
 
   const handleSearch = () => {
     query.pageIndex = 1
-    query.keyword = keyword.value
   }
   const handlePageSizeChange = (val: number) => {
     query.pageSize = val
@@ -65,12 +62,34 @@ export const useSearchTable = () => {
 
   onMounted(fetchData)
 
+  const lazyFetchMembers = async (members: any[]) => {
+    const offset = members.findIndex(item => typeof item === 'string')
+
+    if (offset === -1) return
+
+    let start = offset + 1
+
+    while (start <= members.length - 1) {
+      await delaySync()
+
+      const memberIds = members.slice(start, start + initialSize)
+      const memberData = await getMembers(memberIds)
+
+      members.splice(start, initialSize, ...memberData)
+
+      start += initialSize
+    }
+  }
+
   return {
     query,
-    keyword,
     pageTotal,
+    allTableData,
     tableData,
     filterData,
+
+    initialSize,
+    lazyFetchMembers,
 
     handleRefreshData,
     handleSearch,

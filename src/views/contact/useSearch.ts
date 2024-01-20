@@ -4,8 +4,6 @@ import { Contact, getContactList } from '../../api'
 import { textIncludes } from '../../utils/tools'
 
 export const useSearchTable = () => {
-  const keyword = ref('')
-
   const query = reactive({
     keyword: '',
     pageIndex: 1,
@@ -34,7 +32,6 @@ export const useSearchTable = () => {
 
   const handleSearch = () => {
     query.pageIndex = 1
-    query.keyword = keyword.value
   }
   const handlePageSizeChange = (val: number) => {
     query.pageSize = val
@@ -51,7 +48,6 @@ export const useSearchTable = () => {
 
   return {
     query,
-    keyword,
     pageTotal,
     tableData,
     filterData,

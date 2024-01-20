@@ -5,8 +5,7 @@
     </div>
     <div class="container">
       <div class="search-box">
-        <el-input v-model="keyword" placeholder="请输入昵称或微信号" class="search-input mr10" clearable
-          @keyup.enter.native="handleSearch" @clear="handleSearch"></el-input>
+        <el-input v-model="query.keyword" placeholder="请输入昵称或微信号" class="search-input mr10" clearable></el-input>
         <el-button type="primary" plain :icon="Search" @click="handleSearch">搜索</el-button>
         <el-button type="warning" plain @click="handleExportXlsx">导出Excel</el-button>
       </div>
@@ -23,8 +22,8 @@
         <el-table-column label="操作" width="320" align="center">
           <template #default="scope">
             <div>
-              <el-button v-if="!scope.row.wxid.includes('chatroom')" class="btn" type="info" plain
-                @click="handlePat(scope.$index)">
+              <el-button v-if="!(scope.row.wxid.includes('chatroom') || /^gh_/.test(scope.row.wxid))" class="btn"
+                type="info" plain @click="handlePat(scope.$index)">
                 拍一拍
               </el-button>
               <el-button type="warning" class="btn" plain @click="handleShowDialog(scope.$index, 'image')">
@@ -47,14 +46,14 @@
       </el-table>
       <div class="pagination">
         <el-pagination layout="total, sizes, prev, pager, next" :current-page="query.pageIndex"
-          :page-size="query.pageSize" :total="pageTotal" @size-change="handlePageSizeChange"
-          @current-change="handlePageChange"></el-pagination>
+          :page-size="query.pageSize" :total="pageTotal" :page-sizes="[10, 20, 30, 40, 50]"
+          @size-change="handlePageSizeChange" @current-change="handlePageChange"></el-pagination>
       </div>
     </div>
 
     <el-dialog title="编辑消息" v-model="visible" width="500px" destroy-on-close :close-on-click-modal="false"
       @close="visible = false">
-      <contact-form :mode="optMode" :data="{}" :confirm="handleConfirm"></contact-form>
+      <contact-form :mode="optMode" :confirm="handleConfirm"></contact-form>
     </el-dialog>
   </div>
 </template>
@@ -72,7 +71,7 @@ import { useSearchTable } from './useSearch';
 import { useExport } from './useExport';
 
 const {
-  keyword, query, pageTotal, tableData, filterData,
+  query, pageTotal, tableData, filterData,
   handleSearch, handlePageSizeChange, handlePageChange
 } = useSearchTable()
 const { exportXlsx } = useExport()

@@ -1,8 +1,18 @@
 <template>
   <div class="chatroom-search">
-    <el-input v-model="keyword" placeholder="请输入昵称或微信号" class="search-input mr10" clearable
-      @keyup.enter.native="handleSearch" @clear="handleSearch"></el-input>
-    <el-button type="primary" plain :icon="Search" @click="handleSearch">搜索</el-button>
+    <div>
+      <el-input v-model="query.keyword" placeholder="请输入昵称或微信号" class="search-input mr10" clearable
+        @keyup.enter.native="handleSearch" @clear="handleSearch"></el-input>
+      <el-button type="primary" plain :icon="Search" @click="handleSearch">搜索</el-button>
+    </div>
+    <div class="mr30">
+      <el-button type="warning" class="btn" plain @click="handleSendMsg(null, 'room_text')">
+        发消息
+      </el-button>
+      <el-button type="warning" class="btn" plain @click="handleSendMsg('notify@all', 'room_at_text')">
+        发消息(@all)
+      </el-button>
+    </div>
   </div>
   <div class="chatroom-table">
     <el-table :data="tableData" height="440px" class="table" header-cell-class-name="table-header">
@@ -20,8 +30,15 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center">
+      <el-table-column width="240px" label="操作" align="center">
         <template #default="scope">
+
+          <el-button type="primary" class="btn" plain @click="handleSendMsg(scope.row.wxid, 'room_at_text')">
+            发@消息
+          </el-button>
+          <el-button type="danger" class="btn" plain @click="handleDelete(scope.$index)">
+            删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -34,7 +51,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive, ref } from 'vue';
+import { computed, reactive } from 'vue';
 import { Search } from '@element-plus/icons-vue';
 
 import { textIncludes } from '../../utils/tools'
@@ -49,9 +66,11 @@ const props = defineProps({
     type: Function,
     required: true
   },
+  delete: {
+    type: Function,
+    required: true
+  }
 });
-
-const keyword = ref('')
 
 const query = reactive({
   keyword: '',
@@ -87,7 +106,6 @@ const tableData = computed(() => {
 
 const handleSearch = () => {
   query.pageIndex = 1
-  query.keyword = keyword.value
 }
 
 const handlePageChange = (pageIndex: number) => {
@@ -98,21 +116,29 @@ const handlePageSizeChange = (pageSize: number) => {
   query.pageSize = pageSize
 }
 
-const handleDelete = (item: any) => {
+const handleSendMsg = (wxid: string | null, mode: string) => {
+  let wx_ids: string[] = []
+
+  if (wxid)
+    wx_ids = [wxid]
+
   props.confirm({
-    title: '确认删除',
-    content: `确认删除 ${item.nickname}？`,
-    onConfirm: () => {
-      const index = allTableData.value.indexOf(item)
-      allTableData.value.splice(index, 1)
-    }
+    mode,
+    wx_ids
   })
+}
+
+const handleDelete = (index: number) => {
+  const item = tableData.value[index]
+
+  props.delete([item.wxid])
 }
 </script>
 
 <style lang="scss" scoped>
 .chatroom-search {
   display: flex;
+  justify-content: space-between;
   margin-bottom: 20px;
 
   .search-input {
@@ -121,6 +147,10 @@ const handleDelete = (item: any) => {
 
   .mr10 {
     margin-right: 10px;
+  }
+
+  .mr30 {
+    margin-right: 30px;
   }
 }
 
@@ -134,8 +164,11 @@ const handleDelete = (item: any) => {
     width: 80px;
     height: 80px;
   }
-}
 
+  .btn {
+    margin: 5px;
+  }
+}
 
 .chatroom-pagination {
   padding-top: 30px;

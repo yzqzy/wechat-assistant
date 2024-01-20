@@ -25,6 +25,20 @@ export const sendTextMsg = async (
     })
   ).data
 
+// 发送 @ 文本消息
+export const sendAtTextMsg = async (
+  chatRoomId: string,
+  wxids: string[],
+  msg: string
+): Promise<Result<null>> =>
+  (
+    await request.post('/api/sendAtText', {
+      wxids: wxids.join(','),
+      chatRoomId,
+      msg
+    })
+  ).data
+
 // 发送图片消息
 export const sendImagesMsg = async (
   wxid: string,

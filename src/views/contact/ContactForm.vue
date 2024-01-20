@@ -60,21 +60,13 @@ const props = defineProps({
     required: false,
     default: 'text' // 'text' or 'image' or 'file' or 'wx_article'
   },
-  data: {
-    type: Object,
-    required: true
-  },
-  edit: {
-    type: Boolean,
-    required: false
-  },
   confirm: {
     type: Function,
     required: true
   }
 });
 
-const defaultData = {
+const form = ref({
   mode: props.mode,
 
   message: '',
@@ -87,9 +79,7 @@ const defaultData = {
   url: '',
   thumb_url: '',
   digest: '',
-};
-
-const form = ref({ ...(props.edit ? props.data : defaultData) });
+});
 
 const formRef = ref<FormInstance>();
 const saveEdit = (formEl: FormInstance | undefined) => {

@@ -1,7 +1,7 @@
 <template>
   <el-form ref="formRef" label-position="left" :model="form" label-width="120px">
     <!-- 文本消息 -->
-    <el-form-item v-if="mode === 'text'" label="内容" prop="message">
+    <el-form-item v-if="mode === 'text' || mode === 'room_text' || mode === 'room_at_text'" label="内容" prop="message">
       <el-input type="textarea" placeholder="请输入消息内容" v-model="form.message" />
     </el-form-item>
 
@@ -43,9 +43,18 @@
       </el-form-item>
     </template>
 
-    <!-- 确认按钮 -->
+    <!-- 添加成员 -->
+    <template v-if="mode === 'add_member'">
+      <el-form-item label="成员" prop="member_id">
+        <el-select v-model="form.member_ids" multiple filterable placeholder="请选择成员">
+          <el-option v-for="item in data" :key="item.wxid" :label="item.nickname" :value="item.wxid" />
+        </el-select>
+      </el-form-item>
+    </template>
+
+    <!-- 操作按钮 -->
     <el-form-item>
-      <el-button type="primary" @click="saveEdit(formRef)">发 送</el-button>
+      <el-button type="primary" @click="saveEdit(formRef)">{{ mode === 'add_member' ? '添加' : '发送' }}</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -54,18 +63,16 @@
 import { ElMessage, FormInstance, UploadProps, UploadRawFile } from 'element-plus';
 import { ref } from 'vue';
 
+import { Contact } from '../../api';
+
 const props = defineProps({
   mode: {
     type: String,
     required: false,
-    default: 'text' // 'text' or 'image' or 'file' or 'wx_article'
+    default: 'text' // 'text' or 'room_text' or 'room_at_text' or 'image' or 'file' or 'wx_article' or 'add_member'
   },
   data: {
-    type: Object,
-    required: true
-  },
-  edit: {
-    type: Boolean,
+    type: Array as () => Contact[],
     required: false
   },
   confirm: {
@@ -74,7 +81,7 @@ const props = defineProps({
   }
 });
 
-const defaultData = {
+const form = ref({
   mode: props.mode,
 
   message: '',
@@ -87,9 +94,9 @@ const defaultData = {
   url: '',
   thumb_url: '',
   digest: '',
-};
 
-const form = ref({ ...(props.edit ? props.data : defaultData) });
+  member_ids: []
+});
 
 const formRef = ref<FormInstance>();
 const saveEdit = (formEl: FormInstance | undefined) => {

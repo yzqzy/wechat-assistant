@@ -38,7 +38,8 @@ export const getMembers = async (memberIds: string[]) => {
 // 获取群聊成员
 export const getMemberFromChatRoom = async (
   chatRoomId: string,
-  size: number = 10
+  size: number = 10,
+  fetch: boolean = true
 ): Promise<ChatRoom | null> => {
   const { data: response } = await request.post('/api/getMemberFromChatRoom', {
     chatRoomId
@@ -50,10 +51,13 @@ export const getMemberFromChatRoom = async (
     data = response.data
     data.memberNickname = data.memberNickname.split('^G')
     data.members = data.members.includes('^G') ? data.members.split('^G') : []
-    data.members = [
-      ...(await getMembers(data.members.slice(0, size))),
-      ...data.members.slice(size)
-    ]
+
+    if (fetch) {
+      data.members = [
+        ...(await getMembers(data.members.slice(0, size))),
+        ...data.members.slice(size)
+      ]
+    }
   }
 
   return data
@@ -72,12 +76,24 @@ export const addMemberToChatRoom = async (
   ).data
 
 // 邀请成员加入群聊(40人以上)
-export const InviteMemberToChatRoom = async (
+export const inviteMemberToChatRoom = async (
   chatRoomId: string,
   memberIds: string[]
 ): Promise<Result<null>> =>
   (
     await request.post('/api/InviteMemberToChatRoom', {
+      chatRoomId,
+      memberIds: memberIds.join(',')
+    })
+  ).data
+
+// 删除群聊成员
+export const delMemberFromChatRoom = async (
+  chatRoomId: string,
+  memberIds: string[]
+): Promise<Result<null>> =>
+  (
+    await request.post('/api/delMemberFromChatRoom', {
       chatRoomId,
       memberIds: memberIds.join(',')
     })
