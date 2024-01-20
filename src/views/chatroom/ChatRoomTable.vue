@@ -16,7 +16,7 @@
     </div>
   </div>
   <div class="chatroom-table">
-    <el-table :data="tableData" height="440px" class="table" header-cell-class-name="table-header">
+    <el-table :data="tableData" height="40vh" class="table" header-cell-class-name="table-header">
       <el-table-column prop="wxid" label="ID" width="220"></el-table-column>
       <el-table-column prop="nickname" label="昵称" align="center"></el-table-column>
       <el-table-column prop="account" label="微信号" align="center">

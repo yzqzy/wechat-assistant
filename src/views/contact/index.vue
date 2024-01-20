@@ -9,7 +9,7 @@
         <el-button type="primary" plain :icon="Search" @click="handleSearch">搜索</el-button>
         <el-button type="warning" plain @click="handleExportXlsx">导出Excel</el-button>
       </div>
-      <el-table :data="tableData" height="740px" class="table" header-cell-class-name="table-header">
+      <el-table :data="tableData" height="70vh" class="table" header-cell-class-name="table-header">
         <el-table-column prop="wxid" label="ID" width="220"></el-table-column>
         <el-table-column prop="nickname" label="昵称" align="center"></el-table-column>
         <el-table-column prop="customAccount" label="微信号" align="center">
