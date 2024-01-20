@@ -5,7 +5,8 @@
     </div>
     <div class="container">
       <div class="search-box">
-        <el-input v-model="query.keyword" placeholder="请输入昵称或微信号" class="search-input mr10" clearable></el-input>
+        <el-input v-model="keyword" placeholder="请输入昵称或微信号" class="search-input mr10" clearable
+          @keyup.enter.native="handleSearch" @clear="handleSearch"></el-input>
         <el-button type="primary" plain :icon="Search" @click="handleSearch">搜索</el-button>
         <el-button type="warning" plain @click="handleExportXlsx">导出Excel</el-button>
       </div>
@@ -71,7 +72,7 @@ import { useSearchTable } from './useSearch';
 import { useExport } from './useExport';
 
 const {
-  query, pageTotal, tableData, filterData,
+  keyword, query, pageTotal, tableData, filterData,
   handleSearch, handlePageSizeChange, handlePageChange
 } = useSearchTable()
 const { exportXlsx } = useExport()

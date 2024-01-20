@@ -5,7 +5,8 @@
     </div>
     <div class="container">
       <div class="search-box">
-        <el-input v-model="query.keyword" placeholder="请输入群聊名称" class="search-input mr10" clearable></el-input>
+        <el-input v-model="keyword" placeholder="请输入群聊名称" class="search-input mr10" clearable
+          @keyup.enter.native="handleSearch" @clear="handleSearch"></el-input>
         <el-button type="primary" plain :icon="Search" @click="handleSearch">搜索</el-button>
         <el-button type="warning" plain @click="handleExportXlsx">导出Excel</el-button>
       </div>
@@ -66,7 +67,7 @@
 </template>
 
 <script setup lang="ts" name="basetable">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
 
@@ -74,12 +75,16 @@ import ChatRoomForm from './ChatRoomForm.vue';
 import ChatRoomTable from './ChatRoomTable.vue';
 
 import type { Contact, ChatRoom } from '../../api'
-import { sendTextMsg, sendImagesMsg, sendFileMsg, forwardPublicMsg, getMemberFromChatRoom, quitChatRoom } from '../../api';
+import {
+  sendTextMsg, sendImagesMsg, sendFileMsg, forwardPublicMsg,
+  getMemberFromChatRoom, quitChatRoom, getMembers
+} from '../../api';
 import { useSearchTable } from './useSearch';
 import { useExport } from './useExport';
+import { delaySync } from '../../utils/tools';
 
 const {
-  query, pageTotal, tableData, filterData,
+  keyword, query, pageTotal, tableData, filterData,
   handleSearch, handlePageSizeChange, handlePageChange, handleRefreshData
 } = useSearchTable()
 const { exportXlsx } = useExport()
@@ -102,10 +107,31 @@ const reset = () => {
 
 const handleExportXlsx = () => exportXlsx(filterData.value)
 
+const initialSize = Math.min(query.pageSize, 50)
+
+const lazyFetchMembers = async (members: any[]) => {
+  const offset = members.findIndex((item) => typeof item === 'string')
+
+  if (offset === -1) return
+
+  let start = offset + 1
+
+  while (start <= members.length - 1) {
+    await delaySync()
+
+    const memberIds = members.slice(start, start + initialSize)
+    const memberData = await getMembers(memberIds)
+
+    members.splice(start, initialSize, ...memberData)
+
+    start += initialSize
+  }
+}
+
 const handleViewDetail = async (index: number) => {
   try {
     const contact = tableData.value[index]
-    const chatroom = await getMemberFromChatRoom(contact.wxid)
+    const chatroom = await getMemberFromChatRoom(contact.wxid, initialSize)
 
     if (!chatroom) {
       ElMessage.error('查看详情失败');
@@ -117,6 +143,8 @@ const handleViewDetail = async (index: number) => {
 
     roomData.value = chatroom
     roomVisible.value = true
+
+    lazyFetchMembers(chatroom.members)
   } catch (error) { }
 }
 const handleCloseRoom = () => {

@@ -8,3 +8,6 @@ export const addDateSuffixToFileName = (fileName: string) => {
 
 export const textIncludes = (v1: string, v2: string) =>
   v1.toLocaleLowerCase().includes(v2.toLocaleLowerCase())
+
+export const delaySync = (ms: number = 600) =>
+  new Promise(resolve => setTimeout(resolve, ms))

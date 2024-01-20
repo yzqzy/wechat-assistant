@@ -1,6 +1,7 @@
 <template>
   <div class="chatroom-search">
-    <el-input v-model="query.name" placeholder="请输入昵称或微信号" class="search-input mr10" clearable></el-input>
+    <el-input v-model="keyword" placeholder="请输入昵称或微信号" class="search-input mr10" clearable
+      @keyup.enter.native="handleSearch" @clear="handleSearch"></el-input>
     <el-button type="primary" plain :icon="Search" @click="handleSearch">搜索</el-button>
   </div>
   <div class="chatroom-table">
@@ -9,13 +10,13 @@
       <el-table-column prop="nickname" label="昵称" align="center"></el-table-column>
       <el-table-column prop="account" label="微信号" align="center">
         <template #default="scope">
-          <div>{{ scope.row.account || '--' }}</div>
+          <div>{{ scope.row && scope.row.account || '--' }}</div>
         </template>
       </el-table-column>
       <el-table-column label="头像" align="center">
         <template #default="scope">
-          <el-image class="table-td-thumb" :src="scope.row.headImage" :z-index="9999"
-            :preview-src-list="[scope.row.headImage]" preview-teleported>
+          <el-image class="table-td-thumb" :src="scope.row && scope.row.headImage" :z-index="9999"
+            :preview-src-list="[scope.row && scope.row.headImage]" preview-teleported>
           </el-image>
         </template>
       </el-table-column>
@@ -27,12 +28,13 @@
   </div>
   <div class="chatroom-pagination">
     <el-pagination layout="total, sizes, prev, pager, next" :current-page="query.pageIndex" :page-size="query.pageSize"
-      :total="pageTotal" @size-change="handlePageSizeChange" @current-change="handlePageChange"></el-pagination>
+      :total="pageTotal" :page-sizes="[10, 20, 30, 40, 50]" @size-change="handlePageSizeChange"
+      @current-change="handlePageChange"></el-pagination>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import { Search } from '@element-plus/icons-vue';
 
 import { textIncludes } from '../../utils/tools'
@@ -46,11 +48,13 @@ const props = defineProps({
   confirm: {
     type: Function,
     required: true
-  }
+  },
 });
 
+const keyword = ref('')
+
 const query = reactive({
-  name: '',
+  keyword: '',
   pageIndex: 1,
   pageSize: 10
 })
@@ -58,12 +62,15 @@ const query = reactive({
 const allTableData = computed(() => props.chatroom?.members || [])
 
 const filterData = computed(() => {
-  const { name } = query
+  const { keyword } = query
+
+  if (keyword === '') return allTableData.value
+
   return allTableData.value.filter(item => {
     if (typeof item === 'string') return true
     return (
-      textIncludes(item.nickname, name) ||
-      textIncludes(item.account, name)
+      textIncludes(item.nickname, keyword) ||
+      textIncludes(item.account, keyword)
     )
   })
 })
@@ -75,15 +82,12 @@ const tableData = computed(() => {
   const startIndex = (pageIndex - 1) * pageSize
   const endIndex = pageIndex * pageSize
 
-  const data = filterData.value.slice(startIndex, endIndex)
-
-  // TODO: lazy load
-
-  return data
+  return filterData.value.slice(startIndex, endIndex)
 })
 
 const handleSearch = () => {
   query.pageIndex = 1
+  query.keyword = keyword.value
 }
 
 const handlePageChange = (pageIndex: number) => {

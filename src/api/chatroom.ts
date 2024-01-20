@@ -11,11 +11,7 @@ export interface Member {
 
 // 获取群成员信息
 export const getContactProfile = async (wxid: string): Promise<Result<null>> =>
-  (
-    await request.post('/api/getContactProfile', {
-      wxid
-    })
-  ).data
+  (await request.post('/api/getContactProfile', { wxid })).data
 
 export interface ChatRoom {
   admin: string
@@ -25,7 +21,8 @@ export interface ChatRoom {
   members: Member[]
 }
 
-const getMembers = async (memberIds: string[]) => {
+// 获取指定群成员信息
+export const getMembers = async (memberIds: string[]) => {
   const memberData = await Promise.all(
     memberIds.map((member: string) => getContactProfile(member))
   )
@@ -40,7 +37,8 @@ const getMembers = async (memberIds: string[]) => {
 
 // 获取群聊成员
 export const getMemberFromChatRoom = async (
-  chatRoomId: string
+  chatRoomId: string,
+  size: number = 10
 ): Promise<ChatRoom | null> => {
   const { data: response } = await request.post('/api/getMemberFromChatRoom', {
     chatRoomId
@@ -51,10 +49,10 @@ export const getMemberFromChatRoom = async (
   if (response.code === 1) {
     data = response.data
     data.memberNickname = data.memberNickname.split('^G')
-    data.members = data.members.split('^G')
+    data.members = data.members.includes('^G') ? data.members.split('^G') : []
     data.members = [
-      ...(await getMembers(data.members.slice(0, 10))),
-      ...data.members.slice(10)
+      ...(await getMembers(data.members.slice(0, size))),
+      ...data.members.slice(size)
     ]
   }
 
