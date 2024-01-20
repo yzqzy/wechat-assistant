@@ -96,26 +96,27 @@ router.beforeEach(async (to, from, next) => {
   if (isLoggedIn) {
     next()
   } else {
-    try {
-      const loginRes = await checkLogin()
+    if (to.path != '/injector') {
+      try {
+        const loginRes = await checkLogin()
 
-      if (loginRes.code != 1) {
+        if (loginRes.code != 1) {
+          redirect(next)
+          return
+        }
+      } catch (error) {
         redirect(next)
         return
       }
-    } catch (error) {
-      redirect(next)
-      return
+
+      const res = await getUserInfo()
+
+      if (res.code == 1) {
+        store.setUserInfo(res.data)
+      } else {
+        console.log('获取用户信息失败')
+      }
     }
-
-    const res = await getUserInfo()
-
-    if (res.code == 1) {
-      store.setUserInfo(res.data)
-    } else {
-      console.log('获取用户信息失败')
-    }
-
     next()
   }
 })
