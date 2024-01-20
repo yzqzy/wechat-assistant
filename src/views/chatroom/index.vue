@@ -60,7 +60,7 @@
 
     <el-dialog :title="roomTitle" v-model="roomVisible" width="800px" destroy-on-close :close-on-click-modal="false"
       @close="handleCloseRoom">
-      <chat-room-table :isAdmin="isAdmin" :chatroom="memberData" :confirm="handleShowRoomDialog"
+      <chat-room-table :title="roomTitle" :isAdmin="isAdmin" :chatroom="memberData" :confirm="handleShowRoomDialog"
         :delete="handleDeleteMember"></chat-room-table>
     </el-dialog>
   </div>

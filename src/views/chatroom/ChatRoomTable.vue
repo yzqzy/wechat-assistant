@@ -12,6 +12,7 @@
       <el-button v-if="isAdmin" type="warning" class="btn" plain @click="handleSendMsg('notify@all', 'room_at_text')">
         发消息(@all)
       </el-button>
+      <el-button type="warning" plain @click="handleExportXlsx">导出Excel</el-button>
     </div>
   </div>
   <div class="chatroom-table">
@@ -54,10 +55,14 @@
 import { computed, reactive } from 'vue';
 import { Search } from '@element-plus/icons-vue';
 
-import { textIncludes } from '../../utils/tools'
 import type { ChatRoom } from '../../api'
+import { textIncludes, downloadXlsx } from '../../utils/tools'
 
 const props = defineProps({
+  title: {
+    type: String,
+    required: true
+  },
   isAdmin: {
     type: Boolean,
     required: true
@@ -137,6 +142,16 @@ const handleDelete = (index: number) => {
 
   props.delete([item.wxid])
 }
+
+const handleExportXlsx = () => {
+  downloadXlsx(tableData.value, {
+    wxid: 'ID',
+    nickname: '昵称',
+    account: '微信号'
+  }, props.title)
+}
+
+
 </script>
 
 <style lang="scss" scoped>
