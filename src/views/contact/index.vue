@@ -143,26 +143,6 @@ const handlePat = (index: number) => {
 }
 </script>
 
-<style scoped>
-.title {
-  padding-left: 10px;
-  margin-bottom: 20px;
-  box-sizing: border-box;
-}
-
-.search-box {
-  margin-bottom: 20px;
-}
-
-.search-input {
-  width: 200px;
-}
-
-.mr10 {
-  margin-right: 10px;
-}
-
-.btn {
-  margin: 5px;
-}
+<style lang="scss" scoped>
+@import './index.scss';
 </style>

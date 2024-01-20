@@ -8,7 +8,8 @@ import Home from '../views/home.vue'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
-import { checkLogin } from '../api/index'
+import { checkLogin, getUserInfo } from '../api/index'
+import { useUserStore } from '../store/user'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -86,7 +87,15 @@ const redirect = (next: NavigationGuardNext) => next('/injector')
 router.beforeEach(async (to, from, next) => {
   NProgress.start()
 
-  if (to.path != '/injector') {
+  const store = useUserStore()
+
+  const { isLoggedIn } = store
+
+  console.log('isLoggedIn', isLoggedIn)
+
+  if (isLoggedIn) {
+    next()
+  } else {
     try {
       const loginRes = await checkLogin()
 
@@ -99,11 +108,16 @@ router.beforeEach(async (to, from, next) => {
       return
     }
 
-    next()
-    return
-  }
+    const res = await getUserInfo()
 
-  next()
+    if (res.code == 1) {
+      store.setUserInfo(res.data)
+    } else {
+      console.log('获取用户信息失败')
+    }
+
+    next()
+  }
 })
 
 router.afterEach(() => {

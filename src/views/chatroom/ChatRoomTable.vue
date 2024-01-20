@@ -9,7 +9,7 @@
       <el-button type="warning" class="btn" plain @click="handleSendMsg(null, 'room_text')">
         发消息
       </el-button>
-      <el-button type="warning" class="btn" plain @click="handleSendMsg('notify@all', 'room_at_text')">
+      <el-button v-if="isAdmin" type="warning" class="btn" plain @click="handleSendMsg('notify@all', 'room_at_text')">
         发消息(@all)
       </el-button>
     </div>
@@ -30,13 +30,13 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column width="240px" label="操作" align="center">
+      <el-table-column :width="isAdmin ? '240px' : '140px'" label="操作" align="center">
         <template #default="scope">
 
           <el-button type="primary" class="btn" plain @click="handleSendMsg(scope.row.wxid, 'room_at_text')">
             发@消息
           </el-button>
-          <el-button type="danger" class="btn" plain @click="handleDelete(scope.$index)">
+          <el-button v-if="isAdmin" type="danger" class="btn" plain @click="handleDelete(scope.$index)">
             删除
           </el-button>
         </template>
@@ -58,6 +58,10 @@ import { textIncludes } from '../../utils/tools'
 import type { ChatRoom } from '../../api'
 
 const props = defineProps({
+  isAdmin: {
+    type: Boolean,
+    required: true
+  },
   chatroom: {
     type: Object as () => ChatRoom | undefined,
     required: true

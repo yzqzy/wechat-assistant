@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import router from './router'
+import pinia from './store/index'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import App from './App.vue'
 
@@ -17,6 +18,7 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 }
 
 app
+  .use(pinia)
   .use(router)
   .mount('#app')
   .$nextTick(() => {

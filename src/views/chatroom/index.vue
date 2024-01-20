@@ -60,26 +60,28 @@
 
     <el-dialog :title="roomTitle" v-model="roomVisible" width="800px" destroy-on-close :close-on-click-modal="false"
       @close="handleCloseRoom">
-      <chat-room-table :chatroom="memberData" :confirm="handleShowRoomDialog"
+      <chat-room-table :isAdmin="isAdmin" :chatroom="memberData" :confirm="handleShowRoomDialog"
         :delete="handleDeleteMember"></chat-room-table>
     </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts" name="basetable">
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
 
 import ChatRoomForm from './ChatRoomForm.vue';
 import ChatRoomTable from './ChatRoomTable.vue';
 
+import { useUserStore } from '../../store/user'
 import type { Contact, ChatRoom } from '../../api'
 import {
   sendTextMsg, sendAtTextMsg, sendImagesMsg, sendFileMsg, forwardPublicMsg,
   getMemberFromChatRoom, quitChatRoom,
   addMemberToChatRoom, inviteMemberToChatRoom, delMemberFromChatRoom
 } from '../../api';
+
 import { useSearchTable } from './useSearch';
 import { useExport } from './useExport';
 
@@ -93,6 +95,8 @@ const loading = ref(false)
 
 const optMode = ref('') //  'text' or 'room_text' or 'room_at_text' or 'image' or 'file' or 'wx_article' or 'add_member'
 
+const { userInfo } = useUserStore()
+
 const visible = ref(false)
 const roomData = ref<Contact>()
 const contactData = computed(() =>
@@ -101,6 +105,8 @@ const contactData = computed(() =>
 const roomTitle = ref('')
 const roomVisible = ref(false)
 const memberData = ref<ChatRoom>()
+
+const isAdmin = computed(() => userInfo?.wxid === memberData.value?.admin)
 
 const handleExportXlsx = () => exportXlsx(filterData.value)
 
@@ -251,26 +257,6 @@ const handleQuitChatRoom = (index: number) => {
 }
 </script>
 
-<style scoped>
-.title {
-  padding-left: 10px;
-  margin-bottom: 20px;
-  box-sizing: border-box;
-}
-
-.search-box {
-  margin-bottom: 20px;
-}
-
-.search-input {
-  width: 200px;
-}
-
-.mr10 {
-  margin-right: 10px;
-}
-
-.btn {
-  margin: 5px;
-}
+<style lang="scss" scoped>
+@import './index.scss';
 </style>

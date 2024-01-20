@@ -34,19 +34,9 @@
 </template>
 
 <script setup lang="ts" name="dashboard">
-import { ref } from 'vue'
-import { getUserInfo, UserInfo } from '../api/index'
+import { useUserStore } from '../store/user'
 
-const userInfo = ref<UserInfo>()
-
-getUserInfo()
-  .then(res => {
-    if (res.code == 1) {
-      userInfo.value = res.data
-    } else {
-      console.log('获取用户信息失败')
-    }
-  })
+const { userInfo } = useUserStore()
 </script>
 
 <style scoped>
@@ -71,4 +61,4 @@ getUserInfo()
   display: inline-block;
   width: 120px;
 }
-</style>
+</style>../store/user
