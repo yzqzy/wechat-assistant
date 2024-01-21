@@ -2,17 +2,18 @@ name: Build
 
 on:
   push:
-    branches: [main]
+    tags:
+      - 'v*'
     paths-ignore:
-      - "**.md"
-      - "**.spec.js"
-      - ".idea"
-      - ".vscode"
-      - ".dockerignore"
-      - "Dockerfile"
-      - ".gitignore"
-      - ".github/**"
-      - "!.github/workflows/build.yml"
+      - '**.md'
+      - '**.spec.js'
+      - '.idea'
+      - '.vscode'
+      - '.dockerignore'
+      - 'Dockerfile'
+      - '.gitignore'
+      - '.github/**'
+      - '!.github/workflows/build.yml'
 
 jobs:
   build:
@@ -42,6 +43,34 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: release_on_${{ matrix. os }}
+          name: release_on_${{ matrix.os }}
           path: release/
           retention-days: 5
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: release_artifact
+          path: release/
+
+      - name: Create Release and Upload Release Asset
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          tag_name: ${{ github.ref }}
+          name: Release ${{ github.ref }}
+          files: release/
+          body: 'Release on ${{ github.ref }}'
+          prerelease: true
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

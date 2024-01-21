@@ -2,44 +2,35 @@
  * @see https://www.electron.build/configuration/configuration
  */
 {
-  "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
-  "appId": "YourAppID",
-  "asar": true,
-  "productName": "YourAppName",
-  "directories": {
-    "output": "release/${version}"
+  $schema: 'https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json',
+  appId: 'heora',
+  asar: true,
+  productName: 'wechat-assistant',
+  directories: {
+    output: 'release/${version}'
   },
-  "files": [
-    "dist",
-    "dist-electron"
-  ],
-  "mac": {
-    "target": [
-      "dmg"
-    ],
-    "artifactName": "${productName}-Mac-${version}-Installer.${ext}"
+  files: ['dist', 'dist-electron'],
+  mac: {
+    target: ['dmg'],
+    artifactName: '${productName}-Mac-${version}-Installer.${ext}'
   },
-  "win": {
-    "target": [
+  win: {
+    target: [
       {
-        "target": "nsis",
-        "arch": [
-          "x64"
-        ]
+        target: 'nsis',
+        arch: ['x64']
       }
     ],
-    "artifactName": "${productName}-Windows-${version}-Setup.${ext}"
+    artifactName: '${productName}-Windows-${version}-Setup.${ext}'
   },
-  "nsis": {
-    "oneClick": false,
-    "perMachine": false,
-    "allowToChangeInstallationDirectory": true,
-    "deleteAppDataOnUninstall": false
+  nsis: {
+    oneClick: false,
+    perMachine: false,
+    allowToChangeInstallationDirectory: true,
+    deleteAppDataOnUninstall: false
   },
-  "linux": {
-    "target": [
-      "AppImage"
-    ],
-    "artifactName": "${productName}-Linux-${version}.${ext}"
+  linux: {
+    target: ['AppImage'],
+    artifactName: '${productName}-Linux-${version}.${ext}'
   }
 }
