@@ -28,7 +28,7 @@ PC 微信助手，基于 Electron、WeChat Hook 实现。
 
 > 如果你不会使用命令行工具，可以跳过 3,4 步骤，直接运行微信助手客户端。
 
-1. 从 assets-injector 中下载相关文件
+1. 从 [release](https://github.com/yzqzy/wechat-assistant/releases/tag/v0.0.0) 中下载相关文件
 2. 安装 WeChatSetup 3.9.5.81 版本并且登录
 3. 使用 Injector 工具注入 wxhelper.dll 文件
 
@@ -50,7 +50,7 @@ Successfully injected module!
 
 注入成功后，即可正常使用程序。
 
-<img src="https://img.yueluo.club/wechat-assistant/application.png" style="zoom: 50%" />
+<img src="https://img.yueluo.club/wechat-assistant/application_mosaic.png" style="zoom: 50%" />
 
 ## 三、环境配置
 
