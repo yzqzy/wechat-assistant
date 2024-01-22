@@ -7,7 +7,7 @@
   asar: true,
   productName: 'wechat-assistant',
   directories: {
-    output: 'release/${version}'
+    output: 'release'
   },
   files: ['dist', 'dist-electron'],
   mac: {
