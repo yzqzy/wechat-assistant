@@ -58,7 +58,7 @@
   </div>
 </template>
 
-<script setup lang="ts" name="basetable">
+<script setup lang="ts" name="contact">
 import { ref } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';

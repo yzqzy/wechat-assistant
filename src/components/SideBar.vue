@@ -2,12 +2,29 @@
     <div class="sidebar">
         <el-menu class="sidebar-el-menu" :default-active="onRoutes" unique-opened router>
             <template v-for="item in items">
-                <el-menu-item :index="item.index">
-                    <el-icon>
-                        <component :is="item.icon"></component>
-                    </el-icon>
-                    <template #title>{{ item.title }}</template>
-                </el-menu-item>
+                <template v-if="item.subs">
+                    <el-sub-menu :index="item.index" :key="item.index">
+                        <template #title>
+                            <el-icon>
+                                <component :is="item.icon"></component>
+                            </el-icon>
+                            <span>{{ item.title }}</span>
+                        </template>
+                        <template v-for="subItem in item.subs">
+                            <el-menu-item :index="subItem.index">
+                                {{ subItem.title }}
+                            </el-menu-item>
+                        </template>
+                    </el-sub-menu>
+                </template>
+                <template v-else>
+                    <el-menu-item :index="item.index" :key="item.index">
+                        <el-icon>
+                            <component :is="item.icon"></component>
+                        </el-icon>
+                        <template #title>{{ item.title }}</template>
+                    </el-menu-item>
+                </template>
             </template>
         </el-menu>
     </div>
@@ -32,6 +49,17 @@ const items = [
         icon: 'ChatSquare',
         index: '/chatroom',
         title: '群聊管理',
+    },
+    {
+        icon: 'Tools',
+        index: '3',
+        title: '工具集',
+        subs: [
+            {
+                index: '/ocr',
+                title: '图像文字识别',
+            },
+        ]
     },
     {
         icon: 'CoffeeCup',

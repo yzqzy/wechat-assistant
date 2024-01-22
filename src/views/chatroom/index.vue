@@ -66,8 +66,8 @@
   </div>
 </template>
 
-<script setup lang="ts" name="basetable">
-import { ref, computed, watch } from 'vue';
+<script setup lang="ts" name="chatroom">
+import { ref, computed } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
 

@@ -48,6 +48,15 @@ const routes: RouteRecordRaw[] = [
           )
       },
       {
+        path: '/ocr',
+        name: 'OCR',
+        meta: {
+          title: '图像文字识别 - OCR'
+        },
+        component: () =>
+          import(/* webpackChunkName: "ocr" */ '../views/ocr.vue')
+      },
+      {
         path: '/donate',
         name: 'donate',
         meta: {
