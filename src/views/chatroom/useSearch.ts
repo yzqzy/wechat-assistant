@@ -62,22 +62,34 @@ export const useSearchTable = () => {
 
   onMounted(fetchData)
 
-  const lazyFetchMembers = async (members: any[]) => {
+  const lazyFetchMembers = (members: any[]) => {
+    let isAbort = false
+
     const offset = members.findIndex(item => typeof item === 'string')
 
     if (offset === -1) return
 
     let start = offset + 1
 
-    while (start <= members.length - 1) {
-      await delaySync()
+    ;(async () => {
+      while (start <= members.length - 1) {
+        await delaySync()
 
-      const memberIds = members.slice(start, start + initialSize)
-      const memberData = await getMembers(memberIds)
+        if (isAbort) break
 
-      members.splice(start, initialSize, ...memberData)
+        const memberIds = members.slice(start, start + initialSize)
+        const memberData = await getMembers(memberIds)
 
-      start += initialSize
+        members.splice(start, initialSize, ...memberData)
+
+        start += initialSize
+      }
+    })()
+
+    return {
+      abort: () => {
+        isAbort = true
+      }
     }
   }
 

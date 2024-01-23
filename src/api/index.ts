@@ -40,5 +40,7 @@ export interface Contact {
   wxid: string
 }
 
+export interface Room extends Contact {}
+
 export const getContactList = async (): Promise<Result<Contact[]>> =>
   (await request.post('/api/getContactList')).data

@@ -6,10 +6,7 @@
       <el-button type="primary" plain :icon="Search" @click="handleSearch">搜索</el-button>
     </div>
     <div class="mr30">
-      <el-button type="warning" class="btn" plain @click="handleSendMsg(null, 'room_text')">
-        发消息
-      </el-button>
-      <el-button v-if="isAdmin" type="warning" class="btn" plain @click="handleSendMsg('notify@all', 'room_at_text')">
+      <el-button v-if="isAdmin" type="warning" class="btn" plain @click="handleSendMsg('notify@all')">
         发消息(@all)
       </el-button>
       <el-button type="warning" plain @click="handleExportXlsx">导出Excel</el-button>
@@ -34,7 +31,7 @@
       <el-table-column :width="isAdmin ? '240px' : '140px'" label="操作" align="center">
         <template #default="scope">
 
-          <el-button type="primary" class="btn" plain @click="handleSendMsg(scope.row.wxid, 'room_at_text')">
+          <el-button type="primary" class="btn" plain @click="handleSendMsg(scope.row.wxid)">
             发@消息
           </el-button>
           <el-button v-if="isAdmin" type="danger" class="btn" plain @click="handleDelete(scope.$index)">
@@ -125,16 +122,8 @@ const handlePageSizeChange = (pageSize: number) => {
   query.pageSize = pageSize
 }
 
-const handleSendMsg = (wxid: string | null, mode: string) => {
-  let wx_ids: string[] = []
-
-  if (wxid)
-    wx_ids = [wxid]
-
-  props.confirm({
-    mode,
-    wx_ids
-  })
+const handleSendMsg = (wxid: string) => {
+  props.confirm([wxid])
 }
 
 const handleDelete = (index: number) => {

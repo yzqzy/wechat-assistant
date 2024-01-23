@@ -1,7 +1,13 @@
 <template>
+  <!-- 消息类型选择 -->
+  <el-radio-group v-if="multi" class="radio-group" v-model="mode">
+    <el-radio-button v-for="item in modes" :key="item.value" :label="item.value" :name="item.label">{{ item.label
+    }}</el-radio-button>
+  </el-radio-group>
+
   <el-form ref="formRef" label-position="left" :model="form" label-width="120px">
     <!-- 文本消息 -->
-    <el-form-item v-if="mode === 'text' || mode === 'room_text' || mode === 'room_at_text'" label="内容" prop="message">
+    <el-form-item v-if="mode === 'text'" label="内容" prop="message">
       <el-input type="textarea" placeholder="请输入消息内容" v-model="form.message" />
     </el-form-item>
 
@@ -43,18 +49,9 @@
       </el-form-item>
     </template>
 
-    <!-- 添加成员 -->
-    <template v-if="mode === 'add_member'">
-      <el-form-item label="成员" prop="member_id">
-        <el-select v-model="form.member_ids" multiple filterable placeholder="请选择成员">
-          <el-option v-for="item in data" :key="item.wxid" :label="item.nickname" :value="item.wxid" />
-        </el-select>
-      </el-form-item>
-    </template>
-
-    <!-- 操作按钮 -->
+    <!-- 确认按钮 -->
     <el-form-item>
-      <el-button type="primary" @click="saveEdit(formRef)">{{ mode === 'add_member' ? '添加' : '发送' }}</el-button>
+      <el-button type="primary" @click="saveEdit(formRef)">发 送</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -63,17 +60,10 @@
 import { ElMessage, FormInstance, UploadProps, UploadRawFile } from 'element-plus';
 import { ref } from 'vue';
 
-import { Contact } from '../../api';
-
 const props = defineProps({
-  mode: {
-    type: String,
-    required: false,
-    default: 'text' // 'text' or 'room_text' or 'room_at_text' or 'image' or 'file' or 'wx_article' or 'add_member'
-  },
-  data: {
-    type: Array as () => Contact[],
-    required: false
+  multi: {
+    type: Boolean,
+    default: true,
   },
   confirm: {
     type: Function,
@@ -81,9 +71,27 @@ const props = defineProps({
   }
 });
 
-const form = ref({
-  mode: props.mode,
+const modes = ref([
+  {
+    label: '文本消息',
+    value: 'text'
+  },
+  {
+    label: '图片消息',
+    value: 'image'
+  },
+  {
+    label: '文件消息',
+    value: 'file'
+  },
+  {
+    label: '公众号消息',
+    value: 'wx_article'
+  }
+])
+const mode = ref('text');
 
+const form = ref({
   message: '',
   image_url: '',
   file_url: '',
@@ -94,8 +102,6 @@ const form = ref({
   url: '',
   thumb_url: '',
   digest: '',
-
-  member_ids: []
 });
 
 const formRef = ref<FormInstance>();
@@ -103,7 +109,10 @@ const saveEdit = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   formEl.validate(valid => {
     if (!valid) return false;
-    props.confirm(form.value);
+    props.confirm({
+      mode: mode.value,
+      ...form.value
+    });
   });
 };
 
@@ -141,6 +150,10 @@ const beforeFileUpload: UploadProps['beforeUpload'] = rawFile => {
 </script>
 
 <style lang="scss">
+.radio-group {
+  margin-bottom: 30px;
+}
+
 .el-upload {
   border: 1px dashed var(--el-border-color);
   border-radius: 6px;

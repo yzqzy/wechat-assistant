@@ -20,27 +20,16 @@
               <el-button type="success" class="btn" plain @click="handleViewDetail(scope.$index)">
                 查看群成员
               </el-button>
-              <el-button type="info" class="btn" plain @click="handleShowDialog(scope.$index, 'add_member')">
-                邀请成员
+              <el-button type="success" class="btn" plain @click="handleShowMemberDialog(scope.$index)">
+                添加成员
               </el-button>
             </div>
             <div>
-              <el-button type="warning" class="btn" plain @click="handleShowDialog(scope.$index, 'image')">
-                发图片
-              </el-button>
-              <el-button type="warning" class="btn" plain @click="handleShowDialog(scope.$index, 'file')">
-                发文件
+              <el-button type="primary" class="btn" plain @click="handleShowDialog(scope.$index)">
+                发消息
               </el-button>
               <el-button type="danger" class="btn" plain @click="handleQuitChatRoom(scope.$index)">
                 退出群聊
-              </el-button>
-            </div>
-            <div>
-              <el-button type="primary" class="btn" plain @click="handleShowDialog(scope.$index, 'text')">
-                发消息
-              </el-button>
-              <el-button type="primary" class="btn" plain @click="handleShowDialog(scope.$index, 'wx_article')">
-                发公众号消息
               </el-button>
             </div>
           </template>
@@ -53,14 +42,19 @@
       </div>
     </div>
 
-    <el-dialog :title="optMode == 'add_member' ? '添加成员' : '编辑消息'" v-model="visible" width="500px" destroy-on-close
-      :close-on-click-modal="false" @close="visible = false">
-      <chat-room-form :mode="optMode" :data="contactData" :confirm="handleConfirm"></chat-room-form>
+    <el-dialog title="编辑消息" v-model="visible" width="500px" destroy-on-close :close-on-click-modal="false"
+      @close="handleCloseDialog">
+      <message-form :multi="!isAtMode" :confirm="handleConfirm"></message-form>
+    </el-dialog>
+
+    <el-dialog title="添加成员" v-model="memberVisible" width="500px" destroy-on-close :close-on-click-modal="false"
+      @close="handleCloseMemberDialog">
+      <chat-member-form :data="contactData" :confirm="handleAddMember"></chat-member-form>
     </el-dialog>
 
     <el-dialog :title="roomTitle" v-model="roomVisible" width="800px" destroy-on-close :close-on-click-modal="false"
       @close="handleCloseRoom">
-      <chat-room-table :title="roomTitle" :isAdmin="isAdmin" :chatroom="memberData" :confirm="handleShowRoomDialog"
+      <chat-room-table :title="roomTitle" :isAdmin="isAdmin" :chatroom="roomMemberData" :confirm="handleShowAtDialog"
         :delete="handleDeleteMember"></chat-room-table>
     </el-dialog>
   </div>
@@ -71,11 +65,12 @@ import { ref, computed } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
 
-import ChatRoomForm from './ChatRoomForm.vue';
+import MessageForm from '../../components/MessageForm.vue';
+import ChatMemberForm from './ChatMemberForm.vue';
 import ChatRoomTable from './ChatRoomTable.vue';
 
 import { useUserStore } from '../../store/user'
-import type { Contact, ChatRoom } from '../../api'
+import type { Room, ChatRoom } from '../../api'
 import {
   sendTextMsg, sendAtTextMsg, sendImagesMsg, sendFileMsg, forwardPublicMsg,
   getMemberFromChatRoom, quitChatRoom,
@@ -93,73 +88,80 @@ const { exportXlsx } = useExport()
 
 const loading = ref(false)
 
-const optMode = ref('') //  'text' or 'room_text' or 'room_at_text' or 'image' or 'file' or 'wx_article' or 'add_member'
-
 const { userInfo } = useUserStore()
+const isAdmin = computed(() => userInfo?.wxid === roomMemberData.value?.admin)
+
+const isAtMode = ref(false)
+const atWxIds = ref<string[]>([])
 
 const visible = ref(false)
-const roomData = ref<Contact>()
-const contactData = computed(() =>
-  allTableData.value.filter((item) => !(item.wxid.includes('chatroom') || /^gh_/.test(item.wxid))))
+const memberVisible = ref(false)
+const roomVisible = ref(false)
 
 const roomTitle = ref('')
-const roomVisible = ref(false)
-const memberData = ref<ChatRoom>()
-
-const isAdmin = computed(() => userInfo?.wxid === memberData.value?.admin)
+const roomData = ref<Room>()
+const contactData = computed(() =>
+  allTableData.value.filter((item) => !(item.wxid.includes('chatroom') || /^gh_/.test(item.wxid))))
+const roomMemberData = ref<ChatRoom>()
 
 const handleExportXlsx = () => exportXlsx(filterData.value)
 
-const handleShowDialog = (index: number, mode: string) => {
-  optMode.value = mode;
+const handleShowDialog = (index: number) => {
   roomData.value = tableData.value[index];
   visible.value = true;
 }
-const handleShowRoomDialog = (item: { mode: string, wx_ids: string[] }) => {
-  optMode.value = item.mode;
-  roomData.value = {
-    wxid: item.wx_ids.join(','),
-  } as any;
+const handleShowMemberDialog = (index: number) => {
+  roomData.value = tableData.value[index];
+  memberVisible.value = true;
+}
+const handleShowAtDialog = (wx_ids: string[]) => {
+  isAtMode.value = true
+  atWxIds.value = wx_ids
   visible.value = true;
 }
 
+const lazyFetchController = ref()
+
 const handleViewDetail = async (index: number) => {
   try {
-    const contact = tableData.value[index]
-    const chatroom = await getMemberFromChatRoom(contact.wxid, initialSize)
+    const room = tableData.value[index]
+    const chatroom = await getMemberFromChatRoom(room.wxid, initialSize)
 
     if (!chatroom) {
       ElMessage.error('查看详情失败');
       return
     }
 
-    roomTitle.value = `成员列表 - ${contact.nickname}` +
+    roomTitle.value = `成员列表 - ${room.nickname}` +
       `${chatroom.adminNickname && `(${chatroom.adminNickname})`}`
 
-    memberData.value = chatroom
+    roomData.value = room
+    roomMemberData.value = chatroom
     roomVisible.value = true
 
-    lazyFetchMembers(chatroom.members)
+    lazyFetchController.value = lazyFetchMembers(chatroom.members)
   } catch (error) { }
 }
 
-const tableReset = () => {
-  memberData.value = undefined;
+const handleCloseRoom = () => {
+  if (lazyFetchController.value) {
+    lazyFetchController.value.abort()
+    lazyFetchController.value = undefined
+  }
+
+  roomMemberData.value = undefined;
   roomVisible.value = false;
 }
-
-const handleCloseRoom = tableReset
-
 const handleDeleteMember = async (wx_ids: string[]) => {
   ElMessageBox.confirm('确定要删除该成员吗？', '提示', {
     type: 'warning'
   })
     .then(async () => {
-      if (!memberData.value) return
+      if (!roomMemberData.value) return
 
       loading.value = true;
 
-      const res = await delMemberFromChatRoom(memberData.value.chatRoomId, wx_ids)
+      const res = await delMemberFromChatRoom(roomMemberData.value.chatRoomId, wx_ids)
 
       if (res.code > 0) {
         ElMessage.success('删除成功');
@@ -168,16 +170,50 @@ const handleDeleteMember = async (wx_ids: string[]) => {
       }
 
       loading.value = false;
-      tableReset()
+      handleCloseRoom()
     })
     .catch(() => { });
 }
 
-const formReset = () => {
+
+const handleCloseMemberDialog = () => {
+  roomData.value = undefined;
+  memberVisible.value = false;
+}
+const handleAddMember = async (data: any) => {
+  if (!roomData.value) return
+
+  let res: any;
+  let successMsg = '发送成功'
+  let errorMsg = '发送失败'
+
+  const chatroom = await getMemberFromChatRoom(roomData.value.wxid, initialSize, false)
+
+  if (chatroom && chatroom.members.length >= 40) {
+    successMsg = '邀请成功'
+    errorMsg = '邀请失败'
+    res = await inviteMemberToChatRoom(roomData.value.wxid, data.member_ids)
+  } else {
+    successMsg = '添加成功'
+    errorMsg = '添加失败'
+    res = await addMemberToChatRoom(roomData.value.wxid, data.member_ids)
+  }
+
+  if (res.code >= 1) {
+    ElMessage.success(successMsg);
+  } else {
+    ElMessage.error(errorMsg);
+  }
+
+  handleCloseMemberDialog()
+}
+
+const handleCloseDialog = () => {
+  isAtMode.value = false
+  atWxIds.value = []
   roomData.value = undefined;
   visible.value = false;
 }
-
 const handleConfirm = async (data: any) => {
   if (!roomData.value) return
 
@@ -186,7 +222,15 @@ const handleConfirm = async (data: any) => {
   let errorMsg = '发送失败'
 
   if (data.mode === 'text') {
-    res = await sendTextMsg(roomData.value.wxid, data.message)
+    if (isAtMode.value) {
+      res = await sendAtTextMsg(
+        roomData.value.wxid,
+        atWxIds.value,
+        data.message
+      )
+    } else {
+      res = await sendTextMsg(roomData.value.wxid, data.message)
+    }
   } else if (data.mode === 'image') {
     res = await sendImagesMsg(roomData.value.wxid, data.image_url)
   } else if (data.mode === 'file') {
@@ -199,27 +243,6 @@ const handleConfirm = async (data: any) => {
       thumbUrl: data.thumb_url,
       digest: data.digest
     })
-  } else if (data.mode === 'add_member') {
-    const chatroom = await getMemberFromChatRoom(roomData.value.wxid, initialSize, false)
-    if (chatroom && chatroom.members.length >= 40) {
-      successMsg = '邀请成功'
-      errorMsg = '邀请失败'
-      res = await inviteMemberToChatRoom(roomData.value.wxid, data.member_ids)
-    } else {
-      successMsg = '添加成功'
-      errorMsg = '添加失败'
-      res = await addMemberToChatRoom(roomData.value.wxid, data.member_ids)
-    }
-  } else if (memberData.value) {
-    if (data.mode === 'room_text') {
-      res = await sendTextMsg(memberData.value.chatRoomId, data.message)
-    } else if (data.mode === 'room_at_text') {
-      res = await sendAtTextMsg(
-        memberData.value.chatRoomId,
-        roomData.value.wxid.split(','),
-        data.message
-      )
-    }
   }
 
   if (res.code >= 1) {
@@ -228,7 +251,7 @@ const handleConfirm = async (data: any) => {
     ElMessage.error(errorMsg);
   }
 
-  formReset()
+  handleCloseDialog()
 }
 
 const handleQuitChatRoom = (index: number) => {

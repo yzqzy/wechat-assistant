@@ -42,7 +42,7 @@
 
     <el-dialog title="编辑消息" v-model="visible" width="500px" destroy-on-close :close-on-click-modal="false"
       @close="visible = false">
-      <contact-form :confirm="handleConfirm"></contact-form>
+      <message-form :confirm="handleConfirm"></message-form>
     </el-dialog>
   </div>
 </template>
@@ -52,7 +52,7 @@ import { ref } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
 
-import ContactForm from './ContactForm.vue';
+import MessageForm from '../../components/MessageForm.vue';
 
 import type { Contact } from '../../api'
 import { sendPatMsg, sendTextMsg, sendImagesMsg, sendFileMsg, forwardPublicMsg } from '../../api';
@@ -65,6 +65,8 @@ const {
 } = useSearchTable()
 const { exportXlsx } = useExport()
 
+const handleExportXlsx = () => exportXlsx(filterData.value)
+
 const visible = ref(false)
 const contactData = ref<Contact>()
 
@@ -72,8 +74,6 @@ const reset = () => {
   contactData.value = undefined;
   visible.value = false;
 }
-
-const handleExportXlsx = () => exportXlsx(filterData.value)
 
 const handleShowDialog = (index: number) => {
   contactData.value = tableData.value[index];
