@@ -149,37 +149,9 @@ const beforeFileUpload: UploadProps['beforeUpload'] = rawFile => {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .radio-group {
   margin-bottom: 30px;
-}
-
-.el-upload {
-  border: 1px dashed var(--el-border-color);
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: var(--el-transition-duration-fast);
-
-  &:hover {
-    border-color: var(--el-color-primary);
-  }
-}
-
-.avatar-uploader {
-  .avatar {
-    width: 138px;
-    height: 138px;
-  }
-}
-
-.el-icon.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 138px;
-  height: 138px;
-  text-align: center;
 }
 
 .file-uploader {

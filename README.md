@@ -7,18 +7,22 @@ PC 微信助手，基于 Electron、WeChat Hook 实现。
 ## 一、功能一览
 
 - 联系人管理
-  *	[x] 发送 “文本、图片、文件、公众号” 消息
-  *	[x] 查看联系人列表、导出联系人列表
   * [x] 拍一拍
+  *	[x] 发送 “文本、图片、文件、公众号” 消息
+  * [x] 支持群发消息
+  *	[x] 查看联系人列表、导出联系人列表
+
 - 群聊管理
   *	[x] 发送 “文本、图片、文件、公众号、“@群成员、@全体” 消息
+  * [x] 支持群发消息
   *	[x] 查看群聊列表、导出群聊列表
   *	[x] 查看群成员列表、导出群成员列表
   * [x] 邀请成员、退出群聊、删除成员
 - 其他功能
   * [ ] OCR 文字识别
-  * [ ] 天气定时推送
-  * [ ] 消息备份、防撤回
+  * [ ] 天气推送
+  * [ ] 消息备份
+  * [ ] ...
 
 ## 二、使用说明
 
@@ -26,20 +30,14 @@ PC 微信助手，基于 Electron、WeChat Hook 实现。
 
 需要特定的微信版本和dll才能使 windows hook 工作。
 
-> 如果你不会使用命令行工具，可以跳过 3,4 步骤，直接运行微信助手客户端。
+> 如果你不会使用命令行工具，可以跳过 3 步骤，直接运行微信助手客户端。
 
 1. 从 [release](https://github.com/yzqzy/wechat-assistant/releases/tag/v0.0.0) 中下载相关文件
 2. 安装 WeChatSetup 3.9.5.81 版本并且登录
-3. 使用 Injector 工具注入 wxhelper.dll 文件
+3. 使用 Injector 工具进行注入，如果成功的话你将会看到: `Successfully injected module!`
 
 ```bash
 .\Injector.exe --process-name WeChat.exe --inject .\wxhelper.dll
-```
-
-4. 如果成功的话你将会看到: 
-
-```bash
-Successfully injected module!
 ```
 
 ### 2. 安装运行微信助手
