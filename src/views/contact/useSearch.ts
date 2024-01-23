@@ -17,7 +17,8 @@ export const useSearchTable = () => {
     return allTableData.value.filter(item => {
       return (
         textIncludes(item.nickname, keyword) ||
-        textIncludes(item.customAccount, keyword)
+        textIncludes(item.customAccount, keyword) ||
+        textIncludes(item.wxid, keyword)
       )
     })
   })

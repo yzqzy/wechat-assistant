@@ -1,4 +1,9 @@
 <template>
+  <el-radio-group class="radio-group" v-model="mode">
+    <el-radio-button v-for="item in modes" :key="item.value" :label="item.value" :name="item.label">{{ item.label
+    }}</el-radio-button>
+  </el-radio-group>
+
   <el-form ref="formRef" label-position="left" :model="form" label-width="120px">
     <!-- 文本消息 -->
     <el-form-item v-if="mode === 'text'" label="内容" prop="message">
@@ -55,20 +60,33 @@ import { ElMessage, FormInstance, UploadProps, UploadRawFile } from 'element-plu
 import { ref } from 'vue';
 
 const props = defineProps({
-  mode: {
-    type: String,
-    required: false,
-    default: 'text' // 'text' or 'image' or 'file' or 'wx_article'
-  },
   confirm: {
     type: Function,
     required: true
   }
 });
 
-const form = ref({
-  mode: props.mode,
+const modes = ref([
+  {
+    label: '文本消息',
+    value: 'text'
+  },
+  {
+    label: '图片消息',
+    value: 'image'
+  },
+  {
+    label: '文件消息',
+    value: 'file'
+  },
+  {
+    label: '公众号消息',
+    value: 'wx_article'
+  }
+])
+const mode = ref('text');
 
+const form = ref({
   message: '',
   image_url: '',
   file_url: '',
@@ -86,7 +104,10 @@ const saveEdit = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   formEl.validate(valid => {
     if (!valid) return false;
-    props.confirm(form.value);
+    props.confirm({
+      mode: mode.value,
+      ...form.value
+    });
   });
 };
 
@@ -124,6 +145,10 @@ const beforeFileUpload: UploadProps['beforeUpload'] = rawFile => {
 </script>
 
 <style lang="scss">
+.radio-group {
+  margin-bottom: 30px;
+}
+
 .el-upload {
   border: 1px dashed var(--el-border-color);
   border-radius: 6px;

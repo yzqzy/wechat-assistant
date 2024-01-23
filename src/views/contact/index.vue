@@ -5,7 +5,7 @@
     </div>
     <div class="container">
       <div class="search-box">
-        <el-input v-model="query.keyword" placeholder="请输入昵称或微信号" class="search-input mr10" clearable></el-input>
+        <el-input v-model="query.keyword" placeholder="请输入ID/昵称/微信号" class="search-input mr10" clearable></el-input>
         <el-button type="primary" plain :icon="Search" @click="handleSearch">搜索</el-button>
         <el-button type="warning" plain @click="handleExportXlsx">导出Excel</el-button>
       </div>
@@ -26,19 +26,8 @@
                 type="info" plain @click="handlePat(scope.$index)">
                 拍一拍
               </el-button>
-              <el-button type="warning" class="btn" plain @click="handleShowDialog(scope.$index, 'image')">
-                发图片
-              </el-button>
-              <el-button type="warning" class="btn" plain @click="handleShowDialog(scope.$index, 'file')">
-                发文件
-              </el-button>
-            </div>
-            <div>
               <el-button type="primary" class="btn" plain @click="handleShowDialog(scope.$index)">
                 发消息
-              </el-button>
-              <el-button type="primary" class="btn" plain @click="handleShowDialog(scope.$index, 'wx_article')">
-                发公众号消息
               </el-button>
             </div>
           </template>
@@ -53,7 +42,7 @@
 
     <el-dialog title="编辑消息" v-model="visible" width="500px" destroy-on-close :close-on-click-modal="false"
       @close="visible = false">
-      <contact-form :mode="optMode" :confirm="handleConfirm"></contact-form>
+      <contact-form :confirm="handleConfirm"></contact-form>
     </el-dialog>
   </div>
 </template>
@@ -77,7 +66,6 @@ const {
 const { exportXlsx } = useExport()
 
 const visible = ref(false)
-const optMode = ref('text') // 'text' or 'image' or 'file' or 'wx_article'
 const contactData = ref<Contact>()
 
 const reset = () => {
@@ -87,8 +75,7 @@ const reset = () => {
 
 const handleExportXlsx = () => exportXlsx(filterData.value)
 
-const handleShowDialog = (index: number, mode = 'text') => {
-  optMode.value = mode;
+const handleShowDialog = (index: number) => {
   contactData.value = tableData.value[index];
   visible.value = true;
 }
