@@ -4,12 +4,45 @@
       <h2>联系人列表</h2>
     </div>
     <div class="container">
+      <!-- 搜索区域 -->
       <div class="search-box">
         <el-input v-model="query.keyword" placeholder="请输入ID/昵称/微信号" class="search-input mr10" clearable></el-input>
         <el-button type="primary" plain :icon="Search" @click="handleSearch">搜索</el-button>
         <el-button type="warning" plain @click="handleExportXlsx">导出Excel</el-button>
       </div>
-      <el-table :data="tableData" height="70vh" class="table" header-cell-class-name="table-header">
+
+      <!-- 选择区域 -->
+      <div class="selection-box">
+        <div>
+          已选择：<span class="selected-count">{{ multipleSelection.length }}</span>
+          <template v-if="multipleSelection.length">
+            <el-button type="primary" size="small" class="btn" plain @click="handleShowDialog('multiple')">
+              发消息
+            </el-button>
+            <el-button type="danger" size="small" class="btn" plain @click="handleClearSelection">
+              清空
+            </el-button>
+          </template>
+        </div>
+        <div class="selected-content">
+          <div class="selected-item" v-for="(item, index) in multipleSelection" :key="index"
+            @click="handleRemoverSeclection(index)">
+            <div class="info">
+              <span>{{ item.nickname }}</span>
+              <el-icon :size="18" class="icon">
+                <CircleClose />
+              </el-icon>
+              <span v-if="index !== multipleSelection.length - 1">、</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 表格区域 -->
+      <el-table v-loading="loading" ref="multipleTableRef" :data="tableData" height="70vh" class="table"
+        header-cell-class-name="table-header" @selection-change="handleSelectionChange" @select="handleSelectionRowChange"
+        @select-all="handleSelectionAllChange">
+        <el-table-column type="selection" width="55" />
         <el-table-column prop="wxid" label="ID" width="220"></el-table-column>
         <el-table-column prop="nickname" label="昵称" align="center"></el-table-column>
         <el-table-column prop="customAccount" label="微信号" align="center">
@@ -40,6 +73,7 @@
       </div>
     </div>
 
+    <!-- 弹窗区域 -->
     <el-dialog title="编辑消息" v-model="visible" width="500px" destroy-on-close :close-on-click-modal="false"
       @close="visible = false">
       <message-form :confirm="handleConfirm"></message-form>
@@ -49,15 +83,16 @@
 
 <script setup lang="ts" name="contact">
 import { ref } from 'vue';
-import { ElMessage, ElMessageBox } from 'element-plus';
+import { ElMessage, ElMessageBox, ElTable } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
 
-import MessageForm from '../../components/MessageForm.vue';
+import MessageForm from '../../components/service/MessageForm.vue';
 
 import type { Contact } from '../../api'
 import { sendPatMsg, sendTextMsg, sendImagesMsg, sendFileMsg, forwardPublicMsg } from '../../api';
 import { useSearchTable } from './useSearch';
 import { useExport } from './useExport';
+import { delaySync, getRandomInt } from '../../utils/tools';
 
 const {
   query, pageTotal, tableData, filterData,
@@ -67,38 +102,67 @@ const { exportXlsx } = useExport()
 
 const handleExportXlsx = () => exportXlsx(filterData.value)
 
+const loading = ref(false)
+
 const visible = ref(false)
+const isMultiple = ref(false)
 const contactData = ref<Contact>()
 
+const multipleSelection = ref<Contact[]>([])
+const multipleTableRef = ref<InstanceType<typeof ElTable>>()
+
 const reset = () => {
+  handleClearSelection()
   contactData.value = undefined;
+  isMultiple.value = false;
   visible.value = false;
+  loading.value = false;
 }
 
-const handleShowDialog = (index: number) => {
-  contactData.value = tableData.value[index];
+const handleShowDialog = (index: number | string) => {
+  if (typeof index === 'number') {
+    contactData.value = tableData.value[index];
+  } else {
+    isMultiple.value = true;
+  }
   visible.value = true;
 }
 
 const handleConfirm = async (data: any) => {
-  if (!contactData.value) return
+  if (!contactData.value && (isMultiple.value && multipleSelection.value.length === 0)) return
+
+  const wx_ids = isMultiple.value ? multipleSelection.value.map(item => item.wxid) : [contactData.value && contactData.value.wxid]
 
   let res: any;
 
-  if (data.mode === 'text') {
-    res = await sendTextMsg(contactData.value.wxid, data.message)
-  } else if (data.mode === 'image') {
-    res = await sendImagesMsg(contactData.value.wxid, data.image_url)
-  } else if (data.mode === 'file') {
-    res = await sendFileMsg(contactData.value.wxid, data.file_url)
-  } else if (data.mode === 'wx_article') {
-    res = await forwardPublicMsg({
-      wxid: contactData.value.wxid,
-      title: data.title,
-      url: data.url,
-      thumbUrl: data.thumb_url,
-      digest: data.digest
-    })
+  const send = async (wxid: string) => {
+    if (data.mode === 'text') {
+      res = await sendTextMsg(wxid, data.message)
+    } else if (data.mode === 'image') {
+      res = await sendImagesMsg(wxid, data.image_url)
+    } else if (data.mode === 'file') {
+      res = await sendFileMsg(wxid, data.file_url)
+    } else if (data.mode === 'wx_article') {
+      res = await forwardPublicMsg({
+        wxid,
+        title: data.title,
+        url: data.url,
+        thumbUrl: data.thumb_url,
+        digest: data.digest
+      })
+    }
+  }
+
+  if (wx_ids.length > 2)
+    loading.value = true
+
+  while (wx_ids.length) {
+    const wxid = wx_ids.shift() as string
+
+    if (wxid)
+      await send(wxid)
+
+    await delaySync(getRandomInt(3, 15) * 10)
   }
 
   if (res.code === 1) {
@@ -127,6 +191,34 @@ const handlePat = (index: number) => {
       ElMessage.error('拍一拍失败');
     })
     .catch(() => { });
+}
+
+const handleSelectionAllChange = (selection: Contact[]) => {
+  if (selection.length != 0) return
+
+  for (const item of tableData.value) {
+    handleSelectionRowChange([], item)
+  }
+}
+const handleSelectionRowChange = (contact: Contact[], row: Contact) => {
+  const isDelete = contact.every(item => item.wxid !== row.wxid)
+  if (!isDelete) return
+  const index = multipleSelection.value.findIndex(item => item.wxid === row.wxid)
+  if (index === -1) return
+  handleRemoverSeclection(index)
+}
+const handleSelectionChange = (contact: Contact[]) => {
+  if (contact.length === 0) return
+  multipleSelection.value = [...new Set(contact.concat(multipleSelection.value))]
+}
+const handleRemoverSeclection = (index: number) => {
+  const row = multipleSelection.value[index]
+  multipleTableRef.value!.toggleRowSelection(row, false)
+  multipleSelection.value.splice(index, 1)
+}
+const handleClearSelection = () => {
+  multipleTableRef.value!.clearSelection()
+  multipleSelection.value = []
 }
 </script>
 

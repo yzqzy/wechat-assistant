@@ -14,7 +14,7 @@
           </el-icon>
         </el-upload>
       </div>
-      <div class="result-board">
+      <div class="result-box">
         <div>识别结果:</div>
         <div class="result">
           <p v-html="result"></p>
@@ -84,7 +84,7 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = rawFile => {
   box-sizing: border-box;
 }
 
-.result-board {
+.result-box {
   padding: 20px 0;
 
   div {

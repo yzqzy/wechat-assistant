@@ -49,7 +49,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive } from 'vue';
+import { PropType, computed, reactive } from 'vue';
 import { Search } from '@element-plus/icons-vue';
 
 import type { ChatRoom } from '../../api'
@@ -65,7 +65,7 @@ const props = defineProps({
     required: true
   },
   chatroom: {
-    type: Object as () => ChatRoom | undefined,
+    type: Object as PropType<ChatRoom | undefined>,
     required: true
   },
   confirm: {

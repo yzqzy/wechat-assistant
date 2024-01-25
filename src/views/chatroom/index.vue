@@ -65,7 +65,7 @@ import { ref, computed } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
 
-import MessageForm from '../../components/MessageForm.vue';
+import MessageForm from '../../components/service/MessageForm.vue';
 import ChatMemberForm from './ChatMemberForm.vue';
 import ChatRoomTable from './ChatRoomTable.vue';
 

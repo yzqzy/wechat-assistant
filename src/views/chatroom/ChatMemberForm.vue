@@ -16,13 +16,13 @@
 
 <script lang="ts" setup>
 import { FormInstance } from 'element-plus';
-import { ref } from 'vue';
+import { PropType, ref } from 'vue';
 
 import { Contact } from '../../api';
 
 const props = defineProps({
   data: {
-    type: Array as () => Contact[],
+    type: Array as PropType<Contact[]>,
     required: false
   },
   confirm: {

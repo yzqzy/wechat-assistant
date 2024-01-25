@@ -7,6 +7,7 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    ContactSection: typeof import('./src/components/service/ContactSection/index.vue')['default']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCol: typeof import('element-plus/es')['ElCol']
@@ -29,11 +30,13 @@ declare module 'vue' {
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ElUpload: typeof import('element-plus/es')['ElUpload']
-    Header: typeof import('./src/components/Header.vue')['default']
-    MessageForm: typeof import('./src/components/MessageForm.vue')['default']
+    Header: typeof import('./src/components/layout/Header.vue')['default']
+    MessageForm: typeof import('./src/components/service/MessageForm.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    SideBar: typeof import('./src/components/SideBar.vue')['default']
+    Section: typeof import('./src/components/service/ContactSection/Section.vue')['default']
+    Service: typeof import('./src/components/service/index.vue')['default']
+    SideBar: typeof import('./src/components/layout/SideBar.vue')['default']
   }
   export interface ComponentCustomProperties {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']

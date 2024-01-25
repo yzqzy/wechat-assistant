@@ -21,5 +21,8 @@ export const downloadXlsx = (data: any, fieds: any, fileName: string) => {
 export const textIncludes = (v1: string, v2: string) =>
   v1.toLocaleLowerCase().includes(v2.toLocaleLowerCase())
 
+export const getRandomInt = (start: number, end: number) =>
+  Math.floor(Math.random() * (end - start + 1) + start)
+
 export const delaySync = (ms: number = 600) =>
   new Promise(resolve => setTimeout(resolve, ms))
