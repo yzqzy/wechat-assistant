@@ -8,35 +8,6 @@
   margin-bottom: 20px;
 }
 
-.selection-box {
-  margin-bottom: 20px;
-  font-size: 14px;
-
-  .selected-count {
-    margin-right: 10px;
-  }
-
-  .selected-content {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    margin-top: 5px;
-
-    .selected-item {
-      .info {
-        line-height: 24px;
-
-        .icon {
-          margin-left: 2px;
-          vertical-align: middle;
-          cursor: pointer;
-        }
-      }
-    }
-  }
-
-}
-
 .search-input {
   width: 200px;
 }

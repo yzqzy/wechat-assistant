@@ -12,31 +12,9 @@
       </div>
 
       <!-- 选择区域 -->
-      <div class="selection-box">
-        <div>
-          已选择：<span class="selected-count">{{ multipleSelection.length }}</span>
-          <template v-if="multipleSelection.length">
-            <el-button type="primary" size="small" class="btn" plain @click="handleShowDialog('multiple')">
-              发消息
-            </el-button>
-            <el-button type="danger" size="small" class="btn" plain @click="handleClearSelection">
-              清空
-            </el-button>
-          </template>
-        </div>
-        <div class="selected-content">
-          <div class="selected-item" v-for="(item, index) in multipleSelection" :key="index"
-            @click="handleRemoverSeclection(index)">
-            <div class="info">
-              <span>{{ item.nickname }}</span>
-              <el-icon :size="18" class="icon">
-                <CircleClose />
-              </el-icon>
-              <span v-if="index !== multipleSelection.length - 1">、</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <contact-section :data="tableData" :multiple-selection="multipleSelection" :handle-show-dialog="handleShowDialog"
+        :handle-clear-selection="handleClearSelection"
+        :handle-remover-seclection="handleRemoverSeclection"></contact-section>
 
       <!-- 表格区域 -->
       <el-table v-loading="loading" ref="multipleTableRef" :data="tableData" height="70vh" class="table"
@@ -86,18 +64,27 @@ import { ref } from 'vue';
 import { ElMessage, ElMessageBox, ElTable } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
 
+import ContactSection from '../../components/service/ContactSection/Section.vue'
 import MessageForm from '../../components/service/MessageForm.vue';
 
 import type { Contact } from '../../api'
 import { sendPatMsg, sendTextMsg, sendImagesMsg, sendFileMsg, forwardPublicMsg } from '../../api';
+import { delaySync, getRandomInt } from '../../utils/tools';
+
+import { useSection } from '../../components/service/ContactSection/useSection'
 import { useSearchTable } from './useSearch';
 import { useExport } from './useExport';
-import { delaySync, getRandomInt } from '../../utils/tools';
 
 const {
   query, pageTotal, tableData, filterData,
   handleSearch, handlePageSizeChange, handlePageChange
 } = useSearchTable()
+const {
+  multipleTableRef, multipleSelection,
+  handleSelectionChange, handleSelectionRowChange, handleSelectionAllChange,
+  handleRemoverSeclection, handleClearSelection
+} = useSection({ tableData })
+
 const { exportXlsx } = useExport()
 
 const handleExportXlsx = () => exportXlsx(filterData.value)
@@ -108,8 +95,6 @@ const visible = ref(false)
 const isMultiple = ref(false)
 const contactData = ref<Contact>()
 
-const multipleSelection = ref<Contact[]>([])
-const multipleTableRef = ref<InstanceType<typeof ElTable>>()
 
 const reset = () => {
   handleClearSelection()
@@ -193,33 +178,7 @@ const handlePat = (index: number) => {
     .catch(() => { });
 }
 
-const handleSelectionAllChange = (selection: Contact[]) => {
-  if (selection.length != 0) return
 
-  for (const item of tableData.value) {
-    handleSelectionRowChange([], item)
-  }
-}
-const handleSelectionRowChange = (contact: Contact[], row: Contact) => {
-  const isDelete = contact.every(item => item.wxid !== row.wxid)
-  if (!isDelete) return
-  const index = multipleSelection.value.findIndex(item => item.wxid === row.wxid)
-  if (index === -1) return
-  handleRemoverSeclection(index)
-}
-const handleSelectionChange = (contact: Contact[]) => {
-  if (contact.length === 0) return
-  multipleSelection.value = [...new Set(contact.concat(multipleSelection.value))]
-}
-const handleRemoverSeclection = (index: number) => {
-  const row = multipleSelection.value[index]
-  multipleTableRef.value!.toggleRowSelection(row, false)
-  multipleSelection.value.splice(index, 1)
-}
-const handleClearSelection = () => {
-  multipleTableRef.value!.clearSelection()
-  multipleSelection.value = []
-}
 </script>
 
 <style lang="scss" scoped>
