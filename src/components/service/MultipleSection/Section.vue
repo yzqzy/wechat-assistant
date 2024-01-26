@@ -31,7 +31,7 @@ import type { Contact, Room } from '../../../api'
 
 defineProps<{
   multipleSelection: T[],
-  handleShowDialog: (type: string) => void,
+  handleShowDialog: (action: string | number) => void,
   handleClearSelection: () => void,
   handleRemoverSeclection: (index: number) => void
 }>();
@@ -43,7 +43,7 @@ defineProps<{
   font-size: 14px;
 
   .selected-count {
-    margin-right: 10px;
+    margin-right: 15px;
   }
 
   .selected-content {

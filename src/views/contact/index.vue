@@ -64,14 +64,14 @@ import { ref } from 'vue';
 import { ElMessage, ElMessageBox, ElTable } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
 
-import ContactSection from '../../components/service/ContactSection/Section.vue'
+import ContactSection from '../../components/service/MultipleSection/Section.vue';
 import MessageForm from '../../components/service/MessageForm.vue';
 
 import type { Contact } from '../../api'
 import { sendPatMsg, sendTextMsg, sendImagesMsg, sendFileMsg, forwardPublicMsg } from '../../api';
 import { delaySync, getRandomInt } from '../../utils/tools';
 
-import { useSection } from '../../components/service/ContactSection/useSection'
+import { useSection } from '../../components/service/MultipleSection/useSection'
 import { useSearchTable } from './useSearch';
 import { useExport } from './useExport';
 
@@ -104,9 +104,9 @@ const reset = () => {
   loading.value = false;
 }
 
-const handleShowDialog = (index: number | string) => {
-  if (typeof index === 'number') {
-    contactData.value = tableData.value[index];
+const handleShowDialog = (action: number | string) => {
+  if (typeof action === 'number') {
+    contactData.value = tableData.value[action];
   } else {
     isMultiple.value = true;
   }
@@ -116,7 +116,9 @@ const handleShowDialog = (index: number | string) => {
 const handleConfirm = async (data: any) => {
   if (!contactData.value && (isMultiple.value && multipleSelection.value.length === 0)) return
 
-  const wx_ids = isMultiple.value ? multipleSelection.value.map(item => item.wxid) : [contactData.value && contactData.value.wxid]
+  const wx_ids = isMultiple.value
+    ? multipleSelection.value.map(item => item.wxid)
+    : [contactData.value && contactData.value.wxid]
 
   let res: any;
 
@@ -147,7 +149,7 @@ const handleConfirm = async (data: any) => {
     if (wxid)
       await send(wxid)
 
-    await delaySync(getRandomInt(3, 15) * 10)
+    await delaySync(getRandomInt(3, 8) * 100)
   }
 
   if (res.code === 1) {

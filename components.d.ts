@@ -7,7 +7,7 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
-    ContactSection: typeof import('./src/components/service/ContactSection/index.vue')['default']
+    ContactSection: typeof import('./src/components/service/MemberSection/Section.vue')['default']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCol: typeof import('element-plus/es')['ElCol']
@@ -21,7 +21,6 @@ declare module 'vue' {
     ElMenuItem: typeof import('element-plus/es')['ElMenuItem']
     ElOption: typeof import('element-plus/es')['ElOption']
     ElPagination: typeof import('element-plus/es')['ElPagination']
-    ElRadio: typeof import('element-plus/es')['ElRadio']
     ElRadioButton: typeof import('element-plus/es')['ElRadioButton']
     ElRadioGroup: typeof import('element-plus/es')['ElRadioGroup']
     ElRow: typeof import('element-plus/es')['ElRow']
@@ -32,10 +31,10 @@ declare module 'vue' {
     ElUpload: typeof import('element-plus/es')['ElUpload']
     Header: typeof import('./src/components/layout/Header.vue')['default']
     MessageForm: typeof import('./src/components/service/MessageForm.vue')['default']
+    MultipleSection: typeof import('./src/components/service/MultipleSection/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    Section: typeof import('./src/components/service/ContactSection/Section.vue')['default']
-    Service: typeof import('./src/components/service/index.vue')['default']
+    Section: typeof import('./src/components/service/MultipleSection/Section.vue')['default']
     SideBar: typeof import('./src/components/layout/SideBar.vue')['default']
   }
   export interface ComponentCustomProperties {

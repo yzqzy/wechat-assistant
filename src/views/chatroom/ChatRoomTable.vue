@@ -55,28 +55,13 @@ import { Search } from '@element-plus/icons-vue';
 import type { ChatRoom } from '../../api'
 import { textIncludes, downloadXlsx } from '../../utils/tools'
 
-const props = defineProps({
-  title: {
-    type: String,
-    required: true
-  },
-  isAdmin: {
-    type: Boolean,
-    required: true
-  },
-  chatroom: {
-    type: Object as PropType<ChatRoom | undefined>,
-    required: true
-  },
-  confirm: {
-    type: Function,
-    required: true
-  },
-  delete: {
-    type: Function,
-    required: true
-  }
-});
+const props = defineProps<{
+  title: string,
+  isAdmin: boolean,
+  chatroom: ChatRoom | undefined,
+  confirm: (wxids: string[]) => void,
+  delete: (wxids: string[]) => void
+}>();
 
 const query = reactive({
   keyword: '',

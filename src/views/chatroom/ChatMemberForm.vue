@@ -16,20 +16,14 @@
 
 <script lang="ts" setup>
 import { FormInstance } from 'element-plus';
-import { PropType, ref } from 'vue';
+import { ref } from 'vue';
 
 import { Contact } from '../../api';
 
-const props = defineProps({
-  data: {
-    type: Array as PropType<Contact[]>,
-    required: false
-  },
-  confirm: {
-    type: Function,
-    required: true
-  }
-});
+const props = defineProps<{
+  data?: Contact[];
+  confirm: (form: { member_ids: string[] }) => void;
+}>();
 
 const form = ref({
   member_ids: []

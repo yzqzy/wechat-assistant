@@ -4,12 +4,23 @@
       <h2>群聊列表</h2>
     </div>
     <div class="container">
+      <!-- 搜索区域 -->
       <div class="search-box">
         <el-input v-model="query.keyword" placeholder="请输入群聊名称" class="search-input mr10" clearable></el-input>
         <el-button type="primary" plain :icon="Search" @click="handleSearch">搜索</el-button>
         <el-button type="warning" plain @click="handleExportXlsx">导出Excel</el-button>
       </div>
-      <el-table v-loading="loading" :data="tableData" height="70vh" class="table" header-cell-class-name="table-header">
+
+      <!-- 选择区域 -->
+      <chat-room-section :data="tableData" :multiple-selection="multipleSelection" :handle-show-dialog="handleShowDialog"
+        :handle-clear-selection="handleClearSelection"
+        :handle-remover-seclection="handleRemoverSeclection"></chat-room-section>
+
+      <!-- 表格区域 -->
+      <el-table v-loading="loading" ref="multipleTableRef" :data="tableData" height="70vh" class="table"
+        header-cell-class-name="table-header" @selection-change="handleSelectionChange" @select="handleSelectionRowChange"
+        @select-all="handleSelectionAllChange">
+        <el-table-column type="selection" width="55" />
         <el-table-column prop="wxid" label="ID" width="220"></el-table-column>
         <el-table-column prop="nickname" label="群聊名称" align="center"></el-table-column>
         <el-table-column prop="pinyin" label="拼音缩写" align="center"></el-table-column>
@@ -65,6 +76,7 @@ import { ref, computed } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
 
+import ChatRoomSection from '../../components/service/MultipleSection/Section.vue';
 import MessageForm from '../../components/service/MessageForm.vue';
 import ChatMemberForm from './ChatMemberForm.vue';
 import ChatRoomTable from './ChatRoomTable.vue';
@@ -76,7 +88,9 @@ import {
   getMemberFromChatRoom, quitChatRoom,
   addMemberToChatRoom, inviteMemberToChatRoom, delMemberFromChatRoom
 } from '../../api';
+import { delaySync, getRandomInt } from '../../utils/tools';
 
+import { useSection } from '../../components/service/MultipleSection/useSection'
 import { useSearchTable } from './useSearch';
 import { useExport } from './useExport';
 
@@ -84,6 +98,11 @@ const {
   query, pageTotal, allTableData, tableData, filterData, initialSize,
   handleSearch, handlePageSizeChange, handlePageChange, handleRefreshData, lazyFetchMembers
 } = useSearchTable()
+const {
+  multipleTableRef, multipleSelection,
+  handleSelectionChange, handleSelectionRowChange, handleSelectionAllChange,
+  handleRemoverSeclection, handleClearSelection
+} = useSection({ tableData })
 const { exportXlsx } = useExport()
 
 const loading = ref(false)
@@ -97,6 +116,7 @@ const atWxIds = ref<string[]>([])
 const visible = ref(false)
 const memberVisible = ref(false)
 const roomVisible = ref(false)
+const isMultiple = ref(false)
 
 const roomTitle = ref('')
 const roomData = ref<Room>()
@@ -106,8 +126,12 @@ const roomMemberData = ref<ChatRoom>()
 
 const handleExportXlsx = () => exportXlsx(filterData.value)
 
-const handleShowDialog = (index: number) => {
-  roomData.value = tableData.value[index];
+const handleShowDialog = (action: number | string) => {
+  if (typeof action === 'number') {
+    roomData.value = tableData.value[action];
+  } else {
+    isMultiple.value = true;
+  }
   visible.value = true;
 }
 const handleShowMemberDialog = (index: number) => {
@@ -209,46 +233,65 @@ const handleAddMember = async (data: any) => {
 }
 
 const handleCloseDialog = () => {
+  handleClearSelection()
   isAtMode.value = false
   atWxIds.value = []
   roomData.value = undefined;
   visible.value = false;
+  loading.value = false;
 }
 const handleConfirm = async (data: any) => {
-  if (!roomData.value) return
+  if (!roomData.value && (isMultiple.value && multipleSelection.value.length === 0)) return
+
+  const wx_ids = isMultiple.value
+    ? multipleSelection.value.map(item => item.wxid)
+    : [roomData.value && roomData.value.wxid]
 
   let res: any;
-  let successMsg = '发送成功'
-  let errorMsg = '发送失败'
 
-  if (data.mode === 'text') {
-    if (isAtMode.value) {
-      res = await sendAtTextMsg(
-        roomData.value.wxid,
-        atWxIds.value,
-        data.message
-      )
-    } else {
-      res = await sendTextMsg(roomData.value.wxid, data.message)
+  const send = async (wxid: string) => {
+    if (data.mode === 'text') {
+      if (isAtMode.value) {
+        res = await sendAtTextMsg(
+          wxid,
+          atWxIds.value,
+          data.message
+        )
+      } else {
+        res = await sendTextMsg(wxid, data.message)
+      }
+    } else if (data.mode === 'image') {
+      res = await sendImagesMsg(wxid, data.image_url)
+    } else if (data.mode === 'file') {
+      res = await sendFileMsg(wxid, data.file_url)
+    } else if (data.mode === 'wx_article') {
+      res = await forwardPublicMsg({
+        wxid,
+        title: data.title,
+        url: data.url,
+        thumbUrl: data.thumb_url,
+        digest: data.digest
+      })
     }
-  } else if (data.mode === 'image') {
-    res = await sendImagesMsg(roomData.value.wxid, data.image_url)
-  } else if (data.mode === 'file') {
-    res = await sendFileMsg(roomData.value.wxid, data.file_url)
-  } else if (data.mode === 'wx_article') {
-    res = await forwardPublicMsg({
-      wxid: roomData.value.wxid,
-      title: data.title,
-      url: data.url,
-      thumbUrl: data.thumb_url,
-      digest: data.digest
-    })
   }
 
-  if (res.code >= 1) {
-    ElMessage.success(successMsg);
+  if (wx_ids.length > 2)
+    loading.value = true
+
+  while (wx_ids.length) {
+    const wxid = wx_ids.shift() as string
+
+    if (wxid)
+      await send(wxid)
+
+    await delaySync(getRandomInt(3, 8) * 100)
+  }
+
+
+  if (res.code === 1) {
+    ElMessage.success('发送成功');
   } else {
-    ElMessage.error(errorMsg);
+    ElMessage.error('发送失败');
   }
 
   handleCloseDialog()

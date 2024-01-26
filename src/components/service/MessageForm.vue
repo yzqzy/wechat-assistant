@@ -60,16 +60,10 @@
 import { ElMessage, FormInstance, UploadProps, UploadRawFile } from 'element-plus';
 import { ref } from 'vue';
 
-const props = defineProps({
-  multi: {
-    type: Boolean,
-    default: true,
-  },
-  confirm: {
-    type: Function,
-    required: true
-  }
-});
+const props = defineProps<{
+  multi?: boolean,
+  confirm: (data: any) => void
+}>();
 
 const modes = ref([
   {
