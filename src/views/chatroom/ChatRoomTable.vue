@@ -49,7 +49,7 @@
 </template>
 
 <script lang="ts" setup>
-import { PropType, computed, reactive } from 'vue';
+import { computed, reactive } from 'vue';
 import { Search } from '@element-plus/icons-vue';
 
 import type { ChatRoom } from '../../api'

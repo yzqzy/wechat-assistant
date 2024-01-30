@@ -68,10 +68,10 @@ import ContactSection from '../../components/service/MultipleSection/Section.vue
 import MessageForm from '../../components/service/MessageForm.vue';
 
 import type { Contact } from '../../api'
-import { sendPatMsg, sendTextMsg, sendImagesMsg, sendFileMsg, forwardPublicMsg } from '../../api';
-import { delaySync, getRandomInt } from '../../utils/tools';
+import { sendPatMsg } from '../../api';
 
 import { useSection } from '../../components/service/MultipleSection/useSection'
+import { useMessage } from '../../composables/useMessage'
 import { useSearchTable } from './useSearch';
 import { useExport } from './useExport';
 
@@ -85,6 +85,7 @@ const {
   handleRemoverSeclection, handleClearSelection
 } = useSection({ tableData })
 
+const { sendMsgBatch } = useMessage()
 const { exportXlsx } = useExport()
 
 const handleExportXlsx = () => exportXlsx(filterData.value)
@@ -94,7 +95,6 @@ const loading = ref(false)
 const visible = ref(false)
 const isMultiple = ref(false)
 const contactData = ref<Contact>()
-
 
 const reset = () => {
   handleClearSelection()
@@ -118,45 +118,12 @@ const handleConfirm = async (data: any) => {
 
   const wx_ids = isMultiple.value
     ? multipleSelection.value.map(item => item.wxid)
-    : [contactData.value && contactData.value.wxid]
-
-  let res: any;
-
-  const send = async (wxid: string) => {
-    if (data.mode === 'text') {
-      res = await sendTextMsg(wxid, data.message)
-    } else if (data.mode === 'image') {
-      res = await sendImagesMsg(wxid, data.image_url)
-    } else if (data.mode === 'file') {
-      res = await sendFileMsg(wxid, data.file_url)
-    } else if (data.mode === 'wx_article') {
-      res = await forwardPublicMsg({
-        wxid,
-        title: data.title,
-        url: data.url,
-        thumbUrl: data.thumb_url,
-        digest: data.digest
-      })
-    }
-  }
+    : contactData.value && [contactData.value.wxid] || []
 
   if (wx_ids.length > 2)
     loading.value = true
 
-  while (wx_ids.length) {
-    const wxid = wx_ids.shift() as string
-
-    if (wxid)
-      await send(wxid)
-
-    await delaySync(getRandomInt(3, 8) * 100)
-  }
-
-  if (res.code === 1) {
-    ElMessage.success('发送成功');
-  } else {
-    ElMessage.error('发送失败');
-  }
+  await sendMsgBatch(wx_ids, data)
 
   reset()
 }
@@ -179,8 +146,6 @@ const handlePat = (index: number) => {
     })
     .catch(() => { });
 }
-
-
 </script>
 
 <style lang="scss" scoped>

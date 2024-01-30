@@ -84,13 +84,12 @@ import ChatRoomTable from './ChatRoomTable.vue';
 import { useUserStore } from '../../store/user'
 import type { Room, ChatRoom } from '../../api'
 import {
-  sendTextMsg, sendAtTextMsg, sendImagesMsg, sendFileMsg, forwardPublicMsg,
   getMemberFromChatRoom, quitChatRoom,
   addMemberToChatRoom, inviteMemberToChatRoom, delMemberFromChatRoom
 } from '../../api';
-import { delaySync, getRandomInt } from '../../utils/tools';
 
 import { useSection } from '../../components/service/MultipleSection/useSection'
+import { useMessage } from '../../composables/useMessage'
 import { useSearchTable } from './useSearch';
 import { useExport } from './useExport';
 
@@ -103,6 +102,8 @@ const {
   handleSelectionChange, handleSelectionRowChange, handleSelectionAllChange,
   handleRemoverSeclection, handleClearSelection
 } = useSection({ tableData })
+
+const { sendMsgBatch } = useMessage()
 const { exportXlsx } = useExport()
 
 const loading = ref(false)
@@ -245,54 +246,15 @@ const handleConfirm = async (data: any) => {
 
   const wx_ids = isMultiple.value
     ? multipleSelection.value.map(item => item.wxid)
-    : [roomData.value && roomData.value.wxid]
-
-  let res: any;
-
-  const send = async (wxid: string) => {
-    if (data.mode === 'text') {
-      if (isAtMode.value) {
-        res = await sendAtTextMsg(
-          wxid,
-          atWxIds.value,
-          data.message
-        )
-      } else {
-        res = await sendTextMsg(wxid, data.message)
-      }
-    } else if (data.mode === 'image') {
-      res = await sendImagesMsg(wxid, data.image_url)
-    } else if (data.mode === 'file') {
-      res = await sendFileMsg(wxid, data.file_url)
-    } else if (data.mode === 'wx_article') {
-      res = await forwardPublicMsg({
-        wxid,
-        title: data.title,
-        url: data.url,
-        thumbUrl: data.thumb_url,
-        digest: data.digest
-      })
-    }
-  }
+    : roomData.value && [roomData.value.wxid] || []
 
   if (wx_ids.length > 2)
     loading.value = true
 
-  while (wx_ids.length) {
-    const wxid = wx_ids.shift() as string
-
-    if (wxid)
-      await send(wxid)
-
-    await delaySync(getRandomInt(3, 8) * 100)
-  }
-
-
-  if (res.code === 1) {
-    ElMessage.success('发送成功');
-  } else {
-    ElMessage.error('发送失败');
-  }
+  await sendMsgBatch(wx_ids, data, {
+    isAt: isAtMode.value,
+    atWxIds: atWxIds.value,
+  })
 
   handleCloseDialog()
 }
