@@ -53,7 +53,10 @@ import { computed, reactive } from 'vue';
 import { Search } from '@element-plus/icons-vue';
 
 import type { ChatRoom } from '../../api'
-import { textIncludes, downloadXlsx } from '../../utils/tools'
+import { textIncludes } from '../../utils/tools'
+import { useExport } from '../../composables/useExport'
+
+const { exportXlsx } = useExport()
 
 const props = defineProps<{
   title: string,
@@ -117,12 +120,18 @@ const handleDelete = (index: number) => {
   props.delete([item.wxid])
 }
 
-const handleExportXlsx = () => {
-  downloadXlsx(tableData.value, {
-    wxid: 'ID',
-    nickname: '昵称',
-    account: '微信号'
-  }, props.title)
+
+
+const handleExportXlsx = async () => {
+  await exportXlsx({
+    title: props.title,
+    columns: {
+      wxid: 'ID',
+      nickname: '昵称',
+      account: '微信号'
+    },
+    data: tableData.value
+  })
 }
 
 

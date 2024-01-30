@@ -90,8 +90,8 @@ import {
 
 import { useSection } from '../../components/service/MultipleSection/useSection'
 import { useMessage } from '../../composables/useMessage'
+import { useExport } from '../../composables/useExport';
 import { useSearchTable } from './useSearch';
-import { useExport } from './useExport';
 
 const {
   query, pageTotal, allTableData, tableData, filterData, initialSize,
@@ -125,7 +125,18 @@ const contactData = computed(() =>
   allTableData.value.filter((item) => !(item.wxid.includes('chatroom') || /^gh_/.test(item.wxid))))
 const roomMemberData = ref<ChatRoom>()
 
-const handleExportXlsx = () => exportXlsx(filterData.value)
+const handleExportXlsx = async () => {
+  await exportXlsx({
+    title: '群聊列表',
+    columns: {
+      wxid: 'ID',
+      nickname: '群聊名称',
+      pinyin: '拼音缩写',
+      pinyinAll: '拼音'
+    },
+    data: filterData.value
+  })
+}
 
 const handleShowDialog = (action: number | string) => {
   if (typeof action === 'number') {

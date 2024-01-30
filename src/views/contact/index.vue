@@ -72,8 +72,8 @@ import { sendPatMsg } from '../../api';
 
 import { useSection } from '../../components/service/MultipleSection/useSection'
 import { useMessage } from '../../composables/useMessage'
+import { useExport } from '../../composables/useExport';
 import { useSearchTable } from './useSearch';
-import { useExport } from './useExport';
 
 const {
   query, pageTotal, tableData, filterData,
@@ -88,7 +88,17 @@ const {
 const { sendMsgBatch } = useMessage()
 const { exportXlsx } = useExport()
 
-const handleExportXlsx = () => exportXlsx(filterData.value)
+const handleExportXlsx = () => exportXlsx({
+  title: '联系人列表',
+  columns: {
+    wxid: 'ID',
+    nickname: '昵称',
+    customAccount: '微信号',
+    pinyin: '拼音缩写',
+    pinyinAll: '拼音'
+  },
+  data: filterData.value
+})
 
 const loading = ref(false)
 
