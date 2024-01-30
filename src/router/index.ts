@@ -57,13 +57,22 @@ const routes: RouteRecordRaw[] = [
           import(/* webpackChunkName: "ocr" */ '../views/ocr.vue')
       },
       {
-        path: '/donate',
-        name: 'donate',
+        path: '/cron',
+        name: 'CRON',
         meta: {
-          title: '鼓励作者'
+          title: '定时任务'
         },
         component: () =>
-          import(/* webpackChunkName: "donate" */ '../views/donate.vue')
+          import(/* webpackChunkName: "cron" */ '../views/cron.vue')
+      },
+      {
+        path: '/about',
+        name: 'About',
+        meta: {
+          title: '关于作者'
+        },
+        component: () =>
+          import(/* webpackChunkName: "about" */ '../views/about.vue')
       }
     ]
   },

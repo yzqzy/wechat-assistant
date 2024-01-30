@@ -59,12 +59,16 @@ const items = [
                 index: '/ocr',
                 title: '图像文字识别',
             },
+            {
+                index: '/cron',
+                title: '定时任务管理',
+            },
         ]
     },
     {
         icon: 'CoffeeCup',
-        index: '/donate',
-        title: '支持作者',
+        index: '/about',
+        title: '关于作者',
     },
 ];
 
