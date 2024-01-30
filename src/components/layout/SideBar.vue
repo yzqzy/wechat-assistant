@@ -51,6 +51,11 @@ const items = [
         title: '群聊管理',
     },
     {
+        icon: 'Calendar',
+        index: '/cron',
+        title: '定时任务',
+    },
+    {
         icon: 'Tools',
         index: '3',
         title: '工具集',
@@ -58,10 +63,6 @@ const items = [
             {
                 index: '/ocr',
                 title: '图像文字识别',
-            },
-            {
-                index: '/cron',
-                title: '定时任务管理',
             },
         ]
     },

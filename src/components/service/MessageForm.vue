@@ -60,30 +60,20 @@
 import { ElMessage, FormInstance, UploadProps, UploadRawFile } from 'element-plus';
 import { ref } from 'vue';
 
+import { MessageType, messageMapping } from '../../api'
+
 const props = defineProps<{
   multi?: boolean,
   confirm: (data: any) => void
 }>();
 
 const modes = ref([
-  {
-    label: '文本消息',
-    value: 'text'
-  },
-  {
-    label: '图片消息',
-    value: 'image'
-  },
-  {
-    label: '文件消息',
-    value: 'file'
-  },
-  {
-    label: '公众号消息',
-    value: 'wx_article'
-  }
-])
-const mode = ref('text');
+  MessageType.TEXT, MessageType.IMAGE, MessageType.FILE, MessageType.WX_ARTICLE
+].map(item => ({
+  label: messageMapping[item],
+  value: item
+})))
+const mode = ref(MessageType.TEXT);
 
 const form = ref({
   message: '',

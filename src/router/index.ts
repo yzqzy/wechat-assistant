@@ -63,7 +63,7 @@ const routes: RouteRecordRaw[] = [
           title: '定时任务'
         },
         component: () =>
-          import(/* webpackChunkName: "cron" */ '../views/cron.vue')
+          import(/* webpackChunkName: "cron" */ '../views/cron/index.vue')
       },
       {
         path: '/about',

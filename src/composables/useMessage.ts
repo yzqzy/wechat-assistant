@@ -1,5 +1,7 @@
 import { ElMessage } from 'element-plus'
+
 import {
+  MessageType,
   forwardPublicMsg,
   sendAtTextMsg,
   sendFileMsg,
@@ -19,17 +21,17 @@ export const useMessage = () => {
 
     let res: any
 
-    if (data.mode === 'text') {
+    if (data.mode === MessageType.TEXT) {
       if (isAt && atWxIds) {
         res = await sendAtTextMsg(wxid, atWxIds, data.message)
       } else {
         res = await sendTextMsg(wxid, data.message)
       }
-    } else if (data.mode === 'image') {
+    } else if (data.mode === MessageType.IMAGE) {
       res = await sendImagesMsg(wxid, data.image_url)
-    } else if (data.mode === 'file') {
+    } else if (data.mode === MessageType.FILE) {
       res = await sendFileMsg(wxid, data.file_url)
-    } else if (data.mode === 'wx_article') {
+    } else if (data.mode === MessageType.WX_ARTICLE) {
       res = await forwardPublicMsg({
         wxid,
         title: data.title,
