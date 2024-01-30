@@ -116,11 +116,8 @@ const handleSendMsg = (wxid: string) => {
 
 const handleDelete = (index: number) => {
   const item = tableData.value[index]
-
   props.delete([item.wxid])
 }
-
-
 
 const handleExportXlsx = async () => {
   await exportXlsx({
@@ -133,8 +130,6 @@ const handleExportXlsx = async () => {
     data: tableData.value
   })
 }
-
-
 </script>
 
 <style lang="scss" scoped>
