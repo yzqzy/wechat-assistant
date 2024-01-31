@@ -1,7 +1,7 @@
 <template>
   <!-- 消息类型选择 -->
   <el-radio-group v-if="multi" class="radio-group" v-model="mode">
-    <el-radio-button v-for="item in modes" :key="item.value" :label="item.value" :name="item.label">{{ item.label
+    <el-radio-button v-for="item in modes" :key="item.value" :label="item.value">{{ item.label
     }}</el-radio-button>
   </el-radio-group>
 
@@ -49,23 +49,31 @@
       </el-form-item>
     </template>
 
-    <!-- 确认按钮 -->
-    <el-form-item>
-      <el-button type="primary" @click="saveEdit(formRef)">发 送</el-button>
-    </el-form-item>
+    <!-- 发送按钮 -->
+    <slot name="footer">
+      <el-form-item>
+        <el-button type="primary" @click="saveEdit(formRef)">发 送</el-button>
+      </el-form-item>
+    </slot>
   </el-form>
 </template>
 
 <script lang="ts" setup>
 import { ElMessage, FormInstance, UploadProps, UploadRawFile } from 'element-plus';
-import { ref } from 'vue';
+import { ref, watchEffect } from 'vue';
 
 import { MessageType, messageMapping } from '../../api'
 
 const props = defineProps<{
+  mode?: MessageType,
   multi?: boolean,
-  confirm: (data: any) => void
+  form?: any,
 }>();
+
+const emit = defineEmits<{
+  (e: 'confirm', _: any): void,
+  (e: 'change', _: any): void,
+}>()
 
 const modes = ref([
   MessageType.TEXT, MessageType.IMAGE, MessageType.FILE, MessageType.WX_ARTICLE
@@ -73,36 +81,59 @@ const modes = ref([
   label: messageMapping[item],
   value: item
 })))
-const mode = ref(MessageType.TEXT);
 
-const form = ref({
+const mode = ref(props.mode || MessageType.TEXT);
+const form = ref(props.form || {
   message: '',
   image_url: '',
   file_url: '',
 
-  app_name: '',
-  user_name: '',
   title: '',
   url: '',
   thumb_url: '',
   digest: '',
 });
-
 const formRef = ref<FormInstance>();
+
+const clean = () => {
+  if (mode.value !== MessageType.WX_ARTICLE) {
+    form.value.title = '';
+    form.value.url = '';
+    form.value.thumb_url = '';
+    form.value.digest = '';
+  }
+  if (mode.value != MessageType.IMAGE) {
+    form.value.image_url = '';
+  }
+  if (mode.value != MessageType.FILE) {
+    form.value.file_url = '';
+  }
+  if (mode.value !== MessageType.TEXT) {
+    form.value.message = '';
+  }
+}
+
+watchEffect(() => {
+  clean()
+  emit('change', {
+    mode: mode.value,
+    ...form.value
+  })
+})
+
 const saveEdit = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   formEl.validate(valid => {
     if (!valid) return false;
-    props.confirm({
+
+    emit('confirm', {
       mode: mode.value,
       ...form.value
-    });
+    })
   });
 };
 
-
 const fileList = ref<UploadProps['fileList']>([]);
-
 const addFile = (rawFile: UploadRawFile): void => {
   fileList.value = [{
     name: rawFile.name,
@@ -112,7 +143,6 @@ const addFile = (rawFile: UploadRawFile): void => {
     uid: new Date().getTime()
   }];
 }
-
 const beforeAvatarUpload: UploadProps['beforeUpload'] = rawFile => {
   if (rawFile.type !== 'image/jpeg' && rawFile.type !== 'image/png') {
     ElMessage.error('Avatar picture must be JPG or PNG format!');
@@ -125,7 +155,6 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = rawFile => {
   form.value.image_url = rawFile.path
   return false;
 };
-
 const beforeFileUpload: UploadProps['beforeUpload'] = rawFile => {
   addFile(rawFile)
   form.value.file_url = rawFile.path

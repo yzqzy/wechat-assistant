@@ -55,18 +55,18 @@
 
     <el-dialog title="编辑消息" v-model="visible" width="500px" destroy-on-close :close-on-click-modal="false"
       @close="handleCloseDialog">
-      <message-form :multi="!isAtMode" :confirm="handleConfirm"></message-form>
+      <message-form :multi="!isAtMode" @confirm="handleConfirm"></message-form>
     </el-dialog>
 
     <el-dialog title="添加成员" v-model="memberVisible" width="500px" destroy-on-close :close-on-click-modal="false"
       @close="handleCloseMemberDialog">
-      <chat-member-form :data="contactData" :confirm="handleAddMember"></chat-member-form>
+      <chat-member-form :data="contactData" @confirm="handleAddMember"></chat-member-form>
     </el-dialog>
 
     <el-dialog :title="roomTitle" v-model="roomVisible" width="800px" destroy-on-close :close-on-click-modal="false"
       @close="handleCloseRoom">
-      <chat-room-table :title="roomTitle" :isAdmin="isAdmin" :chatroom="roomMemberData" :confirm="handleShowAtDialog"
-        :delete="handleDeleteMember"></chat-room-table>
+      <chat-room-table :title="roomTitle" :isAdmin="isAdmin" :chatroom="roomMemberData" @confirm="handleShowAtDialog"
+        @delete="handleDeleteMember"></chat-room-table>
     </el-dialog>
   </div>
 </template>

@@ -41,7 +41,6 @@ a {
 }
 
 .content::-webkit-scrollbar {
-  /* Chrome Safari */
   display: none;
 }
 
@@ -73,8 +72,16 @@ a {
   margin-left: 10px;
 }
 
-.mgb20 {
+.mb20 {
   margin-bottom: 20px;
+}
+
+.mr10 {
+  margin-right: 10px;
+}
+
+.mr30 {
+  margin-right: 30px;
 }
 
 .move-enter-active,
@@ -88,13 +95,18 @@ a {
 }
 
 /*BaseForm*/
-
 .form-box {
   width: 600px;
 }
 
 .form-box .line {
   text-align: center;
+}
+
+.el-form-item {
+  .el-form-item {
+    margin-bottom: 10px !important;
+  }
 }
 
 .el-time-panel__content::after,

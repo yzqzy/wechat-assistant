@@ -1,4 +1,3 @@
-import { ElMessage } from 'element-plus'
 import { downloadXlsx } from '../utils/tools'
 
 interface ExportProps {
@@ -10,8 +9,7 @@ interface ExportProps {
 export const useExport = () => {
   const exportXlsx = async (props: ExportProps) => {
     const { title, columns, data } = props
-    await downloadXlsx(title, columns, data)
-    ElMessage.success('导出成功')
+    downloadXlsx(title, columns, data)
   }
 
   return {

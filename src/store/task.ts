@@ -9,7 +9,8 @@ export enum TaskMode {
 }
 
 export interface Task {
-  mode: 'custom' | 'normal'
+  uid: string
+  mode: TaskMode
   type: MessageType
   name: string
   receiver_ids: number[]
@@ -51,6 +52,11 @@ export const useTaskStore = defineStore('task', function () {
     updateStore()
   }
 
+  const editTask = (index: number, task: Task) => {
+    tasks.value[index] = task
+    updateStore()
+  }
+
   const removeTask = (index: number) => {
     tasks.value.splice(index, 1)
     updateStore()
@@ -62,6 +68,7 @@ export const useTaskStore = defineStore('task', function () {
     tasks,
 
     addTask,
+    editTask,
     removeTask
   }
 })

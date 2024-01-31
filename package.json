@@ -45,6 +45,7 @@
     "cronstrue": "^2.47.0",
     "electron-store": "^8.1.0",
     "element-plus": "^2.5.1",
+    "lodash": "^4.17.21",
     "nprogress": "^0.2.0",
     "pinia": "^2.1.7",
     "vue-router": "^4.2.5",

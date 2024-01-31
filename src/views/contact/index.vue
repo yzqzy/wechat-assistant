@@ -54,7 +54,7 @@
     <!-- 弹窗区域 -->
     <el-dialog title="编辑消息" v-model="visible" width="500px" destroy-on-close :close-on-click-modal="false"
       @close="visible = false">
-      <message-form multi :confirm="handleConfirm"></message-form>
+      <message-form multi @confirm="handleConfirm"></message-form>
     </el-dialog>
   </div>
 </template>

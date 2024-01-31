@@ -62,9 +62,14 @@ const props = defineProps<{
   title: string,
   isAdmin: boolean,
   chatroom: ChatRoom | undefined,
-  confirm: (wxids: string[]) => void,
-  delete: (wxids: string[]) => void
 }>();
+
+
+const emit = defineEmits<{
+  (e: 'confirm', wxids: string[]): void
+  (e: 'delete', wxids: string[]): void
+}>()
+
 
 const query = reactive({
   keyword: '',
@@ -111,12 +116,12 @@ const handlePageSizeChange = (pageSize: number) => {
 }
 
 const handleSendMsg = (wxid: string) => {
-  props.confirm([wxid])
+  emit('confirm', [wxid])
 }
 
 const handleDelete = (index: number) => {
   const item = tableData.value[index]
-  props.delete([item.wxid])
+  emit('delete', [item.wxid])
 }
 
 const handleExportXlsx = async () => {
@@ -127,7 +132,7 @@ const handleExportXlsx = async () => {
       nickname: '昵称',
       account: '微信号'
     },
-    data: tableData.value
+    data: filterData.value
   })
 }
 </script>
@@ -140,14 +145,6 @@ const handleExportXlsx = async () => {
 
   .search-input {
     width: 200px;
-  }
-
-  .mr10 {
-    margin-right: 10px;
-  }
-
-  .mr30 {
-    margin-right: 30px;
   }
 }
 

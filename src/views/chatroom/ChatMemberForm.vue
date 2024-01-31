@@ -20,10 +20,13 @@ import { ref } from 'vue';
 
 import { Contact } from '../../api';
 
-const props = defineProps<{
+defineProps<{
   data?: Contact[];
-  confirm: (form: { member_ids: string[] }) => void;
 }>();
+
+const emit = defineEmits<{
+  (e: 'confirm', _: any): void
+}>()
 
 const form = ref({
   member_ids: []
@@ -34,7 +37,7 @@ const saveEdit = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   formEl.validate(valid => {
     if (!valid) return false;
-    props.confirm(form.value);
+    emit('confirm', form.value);
   });
 };
 </script>

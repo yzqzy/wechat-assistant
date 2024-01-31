@@ -3,7 +3,7 @@
     <el-row>
       <div class="welcome"> Hello {{ userInfo?.name || userInfo?.account }} 👋🏼，欢迎使用微信助手！</div>.
     </el-row>
-    <el-row class="mgb20">
+    <el-row class="mb20">
       <el-avatar :size="120" :src="userInfo?.headImage" />
     </el-row>
     <el-row>
