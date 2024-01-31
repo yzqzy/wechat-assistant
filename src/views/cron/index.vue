@@ -30,68 +30,20 @@
       <!-- 新增任务弹窗 -->
       <el-dialog title="新增任务" v-model="visible" width="500px" destroy-on-close :close-on-click-modal="false"
         :close="handleClose">
-        TODO</el-dialog>
+        <task-form @confirm="handleClose"></task-form>
+      </el-dialog>
     </div>
   </div>
 </template>
 
 <script setup lang="ts" name="cron">
-import { computed, ref } from 'vue';
-import cronstrue from 'cronstrue';
-import 'cronstrue/locales/zh_CN';
+import { ref } from 'vue';
 
-import { MessageType, messageMapping } from '../../api'
+import TaskForm from './TaskForm.vue';
+import { useTask } from './useTask'
 
 const visible = ref(false)
-
-const tasks = ref([
-  {
-    type: MessageType.TEXT,
-    name: '定时任务1',
-    receiver_ids: [1, 2, 3],
-    cron: '0 0 * * *',
-    enable: true,
-    params: {
-      message: '北京'
-    }
-  },
-  {
-    type: MessageType.TEXT,
-    name: '定时任务1',
-    receiver_ids: [1, 2, 3],
-    cron: '*/5 * * * * *',
-    enable: true,
-    params: {
-      message: '新年快乐'
-    }
-  },
-  {
-    type: MessageType.TEXT,
-    name: '定时任务2',
-    receiver_ids: [1, 2, 3],
-    cron: '*/10 * * * * *',
-    enable: false,
-    params: {
-      message: '新年快乐'
-    }
-  },
-])
-
-const tableData = computed(() => {
-  return tasks.value.map(task => {
-    return {
-      ...task,
-      type: messageMapping[task.type],
-      params: JSON.stringify(task.params),
-      receiver_ids: task.receiver_ids.join(','),
-      cron: cronstrue.toString(task.cron, {
-        use24HourTimeFormat: true,
-        verbose: true,
-        locale: 'zh_CN'
-      }),
-    }
-  })
-})
+const { tableData } = useTask()
 
 const handleClose = () => {
   visible.value = false
