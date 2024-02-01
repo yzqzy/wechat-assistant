@@ -19,9 +19,10 @@
         <el-table-column label="操作" width="340" align="center">
           <template #default="scope">
             <el-button type="primary" plain class="btn" @click="handleShowEditTask(scope.$index)">编辑</el-button>
-            <el-button type="primary" plain class="btn" @click="handleEnabledTask(scope.$index)">{{ scope.row.enabled ?
-              '禁用' :
-              '启用' }}</el-button>
+            <el-button :type="scope.row.enabled ? 'danger' : 'primary'" plain class="btn"
+              @click="handleEnabledTask(scope.$index)">{{ scope.row.enabled ?
+                '禁用' :
+                '启用' }}</el-button>
             <el-button type="danger" plain class="btn" @click="handleDeleteTask(scope.$index)">删除</el-button>
           </template>
         </el-table-column>

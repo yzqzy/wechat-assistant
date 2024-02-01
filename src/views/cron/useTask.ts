@@ -68,11 +68,12 @@ export const useTask = () => {
   }
 
   const handleEditTask = (index: number, task: Task) => {
+    CronTask.stop(task)
+
     if (task.enabled) {
       CronTask.start(task)
-    } else {
-      CronTask.stop(task)
     }
+
     editTask(index, task)
   }
 

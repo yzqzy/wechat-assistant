@@ -13,7 +13,7 @@ export interface Task {
   mode: TaskMode
   type: MessageType
   name: string
-  receiver_ids: number[]
+  receiver_ids: string[]
   cron: string
   enabled: boolean
   params: any
