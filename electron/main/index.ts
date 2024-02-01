@@ -3,8 +3,9 @@ import { release } from 'node:os'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import { injector } from './injectorHandler'
-import './storeHandler'
+import { injectorHandler } from './injectorHandler'
+import { cronHandler } from './cronHandler'
+import store from './storeHandler'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -92,7 +93,9 @@ async function createWindow() {
 
 app.whenReady().then(() => {
   createWindow()
-  injector()
+
+  injectorHandler()
+  cronHandler(win, store)
 })
 
 app.on('window-all-closed', () => {

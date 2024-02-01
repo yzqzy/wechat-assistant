@@ -25,7 +25,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="是否启用">
-        <el-switch v-model="form.enable"></el-switch>
+        <el-switch v-model="form.enabled"></el-switch>
       </el-form-item>
       <el-form-item label="任务参数">
         <textarea class="textarea" disabled :value="JSON.stringify(form.params, null, 2)" cols="100" rows="10"></textarea>
@@ -66,7 +66,7 @@ const form = ref<Task>(props.task || {
   mode: TaskMode.CUSTOM,
   receiver_ids: [],
   cron: '',
-  enable: false,
+  enabled: false,
   params: {}
 });
 const cronDesc = computed(() => {

@@ -19,9 +19,9 @@
         <el-table-column label="操作" width="340" align="center">
           <template #default="scope">
             <el-button type="primary" plain class="btn" @click="handleShowEditTask(scope.$index)">编辑</el-button>
-            <el-button :type="scope.row.enable ? 'danger' : 'primary'" plain class="btn"
-              @click="handleEnableTask(scope.$index)">{{ scope.row.enable ? '禁用' :
-                '启用' }}</el-button>
+            <el-button type="primary" plain class="btn" @click="handleEnabledTask(scope.$index)">{{ scope.row.enabled ?
+              '禁用' :
+              '启用' }}</el-button>
             <el-button type="danger" plain class="btn" @click="handleDeleteTask(scope.$index)">删除</el-button>
           </template>
         </el-table-column>
@@ -46,7 +46,7 @@ import type { Task } from '../../store/task'
 import { useTask } from './useTask'
 import { ElMessage, ElMessageBox } from 'element-plus';
 
-const { taskData, addTask, contactData, editTask, removeTask } = useTask()
+const { tasks, taskData, contactData, handleAddTask, handleEditTask, handleRemoveTask } = useTask()
 
 const visible = ref(false)
 const task = ref<Task>()
@@ -54,8 +54,6 @@ const task = ref<Task>()
 const reset = () => {
   task.value = undefined
   visible.value = false
-
-  console.log('reset', task.value)
 }
 
 const handleClose = reset
@@ -64,32 +62,32 @@ const handleShowAddTask = () => {
   visible.value = true
 }
 const handleShowEditTask = (index: number) => {
-  task.value = _.cloneDeep(taskData.value[index].__origin__)
+  task.value = _.cloneDeep(tasks.value[index])
   visible.value = true
 }
 
 const handleConfirm = (data: Task) => {
   if (task.value) {
     const index = taskData.value.findIndex(item => item.uid === data.uid)
-    editTask(index, data)
+    handleEditTask(index, data)
     ElMessage.success('编辑成功')
   } else {
-    addTask(data)
+    handleAddTask(data)
     ElMessage.success('新增成功')
   }
   reset()
 }
 
-const handleEnableTask = (index: number) => {
-  const data = _.cloneDeep(taskData.value[index].__origin__)
-  const operation = data.enable ? '禁用' : '启用'
+const handleEnabledTask = (index: number) => {
+  const data = _.cloneDeep(tasks.value[index])
+  const operation = data.enabled ? '禁用' : '启用'
 
   ElMessageBox.confirm(`确定要${operation}该任务吗？`, '提示', {
     type: 'warning'
   }).then(() => {
-    editTask(index, {
+    handleEditTask(index, {
       ...data,
-      enable: !data.enable
+      enabled: !data.enabled
     })
     ElMessage.success('操作成功')
   })
@@ -99,7 +97,7 @@ const handleDeleteTask = (index: number) => {
   ElMessageBox.confirm('确定要删除该任务吗？', '提示', {
     type: 'warning'
   }).then(() => {
-    removeTask(index)
+    handleRemoveTask(index)
     ElMessage.success('删除成功')
   })
 }

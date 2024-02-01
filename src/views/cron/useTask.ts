@@ -5,7 +5,19 @@ import 'cronstrue/locales/zh_CN'
 import { Contact, getContactList, messageMapping } from '../../api'
 
 import { storeToRefs } from 'pinia'
-import { useTaskStore } from '../../store/task'
+import { useTaskStore, Task } from '../../store/task'
+
+const CronTask = {
+  start: (task: Task) => {
+    window.ipcRenderer.send('start-cron-task', JSON.stringify(task))
+  },
+  stop: (task: Task) => {
+    window.ipcRenderer.send('stop-cron-task', JSON.stringify(task))
+  },
+  remove: (task: Task) => {
+    window.ipcRenderer.send('remove-cron-task', JSON.stringify(task))
+  }
+}
 
 export const useTask = () => {
   const store = useTaskStore()
@@ -24,7 +36,6 @@ export const useTask = () => {
   const taskData = computed(() => {
     return tasks.value.map(task => {
       return {
-        __origin__: { ...task },
         ...task,
         type: messageMapping[task.type],
         params: JSON.stringify(task.params),
@@ -46,6 +57,25 @@ export const useTask = () => {
     })
   }
 
+  const handleAddTask = (task: Task) => {
+    CronTask.start(task)
+    addTask(task)
+  }
+
+  const handleRemoveTask = (index: number) => {
+    CronTask.remove(tasks.value[index])
+    removeTask(index)
+  }
+
+  const handleEditTask = (index: number, task: Task) => {
+    if (task.enabled) {
+      CronTask.start(task)
+    } else {
+      CronTask.stop(task)
+    }
+    editTask(index, task)
+  }
+
   onMounted(() => {
     fetchData()
   })
@@ -54,8 +84,9 @@ export const useTask = () => {
     tasks,
     taskData,
     contactData,
-    addTask,
-    removeTask,
-    editTask
+
+    handleAddTask,
+    handleRemoveTask,
+    handleEditTask
   }
 }

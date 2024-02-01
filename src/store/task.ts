@@ -15,7 +15,7 @@ export interface Task {
   name: string
   receiver_ids: number[]
   cron: string
-  enable: boolean
+  enabled: boolean
   params: any
 }
 
