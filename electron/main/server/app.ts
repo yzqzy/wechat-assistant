@@ -6,6 +6,12 @@ let win: BrowserWindow | null = null
 export const createServer = (window: BrowserWindow) => {
   win = window
 
+  if (
+    !import.meta.env.VITE_HOOK_MESSAGE_ENABLE ||
+    import.meta.env.VITE_HOOK_MESSAGE_ENABLE != 1
+  )
+    return
+
   const server = net.createServer(socket => {
     console.log(
       '[tcp-server]: -----------------------------------------------------------'
