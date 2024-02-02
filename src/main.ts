@@ -6,9 +6,9 @@ import router from './router'
 import pinia from './store/index'
 import App from './App.vue'
 
-import './demos/ipc'
+import './bridge/ipc'
 // If you want use Node.js, the`nodeIntegration` needs to be enabled in the Main process.
-// import './demos/node'
+// import './bridge/node'
 
 const app = createApp(App)
 
