@@ -1,11 +1,10 @@
 import { computed, onMounted, ref } from 'vue'
-import cronstrue from 'cronstrue'
-import 'cronstrue/locales/zh_CN'
 
 import { Contact, getContactList, messageMapping } from '../../api'
 
 import { storeToRefs } from 'pinia'
 import { useTaskStore, Task } from '../../store/task'
+import { formatCron } from '../../utils/tools'
 
 const CronTask = {
   start: (task: Task) => {
@@ -42,11 +41,7 @@ export const useTask = () => {
         receiver_ids: task.receiver_ids
           .map(id => contactMapping.value[id])
           .join('、'),
-        cron: cronstrue.toString(task.cron, {
-          use24HourTimeFormat: true,
-          verbose: true,
-          locale: 'zh_CN'
-        })
+        cron: formatCron(task.cron)
       }
     })
   })

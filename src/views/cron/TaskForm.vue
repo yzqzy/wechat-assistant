@@ -1,6 +1,6 @@
 <template>
   <div class="cron-edit-form">
-    <el-form :model="form" ref="cronForm" label-width="120px" label-position="left">
+    <el-form :model="form" label-width="120px" label-position="left">
       <el-form-item label="任务名称">
         <el-input v-model="form.name" placeholder="请输入任务名称"></el-input>
       </el-form-item>
@@ -9,16 +9,42 @@
           <template v-slot:footer><span></span></template>
         </message-form>
       </el-form-item>
+
+      <!-- 执行模式 -->
       <el-form-item label="执行模式">
-        <el-radio-group disabled v-model="form.mode">
+        <el-radio-group v-model="form.mode">
           <el-radio-button label="normal">普通模式</el-radio-button>
           <el-radio-button label="custom">自定义模式</el-radio-button>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="cron表达式">
+      <!-- 执行模式 custom -->
+      <el-form-item v-if="form.mode === 'custom'" label="cron表达式">
         <el-input v-model="form.cron" placeholder="请输入cron表达式"></el-input>
-        <p>{{ cronDesc }}</p>
+        <p class="cron-desc">执行时间: {{ cronDesc }}</p>
       </el-form-item>
+      <!-- 执行模式 normal -->
+      <form :model="cronForm" class="inner-form" v-else>
+        <el-form-item label="生成频率">
+          <el-select v-model="cronForm.frequency">
+            <el-option label="每天" value="daily" />
+            <el-option label="每周" value="weekly" />
+            <el-option label="每月" value="monthly" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="生成时间">
+          <el-select v-if="cronForm.frequency === 'weekly'" v-model="cronForm.week">
+            <el-option v-for="i in 7" :label="weekConverter(i - 1)" :value="i" :key="i" />
+          </el-select>
+          <el-select v-if="cronForm.frequency === 'monthly'" v-model="cronForm.day">
+            <el-option v-for="i in 28" :label="`${i}号`" :value="i" :key="i" />
+          </el-select>
+          <el-select v-model="cronForm.time">
+            <el-option v-for="i in 24" :label="`${i}点`" :value="i" :key="i" />
+          </el-select>
+        </el-form-item>
+        <p class="cron-desc">执行时间: {{ cronDesc }}</p>
+      </form>
+
       <el-form-item label="接收者">
         <el-select v-model="form.receiver_ids" multiple filterable placeholder="请选择接收者">
           <el-option v-for="item in data" :key="item.wxid" :label="item.nickname" :value="item.wxid" />
@@ -40,14 +66,11 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import cronstrue from 'cronstrue'
-import 'cronstrue/locales/zh_CN'
-
 import MessageForm from '../../components/service/MessageForm.vue';
-
 import { Task, TaskMode } from '../../store/task'
 import { MessageType, Contact } from '../../api';
-import { getRandomId } from '../../utils/tools';
+import { formatCron, getRandomId } from '../../utils/tools';
+import { useCron } from './useCron'
 
 const props = defineProps<{
   data: Contact[]
@@ -59,11 +82,20 @@ const emit = defineEmits<{
   (e: 'cancel'): void
 }>()
 
+const { genCron, weekConverter } = useCron()
+
+const cronForm = ref({
+  frequency: 'daily',
+  week: 1,
+  day: 1,
+  time: 24
+})
+
 const form = ref<Task>(props.task || {
   uid: getRandomId(),
   type: MessageType.TEXT,
   name: '',
-  mode: TaskMode.CUSTOM,
+  mode: TaskMode.NORMAL,
   receiver_ids: [],
   cron: '',
   enabled: false,
@@ -71,12 +103,15 @@ const form = ref<Task>(props.task || {
 });
 const cronDesc = computed(() => {
   try {
-    if (!form.value.cron) return ''
-    return cronstrue.toString(form.value.cron, {
-      use24HourTimeFormat: true,
-      verbose: true,
-      locale: 'zh_CN'
-    })
+    if (form.value.mode === TaskMode.CUSTOM) {
+      if (!form.value.cron) return ''
+      return formatCron(form.value.cron)
+    }
+    if (cronForm.value.frequency && cronForm.value.time) {
+      form.value.cron = genCron(cronForm.value)
+      return formatCron(form.value.cron)
+    }
+    return ''
   } catch (error) {
     return error
   }
@@ -98,11 +133,30 @@ const onCancel = () => {
 </script>
 
 <style lang="scss" scoped>
+.cron-desc {
+  color: #909399;
+}
+
 .el-form-item__content {
   width: 200px;
 }
 
-.error {
-  color: red;
+:deep(.inner-form) {
+  padding-left: 120px;
+  padding-bottom: 20px;
+  box-sizing: border-box;
+
+  .el-select {
+    width: 300px;
+    margin-right: 10px;
+  }
+
+  .el-form-item__content {
+    flex-direction: row;
+
+    .el-select {
+      width: 120px;
+    }
+  }
 }
 </style>
