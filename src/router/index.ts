@@ -4,9 +4,11 @@ import {
   NavigationGuardNext,
   RouteRecordRaw
 } from 'vue-router'
-import Home from '../views/home.vue'
+import { storeToRefs } from 'pinia'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
+
+import Home from '../views/home.vue'
 
 import { checkLogin, getUserInfo } from '../api/index'
 import { useUserStore } from '../store/user'
@@ -106,12 +108,11 @@ router.beforeEach(async (to, from, next) => {
   NProgress.start()
 
   const store = useUserStore()
+  const { isLoggedIn } = storeToRefs(store)
 
-  const { isLoggedIn } = store
+  console.log('isLoggedIn', isLoggedIn.value)
 
-  console.log('isLoggedIn', isLoggedIn)
-
-  if (isLoggedIn) {
+  if (isLoggedIn.value) {
     next()
   } else {
     if (to.path != '/injector') {

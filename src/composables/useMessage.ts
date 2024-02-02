@@ -60,7 +60,11 @@ export const useMessage = () => {
         res = await sendMsg(wxid, data, args)
       }
 
-      await delaySync(getRandomInt(3, 8) * 100)
+      const dalay =
+        import.meta.env.VITE_SEND_MESSAGE_BATCH_FREQUENCY ||
+        getRandomInt(3, 8) * 100
+
+      await delaySync(dalay)
     }
 
     if (res.code === 1) {
