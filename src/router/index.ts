@@ -12,6 +12,7 @@ import Home from '../views/home.vue'
 
 import { checkLogin, getUserInfo } from '../api/index'
 import { useUserStore } from '../store/user'
+import { useHook } from '../composables/useHook'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -107,6 +108,7 @@ const redirect = (next: NavigationGuardNext) => next('/injector')
 router.beforeEach(async (to, from, next) => {
   NProgress.start()
 
+  const { messageHook } = useHook()
   const store = useUserStore()
   const { isLoggedIn } = storeToRefs(store)
 
@@ -131,6 +133,9 @@ router.beforeEach(async (to, from, next) => {
       const res = await getUserInfo()
 
       if (res.code == 1) {
+        // hook message
+        await messageHook()
+        // login success
         store.setUserInfo(res.data)
       } else {
         console.log('获取用户信息失败')

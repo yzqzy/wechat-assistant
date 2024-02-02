@@ -70,7 +70,7 @@ const bindEvents = () => {
 
 bindEvents()
 
-export function cronHandler(window: BrowserWindow, store: ElectronStore) {
+export function createCron(window: BrowserWindow, store: ElectronStore) {
   win = window
 
   const tasks = store.get(SAVED_TASKS_KEY, '[]') as string

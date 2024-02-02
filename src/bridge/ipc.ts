@@ -3,24 +3,11 @@ import { storeToRefs } from 'pinia'
 import { Task } from '../store/task'
 import { useUserStore } from '../store/user'
 import { useMessage } from '../composables/useMessage'
+import { RealtimeMessage } from '../typings'
 
 const { sendMsgBatch } = useMessage()
 
-window.ipcRenderer.on('main-process-message', (_event, ...args) => {
-  console.log('[Receive Main-process message]:', ...args)
-})
-
-window.ipcRenderer.on('main-process-cron-message', (_event, ...args) => {
-  const store = useUserStore()
-  const { isLoggedIn } = storeToRefs(store)
-
-  console.log('[Is Logged In]:', isLoggedIn.value)
-  console.log('[Receive Main-process corn message]:', ...args)
-
-  if (!isLoggedIn.value) return
-
-  const task = args[0] as Task
-
+const cronMessageHandler = (task: Task) => {
   if (!Array.isArray(task.receiver_ids)) return
 
   // Send message to receiver
@@ -35,4 +22,41 @@ window.ipcRenderer.on('main-process-cron-message', (_event, ...args) => {
     task.type,
     task.params
   )
-})
+}
+
+const realtimeMessageHandler = (message: RealtimeMessage) => {
+  console.log(message)
+}
+
+const bindEvents = () => {
+  // dispatch message
+  window.ipcRenderer.on('main-process-message', (_event, ...args) => {
+    console.log('[Receive Main-process message]:', ...args)
+  })
+
+  // dispatch realtime message
+  window.ipcRenderer.on('main-process-realtime-message', (_event, ...args) => {
+    console.log(
+      '[Receive Main-process realtime message]: -----------------------------------------------------------'
+    )
+    console.log('[Receive Main-process realtime message]:', ...args)
+    const message = JSON.parse(args[0]) as RealtimeMessage
+    realtimeMessageHandler(message)
+  })
+
+  // dispatch cron message
+  window.ipcRenderer.on('main-process-cron-message', (_event, ...args) => {
+    const store = useUserStore()
+    const { isLoggedIn } = storeToRefs(store)
+
+    console.log('[Is Logged In]:', isLoggedIn.value)
+    console.log('[Receive Main-process corn message]:', ...args)
+
+    if (!isLoggedIn.value) return
+
+    const task = args[0] as Task
+    cronMessageHandler(task)
+  })
+}
+
+bindEvents()

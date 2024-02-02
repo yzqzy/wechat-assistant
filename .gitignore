@@ -14,10 +14,6 @@ dist-electron
 release
 *.local
 
-# wechat-injector
-assets-injector/*
-!assets-injector/.gitkeep
-
 # Editor directories and files
 .vscode/.debug.env
 .idea
@@ -32,3 +28,9 @@ assets-injector/*
 package-lock.json
 pnpm-lock.yaml
 yarn.lock
+
+# wechat-injector
+assets-injector
+
+# test
+testings

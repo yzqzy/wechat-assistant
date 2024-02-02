@@ -7,7 +7,7 @@ const okHandler = (event: IpcMainEvent) =>
 const errorHandler = (event: IpcMainEvent, message: string) =>
   event.sender.send('inject-wxhelper-reply', 'error')
 
-export const injectorHandler = () => {
+export const createInjector = () => {
   ipcMain.on('inject-wxhelper', (event, args) => {
     const { injectPath, processName, dllPath } = JSON.parse(args)
 
