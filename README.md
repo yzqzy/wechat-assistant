@@ -18,10 +18,11 @@ PC 微信助手，基于 Electron、WeChat Hook 实现。
   *	[x] 查看群成员列表、导出群成员列表
   * [x] 邀请成员、退出群聊、删除成员
 - 定时任务
-  * [x] 定时发送消息
+  * [x] 定时消息（cron 表达式）
+  * [ ] 定时消息（常用时间段筛选）
 - 工具集
   * [x] OCR 文字识别
-  * [ ] 消息备份
+  * [ ] 聊天记录备份
   * [ ] ...
 
 ## 二、使用说明
@@ -49,6 +50,8 @@ PC 微信助手，基于 Electron、WeChat Hook 实现。
 注入成功后，即可正常使用程序。
 
 <img src="https://img.yueluo.club/wechat-assistant/application_mosaic.png" style="zoom: 50%" />
+
+<img src="https://img.yueluo.club/wechat-assistant/application_cron.png" style="zoom: 50%" />
 
 ## 三、环境配置
 
