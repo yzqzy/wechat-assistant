@@ -1,8 +1,8 @@
 {
   "name": "wechat-assistant",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "dist-electron/main/index.js",
-  "description": "wechat assistant.",
+  "description": "wechat assistant",
   "author": "heora",
   "license": "MIT",
   "private": true,
