@@ -45,13 +45,13 @@ PC 微信助手，基于 Electron、WeChat Hook 实现。
 
 如果你已经操作成功注入 dll，可以直接使用应用。如果没有注入 dll，会进入以下页面。
 
-<img src="https://img.yueluo.club/wechat-assistant/injector.png" style="zoom: 50%" />
+<img src="https://img.yueluo.club/wechat-assistant/injector.png" width="600px" />
 
 注入成功后，即可正常使用程序。
 
-<img src="https://img.yueluo.club/wechat-assistant/application_mosaic.png" style="zoom: 50%" />
+<img src="https://img.yueluo.club/wechat-assistant/application_mosaic.png" width="600px" />
 
-<img src="https://img.yueluo.club/wechat-assistant/application_cron.png" style="zoom: 50%" />
+<img src="https://img.yueluo.club/wechat-assistant/application_cron.png" width="600px" />
 
 ## 三、环境配置
 
