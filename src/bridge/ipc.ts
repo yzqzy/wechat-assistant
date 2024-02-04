@@ -1,13 +1,14 @@
 import { storeToRefs } from 'pinia'
 
-import { Task } from '../store/task'
+import { CronTask } from '../store/task'
 import { useUserStore } from '../store/user'
 import { useMessage } from '../composables/useMessage'
 import { RealtimeMessage } from '../typings'
 
 const { sendMsgBatch } = useMessage()
 
-const cronMessageHandler = (task: Task) => {
+// Cron message handler
+const cronMessageHandler = (task: CronTask) => {
   if (!Array.isArray(task.receiver_ids)) return
 
   // Send message to receiver
@@ -24,6 +25,7 @@ const cronMessageHandler = (task: Task) => {
   )
 }
 
+// Realtime message handler
 const realtimeMessageHandler = (message: RealtimeMessage) => {
   console.log(message)
 }
@@ -54,7 +56,7 @@ const bindEvents = () => {
 
     if (!isLoggedIn.value) return
 
-    const task = args[0] as Task
+    const task = args[0] as CronTask
     cronMessageHandler(task)
   })
 }

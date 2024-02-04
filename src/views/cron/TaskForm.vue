@@ -23,22 +23,22 @@
         <p class="cron-desc">执行时间: {{ cronDesc }}</p>
       </el-form-item>
       <!-- 执行模式 normal -->
-      <form :model="cronForm" class="inner-form" v-else>
+      <form :model="form.params" class="inner-form" v-else>
         <el-form-item label="生成频率">
-          <el-select v-model="cronForm.frequency">
+          <el-select v-model="form.params.frequency">
             <el-option label="每天" value="daily" />
             <el-option label="每周" value="weekly" />
             <el-option label="每月" value="monthly" />
           </el-select>
         </el-form-item>
         <el-form-item label="生成时间">
-          <el-select v-if="cronForm.frequency === 'weekly'" v-model="cronForm.week">
+          <el-select v-if="form.params.frequency === 'weekly'" v-model="form.params.week">
             <el-option v-for="i in 7" :label="weekConverter(i - 1)" :value="i" :key="i" />
           </el-select>
-          <el-select v-if="cronForm.frequency === 'monthly'" v-model="cronForm.day">
+          <el-select v-if="form.params.frequency === 'monthly'" v-model="form.params.day">
             <el-option v-for="i in 28" :label="`${i}号`" :value="i" :key="i" />
           </el-select>
-          <el-select v-model="cronForm.time">
+          <el-select v-model="form.params.time">
             <el-option v-for="i in 24" :label="`${i}点`" :value="i" :key="i" />
           </el-select>
         </el-form-item>
@@ -67,48 +67,46 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import MessageForm from '../../components/service/MessageForm.vue';
-import { Task, TaskMode } from '../../store/task'
+import { CronTask, CronTaskMode } from '../../store/task'
 import { MessageType, Contact } from '../../api';
 import { formatCron, getRandomId } from '../../utils/tools';
 import { useCron } from './useCron'
 
 const props = defineProps<{
   data: Contact[]
-  task?: Task
+  task?: CronTask
 }>()
 
 const emit = defineEmits<{
-  (e: 'confirm', _: Task): void
+  (e: 'confirm', _: CronTask): void
   (e: 'cancel'): void
 }>()
 
 const { genCron, weekConverter } = useCron()
 
-const cronForm = ref({
-  frequency: 'daily',
-  week: 1,
-  day: 1,
-  time: 24
-})
-
-const form = ref<Task>(props.task || {
+const form = ref<CronTask>(props.task || {
   uid: getRandomId(),
+  mode: CronTaskMode.NORMAL,
   type: MessageType.TEXT,
   name: '',
-  mode: TaskMode.NORMAL,
   receiver_ids: [],
   cron: '',
   enabled: false,
-  params: {}
+  params: {
+    frequency: 'daily',
+    week: 1,
+    day: 1,
+    time: 24
+  }
 });
 const cronDesc = computed(() => {
   try {
-    if (form.value.mode === TaskMode.CUSTOM) {
+    if (form.value.mode === CronTaskMode.CUSTOM) {
       if (!form.value.cron) return ''
       return formatCron(form.value.cron)
     }
-    if (cronForm.value.frequency && cronForm.value.time) {
-      form.value.cron = genCron(cronForm.value)
+    if (form.value.params.frequency && form.value.params.time) {
+      form.value.cron = genCron(form.value.params)
       return formatCron(form.value.cron)
     }
     return ''

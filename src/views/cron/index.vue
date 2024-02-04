@@ -11,11 +11,13 @@
 
       <!-- 任务列表 -->
       <el-table class="table" height="70vh" :data="taskData">
-        <el-table-column prop="name" label="任务名称" width="160" align="center" />
-        <el-table-column prop="type" label="任务类型" width="120" align="center" />
-        <el-table-column prop="receiver_ids" label="接收者" width="200" align="center" />
+        <el-table-column prop="mode" label="任务模式" width="120" align="center">
+          <template #default="scope">{{ scope.row.mode === 'normal' ? '普通模式' : '自定义模式' }}</template>
+        </el-table-column>
+        <el-table-column prop="name" label="任务名称" align="center" />
+        <el-table-column prop="type" label="消息类型" align="center" />
+        <el-table-column prop="receiver_ids" label="接收者" align="center" />
         <el-table-column prop="cron" label="运行规则" align="center" />
-        <el-table-column prop="params" label="任务参数" />
         <el-table-column label="操作" width="340" align="center">
           <template #default="scope">
             <el-button type="primary" plain class="btn" @click="handleShowEditTask(scope.$index)">编辑</el-button>
@@ -43,14 +45,14 @@ import _ from 'lodash'
 
 import TaskForm from './TaskForm.vue';
 
-import type { Task } from '../../store/task'
+import type { CronTask } from '../../store/task'
 import { useTask } from './useTask'
 import { ElMessage, ElMessageBox } from 'element-plus';
 
 const { tasks, taskData, contactData, handleAddTask, handleEditTask, handleRemoveTask } = useTask()
 
 const visible = ref(false)
-const task = ref<Task>()
+const task = ref<CronTask>()
 
 const reset = () => {
   task.value = undefined
@@ -67,7 +69,7 @@ const handleShowEditTask = (index: number) => {
   visible.value = true
 }
 
-const handleConfirm = (data: Task) => {
+const handleConfirm = (data: CronTask) => {
   if (task.value) {
     const index = taskData.value.findIndex(item => item.uid === data.uid)
     handleEditTask(index, data)

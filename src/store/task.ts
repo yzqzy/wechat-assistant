@@ -1,16 +1,17 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
+import { Store } from '../utils/store'
 import { MessageType } from '../api'
 
-export enum TaskMode {
+export enum CronTaskMode {
   CUSTOM = 'custom',
   NORMAL = 'normal'
 }
 
-export interface Task {
+export interface CronTask {
   uid: string
-  mode: TaskMode
+  mode: CronTaskMode
   type: MessageType
   name: string
   receiver_ids: string[]
@@ -19,40 +20,26 @@ export interface Task {
   params: any
 }
 
-const Store = {
-  get: (key: string, defaultValue: Task[]): Promise<Task[]> => {
-    return new Promise(resolve => {
-      window.ipcRenderer.invoke('get-store-value', key).then(value => {
-        resolve((value && JSON.parse(value)) || defaultValue)
-      })
-    })
-  },
-  set: (key: string, value: Task[]) => {
-    window.ipcRenderer.invoke('set-store-value', key, JSON.stringify(value))
-  }
-}
-
 const SAVED_TASKS_KEY = 'cron_tasks'
 
 export const useTaskStore = defineStore('task', function () {
-  const tasks = ref<Task[]>([])
+  const cron_store = new Store<CronTask[]>(SAVED_TASKS_KEY)
+  const tasks = ref<CronTask[]>([])
 
   const initialize = () => {
-    Store.get(SAVED_TASKS_KEY, []).then(savedTasks => {
+    cron_store.get().then(savedTasks => {
       tasks.value = savedTasks
     })
   }
 
-  const updateStore = () => {
-    Store.set(SAVED_TASKS_KEY, tasks.value)
-  }
+  const updateStore = () => cron_store.set(tasks.value)
 
-  const addTask = (task: Task) => {
+  const addTask = (task: CronTask) => {
     tasks.value.push(task)
     updateStore()
   }
 
-  const editTask = (index: number, task: Task) => {
+  const editTask = (index: number, task: CronTask) => {
     tasks.value[index] = task
     updateStore()
   }
