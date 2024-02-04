@@ -51,13 +51,23 @@ const items = [
         title: '群聊管理',
     },
     {
-        icon: 'Calendar',
-        index: '/cron',
-        title: '定时任务',
+        icon: 'List',
+        index: '3',
+        title: '任务管理',
+        subs: [
+            {
+                index: '/cron',
+                title: '定时任务',
+            },
+            {
+                index: '/trigger',
+                title: '触发任务',
+            }
+        ]
     },
     {
         icon: 'Tools',
-        index: '3',
+        index: '4',
         title: '工具集',
         subs: [
             {

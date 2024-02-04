@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="title">
-      <h2>任务列表</h2>
+      <h2>任务列表（定时任务）</h2>
     </div>
     <div class="container">
       <!-- 功能操作区域 -->

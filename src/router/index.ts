@@ -69,6 +69,15 @@ const routes: RouteRecordRaw[] = [
           import(/* webpackChunkName: "cron" */ '../views/cron/index.vue')
       },
       {
+        path: '/trigger',
+        name: 'Trigger',
+        meta: {
+          title: '触发任务'
+        },
+        component: () =>
+          import(/* webpackChunkName: "trigger" */ '../views/trigger/index.vue')
+      },
+      {
         path: '/about',
         name: 'About',
         meta: {
