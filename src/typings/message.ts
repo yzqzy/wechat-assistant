@@ -1,11 +1,13 @@
+import { LosslessNumber } from 'lossless-json'
+
 export interface RealtimeMessage {
   pid: string
-  type: string
-  msgId: number
-  msgSequence: number
+  type: LosslessNumber
+  msgId: LosslessNumber
+  msgSequence: LosslessNumber
   content: string
   fromUser: string
   toUser: string
-  createTime: number
+  createTime: LosslessNumber
   displayFullContent: string
 }

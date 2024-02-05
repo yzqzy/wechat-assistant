@@ -107,3 +107,4 @@ const handleDeleteTask = (index: number) => {
 <style lang="scss" scoped>
 @import './index.scss';
 </style>
+../../store/cron-task

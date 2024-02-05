@@ -67,7 +67,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import MessageForm from '../../components/service/MessageForm.vue';
-import { CronTask, CronTaskMode } from '../../store/task'
+import { CronTask, CronTaskMode } from '../../store/cron-task'
 import { MessageType, Contact } from '../../api';
 import { formatCron, genCron, weekConverter } from '../../utils/cron';
 import { getRandomId } from '../../utils/tools';
@@ -155,4 +155,4 @@ const onCancel = () => {
     }
   }
 }
-</style>
+</style>../../store/cron-task

@@ -55,8 +55,6 @@ export const useSearchTable = () => {
     }, 3000)
   }
 
-  onMounted(fetchData)
-
   const lazyFetchMembers = (members: any[]) => {
     let isAbort = false
 

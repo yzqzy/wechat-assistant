@@ -19,7 +19,7 @@ export interface CronTask {
   params: any
 }
 
-export const CronTaskHelper = {
+const CronTaskHelper = {
   start: (task: CronTask) => {
     window.ipcRenderer.send('start-cron-task', JSON.stringify(task))
   },
@@ -34,40 +34,25 @@ export const CronTaskHelper = {
 export const useCronTaskStore = defineStore('cron_task', function () {
   const CRON_SAVED_TASKS_KEY = 'cron_tasks'
   const store = new TaskStore<CronTask>(CRON_SAVED_TASKS_KEY)
-  const { tasks, addTask, editTask, removeTask } = store
+  const { tasks } = store
 
-  return {
-    tasks,
-    addTask,
-    editTask,
-    removeTask
+  const addTask = (task: CronTask) => {
+    CronTaskHelper.start(task)
+    store.addTask(task)
   }
-})
 
-export enum TriggerTaskType {
-  RED_PACKET = 'red_packet',
-  PREVENT_REVOCATION = 'prevent_revocation'
-}
+  const editTask = (index: number, task: CronTask) => {
+    CronTaskHelper.stop(task)
+    if (task.enabled) {
+      CronTaskHelper.start(task)
+    }
+    store.editTask(index, task)
+  }
 
-export const triggerMapping = {
-  [TriggerTaskType.RED_PACKET]: '红包监控',
-  [TriggerTaskType.PREVENT_REVOCATION]: '消息防撤回'
-}
-
-export interface TriggerTask {
-  uid: string
-  type: TriggerTaskType
-  name: string
-  observer_ids: string[]
-  receiver_ids: string[]
-  enabled: boolean
-  params: any
-}
-
-export const useTriggerTaskStore = defineStore('trigger_task', function () {
-  const TRIGGER_SAVED_TASKS_KEY = 'trigger_tasks'
-  const store = new TaskStore<TriggerTask>(TRIGGER_SAVED_TASKS_KEY)
-  const { tasks, addTask, editTask, removeTask } = store
+  const removeTask = (index: number) => {
+    CronTaskHelper.remove(tasks.value[index])
+    store.removeTask(index)
+  }
 
   return {
     tasks,

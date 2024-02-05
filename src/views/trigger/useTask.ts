@@ -1,7 +1,7 @@
 import { computed } from 'vue'
 
 import { storeToRefs } from 'pinia'
-import { useTriggerTaskStore, triggerMapping } from '../../store/task'
+import { useTriggerTaskStore, triggerMapping } from '../../store/trigger-task'
 import { useContact } from '../../composables/useContact'
 
 const formatIds = (ids: string[], contactMapping: Record<string, string>) => {

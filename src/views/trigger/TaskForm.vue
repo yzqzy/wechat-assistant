@@ -35,7 +35,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { TriggerTask, TriggerTaskType, triggerMapping } from '../../store/task'
+import { TriggerTask, TriggerTaskType, triggerMapping } from '../../store/trigger-task'
 import { Contact } from '../../api';
 import { getRandomId } from '../../utils/tools';
 
@@ -85,4 +85,4 @@ const onCancel = () => {
   color: #909399;
   font-size: 12px;
 }
-</style>
+</style>../../store/cron-task

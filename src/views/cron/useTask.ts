@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { messageMapping } from '../../api'
 
 import { storeToRefs } from 'pinia'
-import { useCronTaskStore, CronTaskHelper, CronTask } from '../../store/task'
+import { useCronTaskStore } from '../../store/cron-task'
 import { useContact } from '../../composables/useContact'
 import { formatCron } from '../../utils/cron'
 
@@ -30,33 +30,13 @@ export const useTask = () => {
     })
   })
 
-  const handleAddTask = (task: CronTask) => {
-    CronTaskHelper.start(task)
-    addTask(task)
-  }
-
-  const handleRemoveTask = (index: number) => {
-    CronTaskHelper.remove(tasks.value[index])
-    removeTask(index)
-  }
-
-  const handleEditTask = (index: number, task: CronTask) => {
-    CronTaskHelper.stop(task)
-
-    if (task.enabled) {
-      CronTaskHelper.start(task)
-    }
-
-    editTask(index, task)
-  }
-
   return {
     tasks,
     taskData,
     contactData,
 
-    handleAddTask,
-    handleRemoveTask,
-    handleEditTask
+    handleAddTask: addTask,
+    handleRemoveTask: removeTask,
+    handleEditTask: editTask
   }
 }

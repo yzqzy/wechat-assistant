@@ -1,18 +1,16 @@
-import { computed, onMounted, ref } from 'vue'
-import { Contact, getContactList } from '../api'
+import { onMounted } from 'vue'
+import { storeToRefs } from 'pinia'
+
+import { useContactStore } from '../store/contact'
+import { getContactList } from '../api'
 
 export const useContact = () => {
-  const contactData = ref<Contact[]>([])
-  const contactMapping = computed(() => {
-    return contactData.value.reduce((acc, cur) => {
-      acc[cur.wxid] = cur.nickname
-      return acc
-    }, {} as Record<string, string>)
-  })
+  const store = useContactStore()
+  const { contactData, contactMapping } = storeToRefs(store)
 
   const fetchData = () => {
     getContactList().then(res => {
-      contactData.value = res.data
+      store.setContactData(res.data)
     })
   }
 
