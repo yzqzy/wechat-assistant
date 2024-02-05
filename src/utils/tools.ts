@@ -1,6 +1,4 @@
 import * as XLSX from 'xlsx'
-import cronstrue from 'cronstrue'
-import 'cronstrue/locales/zh_CN'
 
 export const addDateSuffixToFileName = (fileName: string) => {
   const currentDate = new Date()
@@ -32,12 +30,4 @@ export const getRandomId = () => {
   const timestamp = Date.now().toString()
   const randomId = `${timestamp}${Math.random().toString(36).substring(2, 5)}`
   return randomId
-}
-
-export const formatCron = (cron: string) => {
-  return cronstrue.toString(cron, {
-    use24HourTimeFormat: true,
-    verbose: true,
-    locale: 'zh_CN'
-  })
 }

@@ -1,10 +1,11 @@
-import { computed, onMounted, ref } from 'vue'
+import { computed } from 'vue'
 
-import { Contact, getContactList, messageMapping } from '../../api'
+import { messageMapping } from '../../api'
 
 import { storeToRefs } from 'pinia'
 import { useCronTaskStore, CronTaskHelper, CronTask } from '../../store/task'
-import { formatCron } from '../../utils/tools'
+import { useContact } from '../../composables/useContact'
+import { formatCron } from '../../utils/cron'
 
 export const useTask = () => {
   const store = useCronTaskStore()
@@ -12,13 +13,7 @@ export const useTask = () => {
   const { tasks } = storeToRefs(store)
   const { addTask, editTask, removeTask } = store
 
-  const contactData = ref<Contact[]>([])
-  const contactMapping = computed(() => {
-    return contactData.value.reduce((acc, cur) => {
-      acc[cur.wxid] = cur.nickname
-      return acc
-    }, {} as Record<string, string>)
-  })
+  const { contactData, contactMapping } = useContact()
 
   const taskData = computed(() => {
     return tasks.value.map(task => {
@@ -33,12 +28,6 @@ export const useTask = () => {
       }
     })
   })
-
-  const fetchData = () => {
-    getContactList().then(res => {
-      contactData.value = res.data
-    })
-  }
 
   const handleAddTask = (task: CronTask) => {
     CronTaskHelper.start(task)
@@ -59,10 +48,6 @@ export const useTask = () => {
 
     editTask(index, task)
   }
-
-  onMounted(() => {
-    fetchData()
-  })
 
   return {
     tasks,

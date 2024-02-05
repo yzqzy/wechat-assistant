@@ -1,6 +1,6 @@
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, reactive } from 'vue'
 
-import { Contact, getContactList } from '../../api'
+import { useContact } from '../../composables/useContact'
 import { textIncludes } from '../../utils/tools'
 
 export const useSearchTable = () => {
@@ -10,11 +10,11 @@ export const useSearchTable = () => {
     pageSize: 10
   })
 
-  const allTableData = ref<Contact[]>([])
+  const { contactData } = useContact()
 
   const filterData = computed(() => {
     const { keyword } = query
-    return allTableData.value.filter(item => {
+    return contactData.value.filter(item => {
       return (
         textIncludes(item.nickname, keyword) ||
         textIncludes(item.customAccount, keyword) ||
@@ -40,12 +40,6 @@ export const useSearchTable = () => {
   const handlePageChange = (val: number) => {
     query.pageIndex = val
   }
-
-  onMounted(() => {
-    getContactList().then(res => {
-      allTableData.value = res.data
-    })
-  })
 
   return {
     query,

@@ -69,8 +69,8 @@ import { computed, ref } from 'vue';
 import MessageForm from '../../components/service/MessageForm.vue';
 import { CronTask, CronTaskMode } from '../../store/task'
 import { MessageType, Contact } from '../../api';
-import { formatCron, getRandomId } from '../../utils/tools';
-import { useCron } from './useCron'
+import { formatCron, genCron, weekConverter } from '../../utils/cron';
+import { getRandomId } from '../../utils/tools';
 
 const props = defineProps<{
   data: Contact[]
@@ -81,8 +81,6 @@ const emit = defineEmits<{
   (e: 'confirm', _: CronTask): void
   (e: 'cancel'): void
 }>()
-
-const { genCron, weekConverter } = useCron()
 
 const form = ref<CronTask>(props.task || {
   uid: getRandomId(),

@@ -1,6 +1,7 @@
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive } from 'vue'
 
-import { Contact, getContactList, getMembers } from '../../api'
+import { getMembers } from '../../api'
+import { useContact } from '../../composables/useContact'
 import { delaySync, textIncludes } from '../../utils/tools'
 
 export const useSearchTable = () => {
@@ -11,11 +12,11 @@ export const useSearchTable = () => {
   })
   const initialSize = Math.min(query.pageSize * 2, 50)
 
-  const allTableData = ref<Contact[]>([])
+  const { contactData, fetchData } = useContact()
 
   const filterData = computed(() => {
     const { keyword } = query
-    return allTableData.value.filter(item => {
+    return contactData.value.filter(item => {
       return (
         textIncludes(item.nickname, keyword) && item.wxid.includes('@chatroom')
       )
@@ -36,12 +37,6 @@ export const useSearchTable = () => {
     query.pageSize = 10
   }
 
-  const fetchData = () => {
-    getContactList().then(res => {
-      allTableData.value = res.data
-    })
-  }
-
   const handleSearch = () => {
     query.pageIndex = 1
   }
@@ -57,7 +52,7 @@ export const useSearchTable = () => {
     setTimeout(() => {
       fetchData()
       callback && callback()
-    }, 2000)
+    }, 3000)
   }
 
   onMounted(fetchData)
@@ -96,7 +91,7 @@ export const useSearchTable = () => {
   return {
     query,
     pageTotal,
-    allTableData,
+    allTableData: contactData,
     tableData,
     filterData,
 
