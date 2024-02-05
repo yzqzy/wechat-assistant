@@ -75,12 +75,13 @@ const emit = defineEmits<{
   (e: 'change', _: any): void,
 }>()
 
-const modes = ref([
-  MessageType.TEXT, MessageType.IMAGE, MessageType.FILE, MessageType.WX_ARTICLE
-].map(item => ({
-  label: messageMapping[item],
-  value: item
-})))
+const modes = ref(Object.keys(messageMapping).map((k) => {
+  const key = k as MessageType
+  return {
+    label: messageMapping[key],
+    value: key
+  }
+}))
 
 const mode = ref(props.mode || MessageType.TEXT);
 const form = ref(props.form || {

@@ -49,6 +49,11 @@ export enum TriggerTaskType {
   PREVENT_REVOCATION = 'prevent_revocation'
 }
 
+export const triggerMapping = {
+  [TriggerTaskType.RED_PACKET]: '红包监控',
+  [TriggerTaskType.PREVENT_REVOCATION]: '消息防撤回'
+}
+
 export interface TriggerTask {
   uid: string
   type: TriggerTaskType
@@ -61,7 +66,7 @@ export interface TriggerTask {
 
 export const useTriggerTaskStore = defineStore('trigger_task', function () {
   const TRIGGER_SAVED_TASKS_KEY = 'trigger_tasks'
-  const store = new TaskStore<CronTask>(TRIGGER_SAVED_TASKS_KEY)
+  const store = new TaskStore<TriggerTask>(TRIGGER_SAVED_TASKS_KEY)
   const { tasks, addTask, editTask, removeTask } = store
 
   return {

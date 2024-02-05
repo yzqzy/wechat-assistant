@@ -19,6 +19,7 @@ export const useTask = () => {
     return tasks.value.map(task => {
       return {
         ...task,
+        mode: task.mode === 'normal' ? '普通模式' : '自定义模式',
         type: messageMapping[task.type],
         params: JSON.stringify(task.params),
         receiver_ids: task.receiver_ids

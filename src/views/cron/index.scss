@@ -7,3 +7,7 @@
 .btn {
   margin: 5px;
 }
+
+:deep(.el-dialog) {
+  margin-top: 10vh !important;
+}

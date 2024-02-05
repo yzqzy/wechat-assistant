@@ -11,9 +11,7 @@
 
       <!-- 任务列表 -->
       <el-table class="table" height="70vh" :data="taskData">
-        <el-table-column prop="mode" label="任务模式" width="120" align="center">
-          <template #default="scope">{{ scope.row.mode === 'normal' ? '普通模式' : '自定义模式' }}</template>
-        </el-table-column>
+        <el-table-column prop="mode" label="任务模式" width="120" align="center" />
         <el-table-column prop="name" label="任务名称" align="center" />
         <el-table-column prop="type" label="消息类型" align="center" />
         <el-table-column prop="receiver_ids" label="接收者" align="center" />
