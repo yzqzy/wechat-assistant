@@ -248,7 +248,6 @@ const handleCloseDialog = () => {
   handleClearSelection()
   isAtMode.value = false
   atWxIds.value = []
-  roomData.value = undefined;
   visible.value = false;
   loading.value = false;
 }

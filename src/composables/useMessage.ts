@@ -21,8 +21,10 @@ export const useMessage = () => {
 
     let res: any
 
+    console.log('sendMsg', wxid, data, args)
+
     if (data.mode === MessageType.TEXT) {
-      if (isAt && atWxIds) {
+      if (isAt && atWxIds && wxid.includes('@chatroom')) {
         res = await sendAtTextMsg(wxid, atWxIds, data.message)
       } else {
         res = await sendTextMsg(wxid, data.message)
@@ -67,7 +69,7 @@ export const useMessage = () => {
       await delaySync(dalay)
     }
 
-    if (res.code === 1) {
+    if (res.code >= 1) {
       ElMessage.success('发送成功')
     } else {
       ElMessage.error('发送失败')

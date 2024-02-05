@@ -8,8 +8,9 @@ import {
   TriggerTask,
   TriggerTaskType
 } from '../../store/trigger-task'
-import { useMessageStore } from '../../store/realtime'
 import { useMessage } from '../../composables/useMessage'
+import { useMessageStore } from '../../store/realtime'
+import { useContactStore } from '../../store/contact'
 import { RealtimeMessage } from '../../typings'
 import { MessageType } from '../../api'
 
@@ -62,16 +63,39 @@ const preventRevocationHandler = (
   console.log('[Prevent revocation]: task:', task.uid, task.name)
 
   // Send message to receiver
+  sendMsgBatch(
+    task.receiver_ids,
+    {
+      mode: MessageType.TEXT,
+      message: newMsg
+    },
+    {
+      isAt: task.receiver_ids.some(wxid => wxid.includes('@chatroom')),
+      atWxIds: ['notify@all']
+    }
+  )
+}
+
+// Red packet
+const redPacketHandler = (task: TriggerTask, message: RealtimeMessage) => {
+  if (!(message.type.value == '10000' && message.content.includes('收到红包')))
+    return
+
+  const contactStore = useContactStore()
+  const { contactMapping } = storeToRefs(contactStore)
+
+  console.log('[Red packet]: message:', message)
+  console.log('[Red packet]: task:', task.uid, task.name)
+
+  const newMsg = `“${
+    contactMapping.value[message.fromUser]
+  }” 正在发红包，请速去查看 ！！！`
+
+  // Send message to receiver
   sendMsgBatch(task.receiver_ids, {
     mode: MessageType.TEXT,
     message: newMsg
   })
-}
-
-// Red packet
-const redPacketHandler = (task: TriggerTask) => {
-  // TODO: implement red packet
-  console.log('[Red packet]')
 }
 
 // realtime message handler
@@ -84,20 +108,22 @@ const messageParser = (message: RealtimeMessage) => {
   const { findTaskBySub } = triggerTaskStore
 
   if (subs.value.has(message.fromUser)) {
-    const task = findTaskBySub(message.fromUser)
+    const tasks = findTaskBySub(message.fromUser)
 
-    if (!task) return
+    if (!tasks || tasks.length === 0) return
 
-    switch (task.type) {
-      case TriggerTaskType.PREVENT_REVOCATION:
-        console.log('[Receive Realtime message]: prevent revocation')
-        preventRevocationHandler(task, message, messages.value)
-        break
-      case TriggerTaskType.RED_PACKET:
-        console.log('[Receive Realtime message]: red packet')
-        redPacketHandler(task)
-        break
-    }
+    tasks.forEach(task => {
+      switch (task.type) {
+        case TriggerTaskType.PREVENT_REVOCATION:
+          console.log('[Receive Realtime message]: prevent revocation')
+          preventRevocationHandler(task, message, messages.value)
+          break
+        case TriggerTaskType.RED_PACKET:
+          console.log('[Receive Realtime message]: red packet')
+          redPacketHandler(task, message)
+          break
+      }
+    })
 
     messageStore.addMessage(message)
   }

@@ -41,7 +41,7 @@ export const useTriggerTaskStore = defineStore('trigger_task', function () {
     )
   })
   const findTaskBySub = (id: string) => {
-    const task = tasks.value.find(task => task.observer_ids.includes(id))
+    const task = tasks.value.filter(task => task.observer_ids.includes(id))
     return task ? _.cloneDeep(task) : null
   }
 
