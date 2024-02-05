@@ -4,7 +4,7 @@ import { CronJob } from 'cron'
 
 let win: BrowserWindow | null = null
 
-const SAVED_TASKS_KEY = 'cron_tasks'
+const CRON_SAVED_TASKS_KEY = 'cron_tasks'
 const taskMap = new Map()
 
 const createTask = (task: any) => {
@@ -73,7 +73,7 @@ bindEvents()
 export function createCron(window: BrowserWindow, store: ElectronStore) {
   win = window
 
-  const tasks = store.get(SAVED_TASKS_KEY, '[]') as string
+  const tasks = store.get(CRON_SAVED_TASKS_KEY, '[]') as string
   const savedTasks = JSON.parse(tasks)
 
   if (Array.isArray(savedTasks)) {

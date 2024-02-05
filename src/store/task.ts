@@ -1,7 +1,6 @@
-import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
-import { Store } from '../utils/store'
+import { TaskStore } from '../utils/store'
 import { MessageType } from '../api'
 
 export enum CronTaskMode {
@@ -20,40 +19,53 @@ export interface CronTask {
   params: any
 }
 
-const SAVED_TASKS_KEY = 'cron_tasks'
-
-export const useTaskStore = defineStore('task', function () {
-  const cron_store = new Store<CronTask[]>(SAVED_TASKS_KEY)
-  const tasks = ref<CronTask[]>([])
-
-  const initialize = () => {
-    cron_store.get().then(savedTasks => {
-      tasks.value = savedTasks
-    })
+export const CronTaskHelper = {
+  start: (task: CronTask) => {
+    window.ipcRenderer.send('start-cron-task', JSON.stringify(task))
+  },
+  stop: (task: CronTask) => {
+    window.ipcRenderer.send('stop-cron-task', JSON.stringify(task))
+  },
+  remove: (task: CronTask) => {
+    window.ipcRenderer.send('remove-cron-task', JSON.stringify(task))
   }
+}
 
-  const updateStore = () => cron_store.set(tasks.value)
-
-  const addTask = (task: CronTask) => {
-    tasks.value.push(task)
-    updateStore()
-  }
-
-  const editTask = (index: number, task: CronTask) => {
-    tasks.value[index] = task
-    updateStore()
-  }
-
-  const removeTask = (index: number) => {
-    tasks.value.splice(index, 1)
-    updateStore()
-  }
-
-  initialize()
+export const useCronTaskStore = defineStore('cron_task', function () {
+  const CRON_SAVED_TASKS_KEY = 'cron_tasks'
+  const store = new TaskStore<CronTask>(CRON_SAVED_TASKS_KEY)
+  const { tasks, addTask, editTask, removeTask } = store
 
   return {
     tasks,
+    addTask,
+    editTask,
+    removeTask
+  }
+})
 
+export enum TriggerTaskType {
+  RED_PACKET = 'red_packet',
+  PREVENT_REVOCATION = 'prevent_revocation'
+}
+
+export interface TriggerTask {
+  uid: string
+  type: TriggerTaskType
+  name: string
+  observer_ids: string[]
+  receiver_ids: string[]
+  enabled: boolean
+  params: any
+}
+
+export const useTriggerTaskStore = defineStore('trigger_task', function () {
+  const TRIGGER_SAVED_TASKS_KEY = 'trigger_tasks'
+  const store = new TaskStore<CronTask>(TRIGGER_SAVED_TASKS_KEY)
+  const { tasks, addTask, editTask, removeTask } = store
+
+  return {
+    tasks,
     addTask,
     editTask,
     removeTask

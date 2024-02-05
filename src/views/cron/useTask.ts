@@ -3,23 +3,11 @@ import { computed, onMounted, ref } from 'vue'
 import { Contact, getContactList, messageMapping } from '../../api'
 
 import { storeToRefs } from 'pinia'
-import { useTaskStore, Task } from '../../store/task'
+import { useCronTaskStore, CronTaskHelper, CronTask } from '../../store/task'
 import { formatCron } from '../../utils/tools'
 
-const CronTask = {
-  start: (task: Task) => {
-    window.ipcRenderer.send('start-cron-task', JSON.stringify(task))
-  },
-  stop: (task: Task) => {
-    window.ipcRenderer.send('stop-cron-task', JSON.stringify(task))
-  },
-  remove: (task: Task) => {
-    window.ipcRenderer.send('remove-cron-task', JSON.stringify(task))
-  }
-}
-
 export const useTask = () => {
-  const store = useTaskStore()
+  const store = useCronTaskStore()
 
   const { tasks } = storeToRefs(store)
   const { addTask, editTask, removeTask } = store
@@ -52,21 +40,21 @@ export const useTask = () => {
     })
   }
 
-  const handleAddTask = (task: Task) => {
-    CronTask.start(task)
+  const handleAddTask = (task: CronTask) => {
+    CronTaskHelper.start(task)
     addTask(task)
   }
 
   const handleRemoveTask = (index: number) => {
-    CronTask.remove(tasks.value[index])
+    CronTaskHelper.remove(tasks.value[index])
     removeTask(index)
   }
 
-  const handleEditTask = (index: number, task: Task) => {
-    CronTask.stop(task)
+  const handleEditTask = (index: number, task: CronTask) => {
+    CronTaskHelper.stop(task)
 
     if (task.enabled) {
-      CronTask.start(task)
+      CronTaskHelper.start(task)
     }
 
     editTask(index, task)
