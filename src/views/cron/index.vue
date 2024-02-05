@@ -43,7 +43,7 @@ import _ from 'lodash'
 
 import TaskForm from './TaskForm.vue';
 
-import type { CronTask } from '../../store/task'
+import type { CronTask } from '../../store/cron-task'
 import { useTask } from './useTask'
 import { ElMessage, ElMessageBox } from 'element-plus';
 

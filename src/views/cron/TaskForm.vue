@@ -65,6 +65,7 @@
 </template>
 
 <script lang="ts" setup>
+import _ from 'lodash';
 import { computed, ref } from 'vue';
 import MessageForm from '../../components/service/MessageForm.vue';
 import { CronTask, CronTaskMode } from '../../store/cron-task'
@@ -82,7 +83,7 @@ const emit = defineEmits<{
   (e: 'cancel'): void
 }>()
 
-const form = ref<CronTask>(props.task || {
+const form = ref<CronTask>(_.cloneDeep(props.task) || {
   uid: getRandomId(),
   mode: CronTaskMode.NORMAL,
   type: MessageType.TEXT,

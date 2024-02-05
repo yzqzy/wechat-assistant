@@ -34,6 +34,7 @@
 
 
 <script lang="ts" setup>
+import _ from 'lodash';
 import { ref } from 'vue';
 import { TriggerTask, TriggerTaskType, triggerMapping } from '../../store/trigger-task'
 import { Contact } from '../../api';
@@ -57,7 +58,7 @@ const emit = defineEmits<{
   (e: 'cancel'): void
 }>()
 
-const form = ref<TriggerTask>(props.task || {
+const form = ref<TriggerTask>(_.cloneDeep(props.task) || {
   uid: getRandomId(),
   type: TriggerTaskType.RED_PACKET,
   name: '',

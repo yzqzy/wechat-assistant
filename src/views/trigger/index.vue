@@ -42,7 +42,7 @@ import _ from 'lodash'
 
 import TaskForm from './TaskForm.vue';
 
-import type { TriggerTask } from '../../store/task'
+import type { TriggerTask } from '../../store/trigger-task'
 import { useTask } from './useTask'
 import { ElMessage, ElMessageBox } from 'element-plus';
 
