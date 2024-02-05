@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { defineStore } from 'pinia'
 import { TaskStore } from '../utils/store'
 import { computed } from 'vue'
@@ -40,7 +41,8 @@ export const useTriggerTaskStore = defineStore('trigger_task', function () {
     )
   })
   const findTaskBySub = (id: string) => {
-    return enabledTasks.value.find(task => task.observer_ids.includes(id))
+    const task = tasks.value.find(task => task.observer_ids.includes(id))
+    return task ? _.cloneDeep(task) : null
   }
 
   return {

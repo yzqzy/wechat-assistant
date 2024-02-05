@@ -57,7 +57,7 @@ const preventRevocationHandler = (
   if (!oldMsg) return
 
   const originMsgContent = oldMsg.content.replace(`${revocationPrefix}`, '')
-  const newMsg = `${replacemsg}: ${originMsgContent}`
+  const newMsg = `${replacemsg} :\n ${originMsgContent}`
 
   console.log('[Prevent revocation]: task:', task.uid, task.name)
 
