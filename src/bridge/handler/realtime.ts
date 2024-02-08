@@ -14,7 +14,7 @@ import { useContactStore } from '../../store/contact'
 import { RealtimeMessage } from '../../typings'
 import { MessageType } from '../../api'
 
-const { sendMsgBatch } = useMessage()
+const { sendMsgBatch, forwardMsgBatch } = useMessage()
 
 interface RevocationMessage {
   sysmsg: {
@@ -58,9 +58,31 @@ const preventRevocationHandler = (
   if (!oldMsg) return
 
   const originMsgContent = oldMsg.content.replace(`${revocationPrefix}`, '')
-  const newMsg = `${replacemsg} :\n ${originMsgContent}`
+  const newMsg = `${replacemsg} :\n${originMsgContent}`
 
   console.log('[Prevent revocation]: task:', task.uid, task.name)
+
+  // Send message to receiver
+  sendMsgBatch(task.receiver_ids, {
+    mode: MessageType.TEXT,
+    message: newMsg
+  })
+}
+
+// Red packet
+const redPacketHandler = (task: TriggerTask, message: RealtimeMessage) => {
+  if (!(message.type.value == '10000' && message.content.includes('收到红包')))
+    return
+
+  const contactStore = useContactStore()
+  const { contactMapping } = storeToRefs(contactStore)
+
+  console.log('[Red packet]: message:', message)
+  console.log('[Red packet]: task:', task.uid, task.name)
+
+  const newMsg = `"${
+    contactMapping.value[message.fromUser]
+  }" 正在发红包，请速去查看 ！！！`
 
   // Send message to receiver
   sendMsgBatch(
@@ -76,26 +98,42 @@ const preventRevocationHandler = (
   )
 }
 
-// Red packet
-const redPacketHandler = (task: TriggerTask, message: RealtimeMessage) => {
-  if (!(message.type.value == '10000' && message.content.includes('收到红包')))
-    return
+// Text message
+const textMessageHandler = (task: TriggerTask, message: RealtimeMessage) => {
+  if (message.type.value !== '1') return
+
+  console.log('[Receive Realtime message]: text:', message)
+
+  const content = message.content.split('\n')[1]
+
+  console.log('[Receive Realtime message]: content:', content)
 
   const contactStore = useContactStore()
   const { contactMapping } = storeToRefs(contactStore)
 
-  console.log('[Red packet]: message:', message)
-  console.log('[Red packet]: task:', task.uid, task.name)
-
-  const newMsg = `“${
+  const newMsg = `来自"${
     contactMapping.value[message.fromUser]
-  }” 正在发红包，请速去查看 ！！！`
+  }"的消息 :\n\n${content}`
+
+  console.log('[Receive Realtime message]: task:', task.uid, task.name)
 
   // Send message to receiver
   sendMsgBatch(task.receiver_ids, {
     mode: MessageType.TEXT,
     message: newMsg
   })
+}
+
+// Forward message
+const forwardMessageHandler = async (
+  task: TriggerTask,
+  message: RealtimeMessage
+) => {
+  console.log('[Receive Realtime message]: forward:', message)
+  console.log('[Receive Realtime message]: task:', task.uid, task.name)
+
+  // Forward message to receiver
+  forwardMsgBatch(task.receiver_ids, message.msgId.value)
 }
 
 // realtime message handler
@@ -110,10 +148,16 @@ const messageParser = (message: RealtimeMessage) => {
   if (subs.value.has(message.fromUser)) {
     const tasks = findTaskBySub(message.fromUser)
 
+    console.log('[Receive Realtime message]: message:', subs, tasks)
+
     if (!tasks || tasks.length === 0) return
 
     tasks.forEach(task => {
       switch (task.type) {
+        case TriggerTaskType.TEXT:
+          console.log('[Receive Realtime message]: text')
+          textMessageHandler(task, message)
+          break
         case TriggerTaskType.PREVENT_REVOCATION:
           console.log('[Receive Realtime message]: prevent revocation')
           preventRevocationHandler(task, message, messages.value)
@@ -121,6 +165,10 @@ const messageParser = (message: RealtimeMessage) => {
         case TriggerTaskType.RED_PACKET:
           console.log('[Receive Realtime message]: red packet')
           redPacketHandler(task, message)
+          break
+        case TriggerTaskType.FORWARD:
+          console.log('[Receive Realtime message]: forward')
+          forwardMessageHandler(task, message)
           break
       }
     })

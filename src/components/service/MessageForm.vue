@@ -5,14 +5,14 @@
     }}</el-radio-button>
   </el-radio-group>
 
-  <el-form ref="formRef" label-position="left" :model="form" label-width="120px">
+  <el-form :model="form" :rules="rules" ref="ruleForm" label-position="left" label-width="120px">
     <!-- 文本消息 -->
     <el-form-item v-if="mode === 'text'" label="内容" prop="message">
       <el-input type="textarea" placeholder="请输入消息内容" v-model="form.message" />
     </el-form-item>
 
     <!-- 图片消息 -->
-    <el-form-item v-else-if="mode === 'image'" label="图片" prop="image_url">
+    <el-form-item v-else-if="mode === 'image'" label="图片">
       <el-upload class="avatar-uploader" action="" :before-upload="beforeAvatarUpload">
         <template v-if="fileList.length">
           <img v-for="(file, index) in fileList" :key="index" :src="file.url" class="avatar" />
@@ -24,7 +24,7 @@
     </el-form-item>
 
     <!-- 文件消息 -->
-    <el-form-item v-else-if="mode === 'file'" label="文件" prop="file_url">
+    <el-form-item v-else-if="mode === 'file'" label="文件">
       <el-upload class="file-uploader" action="" :before-upload="beforeFileUpload">
         <template v-if="fileList.length">
           <p v-for="(file, index) in fileList" :key="index" :src="file.url" class="name">{{ file.name }}</p>
@@ -52,14 +52,14 @@
     <!-- 发送按钮 -->
     <slot name="footer">
       <el-form-item>
-        <el-button type="primary" @click="saveEdit(formRef)">发 送</el-button>
+        <el-button type="primary" @click="saveEdit(ruleForm)">发 送</el-button>
       </el-form-item>
     </slot>
   </el-form>
 </template>
 
 <script lang="ts" setup>
-import { ElMessage, FormInstance, UploadProps, UploadRawFile } from 'element-plus';
+import { ElMessage, FormInstance, FormRules, UploadProps, UploadRawFile } from 'element-plus';
 import { ref, watchEffect } from 'vue';
 
 import { MessageType, messageMapping } from '../../api'
@@ -83,6 +83,26 @@ const modes = ref(Object.keys(messageMapping).map((k) => {
   }
 }))
 
+const ruleForm = ref<FormInstance>();
+const rules = ref<FormRules>({
+  message: [
+    { required: true, message: '请输入消息内容', trigger: 'blur' },
+  ],
+  title: [
+    { required: true, message: '请输入文章名称', trigger: 'blur' },
+    { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
+  ],
+  url: [
+    { required: true, message: '请输入文章地址', trigger: 'blur' },
+  ],
+  thumb_url: [
+    { required: true, message: '请输入缩略图地址', trigger: 'blur' },
+  ],
+  digest: [
+    { required: true, message: '请输入摘要', trigger: 'blur' },
+  ],
+});
+
 const mode = ref(props.mode || MessageType.TEXT);
 const form = ref(props.form || {
   message: '',
@@ -94,7 +114,7 @@ const form = ref(props.form || {
   thumb_url: '',
   digest: '',
 });
-const formRef = ref<FormInstance>();
+
 
 const clean = () => {
   if (mode.value !== MessageType.WX_ARTICLE) {
@@ -124,14 +144,12 @@ watchEffect(() => {
 
 const saveEdit = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
-  formEl.validate(valid => {
-    if (!valid) return false;
-
+  formEl.validate().then(() => {
     emit('confirm', {
       mode: mode.value,
       ...form.value
-    })
-  });
+    });
+  }).catch(() => { })
 };
 
 const fileList = ref<UploadProps['fileList']>([]);

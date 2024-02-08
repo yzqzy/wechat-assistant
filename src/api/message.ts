@@ -100,3 +100,10 @@ export const forwardPublicMsg = async ({
       ...args
     })
   ).data
+
+// 转发消息
+export const forwardMsg = async (
+  wxid: string,
+  msgId: string
+): Promise<Result<null>> =>
+  (await request.post('/api/forwardMsg', { wxid, msgId })).data

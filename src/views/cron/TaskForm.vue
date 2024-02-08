@@ -1,7 +1,7 @@
 <template>
   <div class="cron-edit-form">
-    <el-form :model="form" label-width="120px" label-position="left">
-      <el-form-item label="任务名称">
+    <el-form :model="form" :rules="rules" ref="ruleForm" label-width="120px" label-position="left">
+      <el-form-item label="任务名称" prop="name">
         <el-input v-model="form.name" placeholder="请输入任务名称"></el-input>
       </el-form-item>
       <el-form-item label="任务类型">
@@ -45,7 +45,7 @@
         <p class="cron-desc">执行时间: {{ cronDesc }}</p>
       </form>
 
-      <el-form-item label="接收者">
+      <el-form-item label="接收者" prop="receiver_ids">
         <el-select v-model="form.receiver_ids" multiple filterable placeholder="请选择接收者">
           <el-option v-for="item in data" :key="item.wxid" :label="item.nickname" :value="item.wxid" />
         </el-select>
@@ -57,7 +57,7 @@
         <textarea class="textarea" disabled :value="JSON.stringify(form.params, null, 2)" cols="100" rows="10"></textarea>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onConfirm">{{ props.task ? '编辑' : '新增' }}</el-button>
+        <el-button type="primary" @click="onConfirm(ruleForm)">{{ props.task ? '编辑' : '新增' }}</el-button>
         <el-button @click="onCancel">取消</el-button>
       </el-form-item>
     </el-form>
@@ -67,6 +67,7 @@
 <script lang="ts" setup>
 import _ from 'lodash';
 import { computed, ref } from 'vue';
+import type { FormInstance, FormRules } from 'element-plus'
 import MessageForm from '../../components/service/MessageForm.vue';
 import { CronTask, CronTaskMode } from '../../store/cron-task'
 import { MessageType, Contact } from '../../api';
@@ -82,6 +83,17 @@ const emit = defineEmits<{
   (e: 'confirm', _: CronTask): void
   (e: 'cancel'): void
 }>()
+
+const ruleForm = ref<FormInstance>()
+const rules = ref<FormRules>({
+  name: [
+    { required: true, message: '请输入任务名称', trigger: 'blur' },
+    { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
+  ],
+  receiver_ids: [
+    { type: 'array', required: true, message: '请选择接收者', trigger: 'change' }
+  ]
+})
 
 const form = ref<CronTask>(_.cloneDeep(props.task) || {
   uid: getRandomId(),
@@ -120,8 +132,11 @@ const handleChange = (data: any) => {
   form.value.params = { ...args }
 }
 
-const onConfirm = () => {
-  emit('confirm', form.value);
+const onConfirm = (formEl: FormInstance | undefined) => {
+  if (!formEl) return;
+  formEl.validate().then(() => {
+    emit('confirm', form.value);
+  }).catch(() => { })
 }
 
 const onCancel = () => {
