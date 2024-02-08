@@ -1,7 +1,9 @@
+import _, { rest } from 'lodash'
 import { ElMessage } from 'element-plus'
 
 import {
   MessageType,
+  forwardMsg,
   forwardPublicMsg,
   sendAtTextMsg,
   sendFileMsg,
@@ -11,8 +13,41 @@ import {
 import { delaySync, getRandomInt } from '../utils/tools'
 
 interface ExtendedParams {
-  isAt: boolean
-  atWxIds: string[]
+  isAt?: boolean
+  atWxIds?: string[]
+  callback?: any
+}
+
+const delay = async () => {
+  const dalay =
+    import.meta.env.VITE_SEND_MESSAGE_BATCH_FREQUENCY ||
+    getRandomInt(3, 8) * 100
+
+  await delaySync(dalay)
+}
+
+const exec = async (
+  wx_ids: string[] | undefined,
+  executor: any,
+  ...args: any
+) => {
+  let res: any
+
+  if (!wx_ids || !executor) return
+
+  const tasks = _.cloneDeep(wx_ids)
+
+  while (tasks.length) {
+    const taskId = tasks.shift() as string
+
+    if (!taskId) continue
+
+    await delay()
+
+    res = await executor(taskId, ...args)
+  }
+
+  return res
 }
 
 export const useMessage = () => {
@@ -20,8 +55,6 @@ export const useMessage = () => {
     const { isAt, atWxIds } = args || {}
 
     let res: any
-
-    console.log('sendMsg', wxid, data, args)
 
     if (data.mode === MessageType.TEXT) {
       if (isAt && atWxIds && wxid.includes('@chatroom')) {
@@ -51,33 +84,42 @@ export const useMessage = () => {
     data: any,
     args?: ExtendedParams
   ) => {
-    if (!wx_ids) return
+    const { callback, ...restArgs } = args || {}
 
-    let res: any
+    const res = await exec(wx_ids, sendMsg, data, restArgs)
 
-    while (wx_ids.length) {
-      const wxid = wx_ids.shift() as string
-
-      if (wxid) {
-        res = await sendMsg(wxid, data, args)
-      }
-
-      const dalay =
-        import.meta.env.VITE_SEND_MESSAGE_BATCH_FREQUENCY ||
-        getRandomInt(3, 8) * 100
-
-      await delaySync(dalay)
+    if (callback) {
+      return callback(res)
     }
 
-    if (res.code >= 1) {
+    if (res && res.code >= 1) {
       ElMessage.success('发送成功')
     } else {
       ElMessage.error('发送失败')
     }
   }
 
+  const forwardMsgBatch = async (
+    wx_ids: string[] | undefined,
+    msgId: string,
+    args?: ExtendedParams
+  ) => {
+    const { callback } = args || {}
+    const res = await exec(wx_ids, forwardMsg, msgId)
+
+    if (callback) {
+      return callback(res)
+    }
+
+    if (res && res.code >= 1) {
+      ElMessage.success('转发成功')
+    } else {
+      ElMessage.error('转发失败')
+    }
+  }
+
   return {
-    sendMsg,
+    forwardMsgBatch,
     sendMsgBatch
   }
 }
