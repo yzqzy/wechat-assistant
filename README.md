@@ -27,48 +27,18 @@ PC 微信助手，基于 Electron、WeChat Hook 实现。
 
 ## 二、使用说明
 
-### 1. Hook 注入
+[安装及使用说明](doc/使用说明.md)
 
-需要特定的微信版本和dll才能使 windows hook 工作。
+## 三、开发手册
 
-> 如果你不会使用命令行工具，可以跳过 3 步骤，直接运行微信助手客户端。
+[开发手册](doc/开发手册.md)
 
-1. 从 [release](https://github.com/yzqzy/wechat-assistant/releases/tag/v0.0.0) 中下载相关文件
-2. 安装 WeChatSetup 3.9.5.81 版本并且登录
-3. 使用 Injector 工具进行注入，如果成功的话你将会看到: `Successfully injected module!`
+## 四、Star 历史
 
-```bash
-.\Injector.exe --process-name WeChat.exe --inject .\wxhelper.dll
-```
+[![Star History Chart](https://api.star-history.com/svg?repos=yzqzy/wechat-assistant&type=Date)](https://star-history.com/#yzqzy/wechat-assistant&Date)
 
-### 2. 安装运行微信助手
 
-如果你已经操作成功注入 dll，可以直接使用应用。如果没有注入 dll，会进入以下页面。
-
-<img src="https://img.yueluo.club/wechat-assistant/injector.png" width="600px" />
-
-注入成功后，即可正常使用程序。
-
-<img src="https://img.yueluo.club/wechat-assistant/application_mosaic.png" width="600px" />
-
-<img src="https://img.yueluo.club/wechat-assistant/application_cron.png" width="600px" />
-
-## 三、环境配置
-
-### 开发环境
-
-```bash
-npm install
-npm run dev
-```
-
-### 打包构建
-
-```bash
-npm run build
-```
-
-## 四、参考
+## 五、参考
 
 * [wxhelper](https://github.com/ttttupup/wxhelper) : Hook WeChat / 微信逆向
 * [Injector](https://github.com/nefarius/Injector) : 注入和弹出 DLL
