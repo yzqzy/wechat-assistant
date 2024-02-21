@@ -106,6 +106,11 @@ const textMessageHandler = (task: TriggerTask, message: RealtimeMessage) => {
 
   const content = message.content.split('\n')[1]
 
+  if (task.keyword && !content.includes(task.keyword)) {
+    console.log('[Receive Realtime message]: keyword not match')
+    return
+  }
+
   console.log('[Receive Realtime message]: content:', content)
 
   const contactStore = useContactStore()
@@ -131,6 +136,11 @@ const forwardMessageHandler = async (
 ) => {
   console.log('[Receive Realtime message]: forward:', message)
   console.log('[Receive Realtime message]: task:', task.uid, task.name)
+
+  if (task.keyword && !message.content.includes(task.keyword)) {
+    console.log('[Receive Realtime message]: keyword not match')
+    return
+  }
 
   // Forward message to receiver
   forwardMsgBatch(task.receiver_ids, message.msgId.value)

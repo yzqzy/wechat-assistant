@@ -24,6 +24,7 @@ export interface TriggerTask {
   observer_ids: string[]
   receiver_ids: string[]
   enabled: boolean
+  keyword?: string
   params: any
 }
 

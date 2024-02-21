@@ -9,6 +9,9 @@
           <el-option v-for="item in types" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
+      <el-form-item v-if="showKeywordField" label="关键词">
+        <el-input v-model="form.keyword" placeholder="请输入触发关键词（默认全部）"></el-input>
+      </el-form-item>
       <el-form-item label="观察者" prop="observer_ids">
         <el-select v-model="form.observer_ids" multiple filterable placeholder="请选择观察者">
           <el-option v-for="item in data" :key="item.wxid" :label="item.nickname" :value="item.wxid" />
@@ -35,7 +38,7 @@
 
 <script lang="ts" setup>
 import _ from 'lodash';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import type { FormInstance, FormRules } from 'element-plus'
 import { TriggerTask, TriggerTaskType, triggerMapping } from '../../store/trigger-task'
 import { Contact } from '../../api';
@@ -80,8 +83,12 @@ const form = ref<TriggerTask>(_.cloneDeep(props.task) || {
   observer_ids: [],
   receiver_ids: [],
   enabled: false,
+  keyword: '',
   params: {}
 });
+const showKeywordField = computed(() => {
+  return form.value.type === TriggerTaskType.TEXT || form.value.type === TriggerTaskType.FORWARD
+})
 
 const onConfirm = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
