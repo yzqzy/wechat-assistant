@@ -5,32 +5,36 @@
   $schema: 'https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json',
   appId: 'heora',
   asar: true,
-  productName: 'wechat-assistant',
+  productName: '微信助手',
   directories: {
     output: 'release'
   },
   files: ['dist', 'dist-electron'],
   mac: {
+    icon: 'public/icon.icns',
     target: ['dmg'],
     artifactName: '${productName}-Mac-${version}-Installer.${ext}'
   },
   win: {
+    icon: 'public/icon.ico',
     target: [
       {
         target: 'nsis',
         arch: ['x64']
       }
     ],
-    artifactName: '${productName}-Windows-${version}-Setup.${ext}'
+    artifactName: '${productName}-Windows-${version}-Setup.${ext}',
+    requestedExecutionLevel: 'highestAvailable'
+  },
+  linux: {
+    icon: 'public/icon.ico',
+    target: ['AppImage'],
+    artifactName: '${productName}-Linux-${version}.${ext}'
   },
   nsis: {
     oneClick: false,
     perMachine: false,
     allowToChangeInstallationDirectory: true,
     deleteAppDataOnUninstall: false
-  },
-  linux: {
-    target: ['AppImage'],
-    artifactName: '${productName}-Linux-${version}.${ext}'
   }
 }
