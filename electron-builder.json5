@@ -13,7 +13,7 @@
   mac: {
     icon: 'public/icon.icns',
     target: ['dmg'],
-    artifactName: '${productName}-Mac-${version}-Installer.${ext}'
+    artifactName: '${name}-Mac-${version}-Installer.${ext}'
   },
   win: {
     icon: 'public/icon.ico',
@@ -23,13 +23,13 @@
         arch: ['x64']
       }
     ],
-    artifactName: '${productName}-Windows-${version}-Setup.${ext}',
+    artifactName: '${name}-Windows-${version}-Setup.${ext}',
     requestedExecutionLevel: 'highestAvailable'
   },
   linux: {
     icon: 'public/icon.ico',
     target: ['AppImage'],
-    artifactName: '${productName}-Linux-${version}.${ext}'
+    artifactName: '${name}-Linux-${version}.${ext}'
   },
   nsis: {
     oneClick: false,
