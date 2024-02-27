@@ -68,7 +68,7 @@
 import _ from 'lodash';
 import { computed, ref } from 'vue';
 import type { FormInstance, FormRules } from 'element-plus'
-import MessageForm from '../../components/service/MessageForm.vue';
+import MessageForm from '../../components/MessageForm.vue';
 import { CronTask, CronTaskMode } from '../../store/cron-task'
 import { MessageType, Contact } from '../../api';
 import { formatCron, genCron, weekConverter } from '../../utils/cron';
