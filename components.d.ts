@@ -29,12 +29,12 @@ declare module 'vue' {
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ElUpload: typeof import('element-plus/es')['ElUpload']
-    Header: typeof import('./src/components/layout/Header.vue')['default']
-    MessageForm: typeof import('./src/components/service/MessageForm.vue')['default']
+    Header: typeof import('./src/components/Header.vue')['default']
+    MessageForm: typeof import('./src/components/MessageForm.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    Section: typeof import('./src/components/service/MultipleSection/Section.vue')['default']
-    SideBar: typeof import('./src/components/layout/SideBar.vue')['default']
+    Section: typeof import('./src/components/MultipleSection/Section.vue')['default']
+    SideBar: typeof import('./src/components/SideBar.vue')['default']
   }
   export interface ComponentCustomProperties {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']

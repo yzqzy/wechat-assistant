@@ -14,6 +14,6 @@
 </template>
 
 <script setup lang="ts" name="home">
-import vHeader from '../components/layout/Header.vue';
-import vSidebar from '../components/layout/SideBar.vue';
+import vHeader from '../components/Header.vue';
+import vSidebar from '../components/SideBar.vue';
 </script>

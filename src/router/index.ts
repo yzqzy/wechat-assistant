@@ -51,15 +51,6 @@ const routes: RouteRecordRaw[] = [
           )
       },
       {
-        path: '/ocr',
-        name: 'OCR',
-        meta: {
-          title: '图像文字识别 - OCR'
-        },
-        component: () =>
-          import(/* webpackChunkName: "ocr" */ '../views/ocr.vue')
-      },
-      {
         path: '/cron',
         name: 'CRON',
         meta: {
@@ -76,6 +67,24 @@ const routes: RouteRecordRaw[] = [
         },
         component: () =>
           import(/* webpackChunkName: "trigger" */ '../views/trigger/index.vue')
+      },
+      {
+        path: '/wx-msg',
+        name: 'WxMsg',
+        meta: {
+          title: '聊天记录备份'
+        },
+        component: () =>
+          import(/* webpackChunkName: "wx-msg" */ '../views/wx-msg/index.vue')
+      },
+      {
+        path: '/ocr',
+        name: 'OCR',
+        meta: {
+          title: '图像文字识别 - OCR'
+        },
+        component: () =>
+          import(/* webpackChunkName: "ocr" */ '../views/ocr.vue')
       },
       {
         path: '/about',

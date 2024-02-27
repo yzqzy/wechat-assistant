@@ -76,8 +76,8 @@ import { ref, computed } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
 
-import ChatRoomSection from '../../components/service/MultipleSection/Section.vue';
-import MessageForm from '../../components/service/MessageForm.vue';
+import ChatRoomSection from '../../components/MultipleSection/Section.vue';
+import MessageForm from '../../components/MessageForm.vue';
 import ChatMemberForm from './ChatMemberForm.vue';
 import ChatRoomTable from './ChatRoomTable.vue';
 
@@ -88,7 +88,7 @@ import {
   addMemberToChatRoom, inviteMemberToChatRoom, delMemberFromChatRoom
 } from '../../api';
 
-import { useSection } from '../../components/service/MultipleSection/useSection'
+import { useSection } from '../../components/MultipleSection/useSection'
 import { useMessage } from '../../composables/useMessage'
 import { useExport } from '../../composables/useExport';
 import { useSearchTable } from './useSearch';

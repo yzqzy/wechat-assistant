@@ -66,8 +66,13 @@ const items = [
         ]
     },
     {
+        icon: 'ChatDotRound',
+        index: '/wx-msg',
+        title: '聊天记录备份',
+    },
+    {
         icon: 'Tools',
-        index: '4',
+        index: '5',
         title: '工具集',
         subs: [
             {

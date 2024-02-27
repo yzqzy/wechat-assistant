@@ -64,13 +64,13 @@ import { ref } from 'vue';
 import { ElMessage, ElMessageBox, ElTable } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
 
-import ContactSection from '../../components/service/MultipleSection/Section.vue';
-import MessageForm from '../../components/service/MessageForm.vue';
+import ContactSection from '../../components/MultipleSection/Section.vue';
+import MessageForm from '../../components/MessageForm.vue';
 
 import type { Contact } from '../../api'
 import { sendPatMsg } from '../../api';
 
-import { useSection } from '../../components/service/MultipleSection/useSection'
+import { useSection } from '../../components/MultipleSection/useSection'
 import { useMessage } from '../../composables/useMessage'
 import { useExport } from '../../composables/useExport';
 import { useSearchTable } from './useSearch';
