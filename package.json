@@ -27,7 +27,7 @@
   "devDependencies": {
     "@types/nprogress": "^0.2.3",
     "@vitejs/plugin-vue": "^5.0.1",
-    "electron": "^28.1.0",
+    "electron": "^29.1.0",
     "electron-builder": "^24.9.1",
     "sass": "^1.69.7",
     "tree-kill": "^1.2.2",
