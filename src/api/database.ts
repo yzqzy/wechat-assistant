@@ -8,17 +8,17 @@ interface Table {
   tableName: string
 }
 
-interface Database {
+export interface Database {
   databaseName: string
-  handle: string
+  handle: number
   tables: Table[]
 }
 
-export const getDatabaseList = async (): Promise<Result<Database[]>> =>
-  (await request.post('/api/hookSyncMsg')).data
+export const getDatabases = async (): Promise<Result<Database[]>> =>
+  (await request.post('/api/getDBInfo')).data
 
-export const executeSql = async (
-  dbHandle: string,
+export const execSql = async (
+  dbHandle: number,
   sql: string
-): Promise<Result<null>> =>
-  (await request.post('/api/executeSql', { dbHandle, sql })).data
+): Promise<Result<string[][]>> =>
+  (await request.post('/api/execSql', { dbHandle, sql })).data

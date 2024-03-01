@@ -3,3 +3,87 @@
   margin-bottom: 20px;
   box-sizing: border-box;
 }
+
+.container {
+  width: 100vw;
+  height: 80vh;
+  display: flex;
+  flex-direction: row;
+}
+
+.left {
+  width: 15vw;
+  border: 1px solid #eee;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  height: 50px;
+  background-color: #f5f7fa;
+
+  .refresh-btn {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.contact-list {
+  width: 100%;
+  height: 70vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: #fff;
+
+
+  &::-webkit-scrollbar{
+    width: 6px;
+    height: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    border-radius: 3px;
+    background: rgba(0,0,0,0.06);
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.08);
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background: rgba(0,0,0,0.12);
+    -webkit-box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+  }
+
+  .contact {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    &.active {
+      background-color: #f5f7fa;
+    }
+
+    .avator {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 80px;
+      height: 80px;
+
+
+      img {
+        width: 60px;
+        height: auto;
+      }
+
+    }
+
+    .nickname {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      margin-left: 3px;
+      color: #000;
+    }
+  }
+}
