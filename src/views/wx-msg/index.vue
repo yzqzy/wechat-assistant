@@ -8,17 +8,20 @@
         <!-- 搜索栏 -->
         <div class="search-bar">
           <el-input v-model="keyword" style="width: 240px" placeholder="搜索" :prefix-icon="Search" />
-          <el-button circle class="refresh-btn" :icon="Refresh" />
+          <el-button circle class="refresh-btn" :icon="Refresh" @click="refreshChats" />
         </div>
 
-        <!-- 联系人列表 -->
-        <div class="contact-list">
-          <div class="contact" :class="{ active: contact.username === selectedContact?.username }"
-            v-for="contact in searchContacts" :key="contact.username" @click="handleSelectContact(contact)">
+        <!-- 聊天列表 -->
+        <div class="chat-list">
+          <div class="chat" :class="{ active: chat.username === selectedChat?.username }" v-for="chat in searchChats"
+            :key="chat.wxid" @click="handleSelectChat(chat)">
             <div class="avator">
-              <img :src="contact.smale_head_img_url" alt="head-img" />
+              <img :src="chat.smalllAvatar" alt="head-img" />
             </div>
-            <div class="nickname">{{ contact.nickname }}</div>
+            <div class="info">
+              <div class="nickname">{{ formattedName(chat) }}</div>
+              <div class="last-msg">{{ formattedContent(chat) }}</div>
+            </div>
           </div>
         </div>
       </div>
@@ -33,25 +36,38 @@
 import { computed, ref } from 'vue';
 import { Search, Refresh } from '@element-plus/icons-vue';
 import { useDatabase } from '../../composables/useDatabase'
-import { DatabaseContact } from '../../typings'
+import { DatabaseChat } from '../../typings'
 
-const { loading, contacts, getMessages } = useDatabase()
+const { loading, chats, getMessages, refreshChats } = useDatabase()
 
 const keyword = ref('')
-const selectedContact = ref<DatabaseContact | null>(null)
+const selectedChat = ref<DatabaseChat | null>(null)
 
 const handleGetMsg = () => {
-  if (!selectedContact.value) return
-  getMessages(selectedContact.value.username)
+  if (!selectedChat.value) return
+  getMessages(selectedChat.value.username)
 }
 
-const searchContacts = computed(() => {
-  if (!contacts.value) return []
-  return contacts.value.filter(contact => contact.nickname.includes(keyword.value))
+const formattedName = computed(() => {
+  return (chat: DatabaseChat) => {
+    const name = chat.remark || chat.nickname
+    return name.length > 10 ? `${name.slice(0, 10)}...` : name
+  }
+})
+const formattedContent = computed(() => {
+  return (chat: DatabaseChat) => {
+    const msg = `${chat.unReadCount > 0 ? `[${chat.unReadCount}条] ` : ''}${chat.lastMsg}`
+    return msg.length > 15 ? `${msg.slice(0, 15)}...` : msg
+  }
 })
 
-const handleSelectContact = (contact: DatabaseContact) => {
-  selectedContact.value = contact
+const searchChats = computed(() => {
+  if (!chats.value) return []
+  return chats.value.filter(chat => chat.nickname.includes(keyword.value))
+})
+
+const handleSelectChat = (chat: DatabaseChat) => {
+  selectedChat.value = chat
 }
 </script>
 

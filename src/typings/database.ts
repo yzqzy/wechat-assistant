@@ -1,11 +1,16 @@
-export interface DatabaseContact {
+export interface DatabaseChat {
+  wxid: string
+  order: number
   username: string
   alias: string
-  type: string
   remark: string
   nickname: string
-  pyinitial: string
-  remark_pyinitial: string
-  smale_head_img_url: string
-  big_head_img_url: string
+  lastMsg: string
+  msgType: number
+  msgLocalId: string
+  msgStatus: number
+  smalllAvatar: string
+  bigAvatar: string
+  unReadCount: number
+  time: Date
 }

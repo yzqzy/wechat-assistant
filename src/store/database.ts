@@ -1,39 +1,50 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { Database } from '../api/database'
-import { DatabaseContact } from '../typings'
+import { DatabaseChat } from '../typings'
 
-export const formatedContacts = (contacts: string[][]) => {
-  contacts.shift()
-  return contacts.map(contact => {
+export const formatedChats = (chats: string[][]) => {
+  chats.shift()
+  return chats.map(chat => {
     const [
+      wxid,
+      order,
       username,
       alias,
-      type,
       remark,
       nickname,
-      pyinitial,
-      remark_pyinitial,
-      smale_head_img_url,
-      big_head_img_url
-    ] = contact
+      lastMsg,
+      msgType,
+      msgLocalId,
+      msgStatus,
+      smalllAvatar,
+      bigAvatar,
+
+      unReadCount,
+      time
+    ] = chat
     return {
+      wxid,
+      order: Number(order),
       username,
       alias,
-      type,
       remark,
       nickname,
-      pyinitial,
-      remark_pyinitial,
-      smale_head_img_url,
-      big_head_img_url
-    } as DatabaseContact
+      lastMsg,
+      msgType: Number(msgType),
+      msgLocalId,
+      msgStatus: Number(msgStatus),
+      smalllAvatar,
+      bigAvatar,
+      unReadCount: Number(unReadCount),
+      time: new Date(Number(time) * 1000)
+    } as DatabaseChat
   })
 }
 
 export const useDatabaseStore = defineStore('database', () => {
   const databases = ref<Database[] | null>()
-  const contacts = ref<DatabaseContact[] | null>()
+  const chats = ref<DatabaseChat[] | null>()
 
   const handlerMapping = computed(() => {
     return databases.value?.reduce((acc, cur) => {
@@ -46,8 +57,8 @@ export const useDatabaseStore = defineStore('database', () => {
     databases.value = data
   }
 
-  const setContacts = (data: DatabaseContact[] | null) => {
-    contacts.value = data
+  const setChats = (data: DatabaseChat[] | null) => {
+    chats.value = data
   }
 
   return {
@@ -56,7 +67,7 @@ export const useDatabaseStore = defineStore('database', () => {
     databases,
     setDatabases,
 
-    contacts,
-    setContacts
+    chats,
+    setChats
   }
 })

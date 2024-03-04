@@ -1,15 +1,15 @@
 import { onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 
-import { useDatabaseStore, formatedContacts } from '../store/database'
+import { useDatabaseStore, formatedChats } from '../store/database'
 import { getDatabases, execSql } from '../api'
 
 export function useDatabase() {
   const loading = ref(true)
 
   const store = useDatabaseStore()
-  const { handlerMapping, databases, contacts } = storeToRefs(store)
-  const { setDatabases, setContacts } = store
+  const { handlerMapping, databases, chats } = storeToRefs(store)
+  const { setDatabases, setChats } = store
 
   const getDatabaseList = async () => {
     const response = await getDatabases()
@@ -18,36 +18,31 @@ export function useDatabase() {
     return response.data
   }
 
-  const refreshContacts = async () => {
+  const refreshChats = async () => {
     loading.value = true
-    await getContacts(true)
+    await getChats(true)
     loading.value = false
   }
 
-  const getContacts = async (forceUpdate = false) => {
+  const getChats = async (forceUpdate = false) => {
     if (handlerMapping.value == null) return null
-    if (contacts.value && !forceUpdate) return contacts.value
+    if (chats.value && !forceUpdate) return chats.value
 
     const sql = `
-      SELECT UserName, Alias, Type, Remark, NickName, PYInitial, RemarkPYInitial, ContactHeadImgUrl.smallHeadImgUrl, ContactHeadImgUrl.bigHeadImgUrl,ExTraBuf,COALESCE(ContactLabel.LabelName, 'None') AS labelName
-                      FROM Contact
-                      INNER JOIN ContactHeadImgUrl ON Contact.UserName = ContactHeadImgUrl.usrName
-                      LEFT JOIN ContactLabel ON Contact.LabelIDList = ContactLabel.LabelId
-                      WHERE (Type!=4 AND VerifyFlag=0)
-                          AND NickName != ''
-                      ORDER BY 
-                          CASE
-                              WHEN RemarkPYInitial = '' THEN PYInitial
-                              ELSE RemarkPYInitial
-                          END ASC
+      SELECT chat.strUsrName, chat.nOrder, chat.strNickName, contact.Alias, contact.Remark, contact.NickName, chat.strContent, chat.nMsgType, chat.nMsgLocalId, chat.nMsgStatus, img.smallHeadImgUrl, img.bigHeadImgUrl, chat.nUnReadCount, chat.nTime
+      FROM
+          Session as chat
+          INNER JOIN ContactHeadImgUrl as img ON chat.strUsrName = img.usrName
+          INNER JOIN Contact as contact ON chat.strUsrName = contact.UserName
+      ORDER BY nOrder DESC;
     `
     const handle = handlerMapping.value['MicroMsg.db']
 
     const response = await execSql(handle, sql)
     if (response.code != 1) return null
 
-    const data = formatedContacts(response.data)
-    setContacts(data)
+    const data = formatedChats(response.data)
+    setChats(data.filter(chat => chat.remark || chat))
 
     return data
   }
@@ -66,18 +61,6 @@ export function useDatabase() {
     console.log(response.data)
   }
 
-  const getMsgContacts = async () => {
-    if (handlerMapping.value == null) return null
-
-    const sql = `select StrTalker, MAX(CreateTime) from MSG group by StrTalker`
-    const handle = handlerMapping.value['MSG0.db']
-
-    const response = await execSql(handle, sql)
-    if (response.code != 1) return null
-
-    console.log(response.data)
-  }
-
   onMounted(async () => {
     if (databases.value != null) {
       loading.value = false
@@ -85,7 +68,7 @@ export function useDatabase() {
     }
 
     await getDatabaseList()
-    await getContacts()
+    await getChats()
     loading.value = false
   })
 
@@ -93,11 +76,10 @@ export function useDatabase() {
     loading,
 
     databases,
-    contacts,
+    chats,
 
-    refreshContacts,
+    refreshChats,
 
-    getMsgContacts,
     getMessages
   }
 }

@@ -47,3 +47,4 @@ PC 微信助手，基于 Electron、WeChat Hook 实现。
 
 * [wxhelper](https://github.com/ttttupup/wxhelper) : Hook WeChat / 微信逆向
 * [Injector](https://github.com/nefarius/Injector) : 注入和弹出 DLL
+* [WeChatMsg](https://github.com/LC044/WeChatMsg) : 留痕、提取微信聊天记录
