@@ -1,44 +1,4 @@
-.title {
-  padding-left: 10px;
-  margin-bottom: 20px;
-  box-sizing: border-box;
-}
-
-.container {
-  width: 100vw;
-  height: 80vh;
-  display: flex;
-  flex-direction: row;
-}
-
-.left {
-  width: 15vw;
-  border: 1px solid #eee;
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.search-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  height: 50px;
-  background-color: #f5f7fa;
-
-  .refresh-btn {
-    width: 24px;
-    height: 24px;
-  }
-}
-
-.chat-list {
-  width: 100%;
-  height: 70vh;
-  overflow-x: hidden;
-  overflow-y: auto;
-  background-color: #fff;
-
-
+.scroll-bar {
   &::-webkit-scrollbar{
     width: 6px;
     height: 6px;
@@ -53,48 +13,192 @@
     background: rgba(0,0,0,0.12);
     -webkit-box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
   }
+}
 
-  .chat {
+.title {
+  padding-left: 10px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+}
+
+.container {
+  width: 100vw;
+  height: 85vh;
+  display: flex;
+  flex-direction: row;
+}
+
+.left {
+  width: 15vw;
+  min-width: 240px;
+  border: 1px solid #eee;
+  border-radius: 2px;
+  overflow: hidden;
+  box-sizing: border-box;
+
+  .search-bar {
     display: flex;
-    flex-direction: row;
     align-items: center;
+    justify-content: space-around;
+    height: 50px;
+    background-color: #f5f7fa;
 
-    &.active {
-      background-color: #f5f7fa;
+    .refresh-btn {
+      width: 24px;
+      height: 24px;
     }
+  }
 
-    .avator {
+  .chat-list {
+    width: 100%;
+    height: 75vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: #fff;
+
+    .chat {
       display: flex;
-      justify-content: center;
+      flex-direction: row;
       align-items: center;
-      width: 80px;
-      height: 80px;
 
-
-      img {
-        width: 60px;
-        height: auto;
+      &.active {
+        background-color: #f5f7fa;
       }
 
+      .avator {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 80px;
+        height: 80px;
+
+
+        img {
+          width: 60px;
+          height: auto;
+        }
+      }
+
+      .info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        text-align: left;
+        margin-left: 3px;
+
+        .nickname {
+          color: #000;
+        }
+    
+        .last-msg {
+          color: rgb(168, 168, 168);
+          font-size: 12px;
+          margin-top: 1px;
+        }
+      }
     }
+  }
+}
+
+.right {
+  display: flex;
+  flex-direction: column;
+  width: 50vw;
+  height: 75vh;
+  border: 1px solid #eee;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-left: 10px;
+  background-color: #f5f7fa;
+  box-sizing: border-box;
+
+  .chat-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 50px;
+    border-bottom: 1px solid #eee;
+    padding: 0 10px;
+    box-sizing: border-box;
 
     .info {
-      flex: 1;
       display: flex;
       flex-direction: column;
-      flex-wrap: wrap;
-      text-align: left;
-      margin-left: 3px;
+      justify-content: center;
 
-      .nickname {
+      .remark {
         color: #000;
       }
   
-      .last-msg {
-        color: rgb(168, 168, 168);
-        font-size: 12;
-        transform: scale(0.8) translateX(-24px);
+      .nickname {
+        color: #000;
+        font-size: 10px;
         margin-top: 1px;
+      }
+    }
+
+    .btns {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      box-sizing: border-box;
+
+      .refresh-btn {
+        width: 34px;
+        height: 34px;
+      }
+    }
+  }
+
+  .message-list {
+    flex: 1;
+    overflow-y: auto;
+
+    .message {
+      display: flex;      
+      flex-direction: row;
+      align-items: center;
+      flex-wrap: wrap;
+
+      .avator {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 60px;
+        height: 60px;
+
+        img {
+          width: 40px;
+          height: auto;
+        }
+      }
+
+      .content {
+        display: flex;
+        flex-direction: column;
+        width: 60%;
+
+        .username {
+          color: rgb(168, 168, 168);
+          font-size: 12px;
+        }
+
+        .msg {
+          display: flex;
+          color: #000;
+          font-size: 14px;
+          flex-direction: row;
+          flex-wrap: wrap;
+        }
+      }
+      
+      &.is-sender {
+        flex-direction: row-reverse;
+
+        .content {
+          align-items: flex-end;
+        }
       }
     }
   }

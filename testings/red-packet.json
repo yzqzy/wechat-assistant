@@ -1,0 +1,12 @@
+{
+  "content": "收到红包，请在手机上查看",
+  "createTime": 1706865767,
+  "displayFullContent": "",
+  "fromUser": "25054228175@chatroom",
+  "msgId": 7566968094722970923,
+  "msgSequence": 863093906,
+  "pid": 29068,
+  "signature": "<msgsource>\n\t<pushkey />\n\t<ModifyMsgAction />\n\t<silence>1</silence>\n\t<membercount>19</membercount>\n\t<signature>v1_oU9quVmO</signature>\n\t<tmp_node>\n\t\t<publisher-id></publisher-id>\n\t</tmp_node>\n</msgsource>\n",
+  "toUser": "wxid_3w0lupg9j01622",
+  "type": 10000
+}

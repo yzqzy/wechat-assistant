@@ -12,7 +12,7 @@
         </div>
 
         <!-- 聊天列表 -->
-        <div class="chat-list">
+        <div class="chat-list scroll-bar">
           <div class="chat" :class="{ active: chat.username === selectedChat?.username }" v-for="chat in searchChats"
             :key="chat.wxid" @click="handleSelectChat(chat)">
             <div class="avator">
@@ -27,26 +27,70 @@
       </div>
 
       <!-- 聊天记录 -->
-      <div class="message-list"></div>
+      <div class="right">
+        <div class="chat-info">
+          <div class="info">
+            <div class="remark">{{ selectedChat?.remark }}</div>
+            <div class="nickname">{{ selectedChat?.nickname }}</div>
+          </div>
+          <div class="btns">
+            <el-button circle class="refresh-btn" :icon="Refresh" @click="refreshMessages" />
+          </div>
+        </div>
+        <div class="message-list scroll-bar" ref="messageRef">
+          <div class="message" :class="{ 'is-sender': msg.isSender }" v-for="(msg, idx) in messages"
+            :key="msg.wxid + '' + idx">
+            <div class="avator">
+              <img :src="msg.user?.smalllAvatar || ''" alt="head-img" />
+            </div>
+            <div class="content">
+              <div class="username">
+                {{ msg.user?.remark || msg.user?.nickname || '' }}
+              </div>
+              <div class="msg">
+                {{ msg.content }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts" name="wx-msg">
-import { computed, ref } from 'vue';
+import { computed, ref, watch, nextTick } from 'vue';
 import { Search, Refresh } from '@element-plus/icons-vue';
 import { useDatabase } from '../../composables/useDatabase'
 import { DatabaseChat } from '../../typings'
 
-const { loading, chats, getMessages, refreshChats } = useDatabase()
+const { loading, chats, messages, getMessages, refreshChats } = useDatabase()
 
 const keyword = ref('')
 const selectedChat = ref<DatabaseChat | null>(null)
+const messageRef = ref<HTMLDivElement | null>(null)
 
-const handleGetMsg = () => {
+const refreshMessages = () => {
   if (!selectedChat.value) return
-  getMessages(selectedChat.value.username)
+  getMessages(selectedChat.value.wxid)
 }
+
+watch(selectedChat, refreshMessages)
+
+watch(messages, () => {
+  try {
+    console.log('messages changed', messages.value)
+
+    nextTick(() => {
+      messageRef.value?.scrollTo({
+        top: messageRef.value?.scrollHeight,
+        behavior: 'smooth'
+      })
+    })
+  } catch (error) {
+    console.log(error)
+  }
+})
 
 const formattedName = computed(() => {
   return (chat: DatabaseChat) => {

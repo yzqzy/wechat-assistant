@@ -7,6 +7,7 @@ import { createInjector } from './handler/injector'
 import { createCron } from './handler/cron'
 import { createServer } from './server/app'
 import store from './handler/store'
+import './handler/msg'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -60,7 +61,7 @@ async function createWindow() {
 
       preload
       // Warning: Enable nodeIntegration and disable contextIsolation is not secure in production
-      // nodeIntegration: true,
+      // nodeIntegration: true
 
       // Consider using contextBridge.exposeInMainWorld
       // Read more on https://www.electronjs.org/docs/latest/tutorial/context-isolation

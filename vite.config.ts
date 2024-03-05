@@ -1,4 +1,5 @@
 import fs from 'node:fs'
+import { resolve } from 'path'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite'
@@ -16,6 +17,11 @@ export default defineConfig(({ command }) => {
   const sourcemap = isServe || !!process.env.VSCODE_DEBUG
 
   return {
+    resolve: {
+      alias: {
+        '@': resolve(__dirname, './src')
+      }
+    },
     build: {
       chunkSizeWarningLimit: 1600
     },

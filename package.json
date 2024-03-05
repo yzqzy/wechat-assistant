@@ -49,8 +49,10 @@
     "fast-xml-parser": "^4.3.4",
     "lodash": "^4.17.21",
     "lossless-json": "^4.0.1",
+    "lz4": "^0.6.5",
     "nprogress": "^0.2.0",
     "pinia": "^2.1.7",
+    "protobufjs": "^7.2.6",
     "vue-router": "^4.2.5",
     "xlsx": "^0.18.5"
   }

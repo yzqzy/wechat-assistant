@@ -1,50 +1,12 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { Database } from '../api/database'
-import { DatabaseChat } from '../typings'
-
-export const formatedChats = (chats: string[][]) => {
-  chats.shift()
-  return chats.map(chat => {
-    const [
-      wxid,
-      order,
-      username,
-      alias,
-      remark,
-      nickname,
-      lastMsg,
-      msgType,
-      msgLocalId,
-      msgStatus,
-      smalllAvatar,
-      bigAvatar,
-
-      unReadCount,
-      time
-    ] = chat
-    return {
-      wxid,
-      order: Number(order),
-      username,
-      alias,
-      remark,
-      nickname,
-      lastMsg,
-      msgType: Number(msgType),
-      msgLocalId,
-      msgStatus: Number(msgStatus),
-      smalllAvatar,
-      bigAvatar,
-      unReadCount: Number(unReadCount),
-      time: new Date(Number(time) * 1000)
-    } as DatabaseChat
-  })
-}
+import { DatabaseChat, DatabaseContact } from '../typings'
 
 export const useDatabaseStore = defineStore('database', () => {
   const databases = ref<Database[] | null>()
   const chats = ref<DatabaseChat[] | null>()
+  const contacts = ref<DatabaseContact[] | null>()
 
   const handlerMapping = computed(() => {
     return databases.value?.reduce((acc, cur) => {
@@ -52,7 +14,6 @@ export const useDatabaseStore = defineStore('database', () => {
       return acc
     }, {} as Record<string, number>)
   })
-
   const setDatabases = (data: Database[] | null) => {
     databases.value = data
   }
@@ -61,13 +22,33 @@ export const useDatabaseStore = defineStore('database', () => {
     chats.value = data
   }
 
+  const contactMapping = computed(() => {
+    return contacts.value?.reduce((acc, cur) => {
+      acc[cur.wxid] = cur
+      return acc
+    }, {} as Record<string, DatabaseContact>)
+  })
+  const setContacts = (data: DatabaseContact[] | null) => {
+    contacts.value = data
+  }
+  const setContact = (data: DatabaseContact) => {
+    if (contactMapping.value && contactMapping.value[data.wxid]) {
+      return
+    }
+    contacts.value?.push(data)
+  }
+
   return {
     handlerMapping,
-
     databases,
     setDatabases,
 
     chats,
-    setChats
+    setChats,
+
+    contactMapping,
+    contacts,
+    setContacts,
+    setContact
   }
 })
