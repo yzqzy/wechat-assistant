@@ -78,6 +78,54 @@ export function useDatabase() {
     return response.data
   }
 
+  const normailzedUser = async (wxid: string, message: DatabaseMsg) => {
+    let user: DatabaseContact | null = null
+
+    const new_wxid = message.isSender
+      ? userInfo.value?.wxid
+      : getWxidByBytesExtra(message.bytesExtra) || wxid
+
+    if (contactMapping.value && new_wxid in contactMapping.value) {
+      // Get user from cache
+      user = contactMapping.value[new_wxid]
+    } else {
+      // Get user from database
+      const contact = await getContactByWxid(new_wxid)
+      user = (contact && formattedContacts(contact)[0]) || null
+      if (user) setContact(user)
+    }
+
+    return user
+  }
+
+  const normalizedContentImage = async (message: DatabaseMsg) => {
+    const { content, bytesExtra } = message
+
+    console.log(content, bytesExtra)
+
+    for (const item of bytesExtra.message2) {
+      if (item.field1 != 4) continue
+      let pathh = item.field2
+      pathh = pathh.split('\\').slice(1).join('\\')
+      return pathh
+    }
+
+    return content
+  }
+
+  const normalizedContent = async (message: DatabaseMsg) => {
+    const { type, content } = message
+
+    switch (type) {
+      case 1:
+        return content
+      case 3:
+        return normalizedContentImage(message)
+      default:
+        return content
+    }
+  }
+
   const normalizedMessages = async (
     wxid: string,
     messages: DatabaseMsg[]
@@ -85,22 +133,8 @@ export function useDatabase() {
     const result: DatabaseMessage[] = []
 
     for (const message of messages) {
-      const new_wxid = message.isSender
-        ? userInfo.value?.wxid
-        : getWxidByBytesExtra(message.bytesExtra) || wxid
-
-      let user: DatabaseContact | null = null
-
-      if (contactMapping.value && new_wxid in contactMapping.value) {
-        // Get user from cache
-        user = contactMapping.value[new_wxid]
-      } else {
-        // Get user from database
-        const contact = await getContactByWxid(new_wxid)
-        user = (contact && formattedContacts(contact)[0]) || null
-        if (user) setContact(user)
-      }
-
+      const user = await normailzedUser(wxid, message)
+      message.content = await normalizedContent(message)
       result.push({ ...message, user })
     }
 
