@@ -10,6 +10,12 @@ const msgBytesExtraParser = (bytesExtra: string) => {
   })
 }
 
+const decodeDat = (filePath: string, basePath: string) => {
+  return new Promise<any>(resolve => {
+    ipcRenderer.invoke('decode-dat', filePath, basePath).then(resolve)
+  })
+}
+
 export const formattedChats = (chats: string[][]): DatabaseChat[] => {
   chats.shift()
   return chats.map(chat => {
@@ -105,4 +111,28 @@ export const getWxidByBytesExtra = (data: any) => {
     }
   }
   return null
+}
+
+const normalizedContentImage = (message: DatabaseMsg) => {
+  const { content, bytesExtra } = message
+  for (const item of bytesExtra.message2) {
+    if (item.field1 != 4) continue
+    let pathh = item.field2
+    pathh = pathh.split('\\').slice(1).join('\\')
+    return pathh
+  }
+  return content
+}
+
+export const getImagePath = (message: DatabaseMsg, dataSavePath: string) => {
+  const pathh = normalizedContentImage(message)
+  const absPath = `${dataSavePath}${pathh}`
+  const outPath = `${dataSavePath}Decode\\image`
+  return decodeDat(absPath, outPath)
+}
+
+export const getEmojiPath = (filePath: string, basePath: string) => {
+  return new Promise<any>(resolve => {
+    ipcRenderer.invoke('decode-dat', filePath, basePath).then(resolve)
+  })
 }

@@ -7,7 +7,7 @@
       <div class="left">
         <!-- 搜索栏 -->
         <div class="search-bar">
-          <el-input v-model="keyword" style="width: 240px" placeholder="搜索" :prefix-icon="Search" />
+          <el-input v-model="keyword" style="width: 80%" placeholder="搜索" :prefix-icon="Search" />
           <el-button circle class="refresh-btn" :icon="Refresh" @click="refreshChats" />
         </div>
 
@@ -44,11 +44,16 @@
               <img :src="msg.user?.smalllAvatar || ''" alt="head-img" />
             </div>
             <div class="content">
-              <div class="username">
+              <div v-if="!msg.isSender" class="username">
                 {{ msg.user?.remark || msg.user?.nickname || '' }}
               </div>
               <div class="msg">
-                {{ msg.content }}
+                <div v-if="msg.type === 1">
+                  {{ msg.content }}
+                </div>
+                <div v-if="msg.type === 3">
+                  <img class="image" :src="msg.content" alt="image" />
+                </div>
               </div>
             </div>
           </div>
@@ -81,12 +86,12 @@ watch(messages, () => {
   try {
     console.log('messages changed', messages.value)
 
-    nextTick(() => {
+    setTimeout(() => {
       messageRef.value?.scrollTo({
         top: messageRef.value?.scrollHeight,
         behavior: 'smooth'
       })
-    })
+    }, 300)
   } catch (error) {
     console.log(error)
   }

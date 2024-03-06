@@ -158,19 +158,17 @@
     .message {
       display: flex;      
       flex-direction: row;
-      align-items: center;
       flex-wrap: wrap;
 
       .avator {
         display: flex;
         justify-content: center;
-        align-items: center;
         width: 60px;
         height: 60px;
 
         img {
           width: 40px;
-          height: auto;
+          height: 40px;
         }
       }
 
@@ -182,6 +180,7 @@
         .username {
           color: rgb(168, 168, 168);
           font-size: 12px;
+          line-height: 18px;
         }
 
         .msg {
@@ -190,6 +189,13 @@
           font-size: 14px;
           flex-direction: row;
           flex-wrap: wrap;
+          line-height: 40px;
+
+          .image {
+            border: 2px solid #eee;
+            max-height: 200px;
+            max-width: 200px;
+          }
         }
       }
       

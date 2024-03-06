@@ -9,7 +9,8 @@ import {
   formattedChats,
   formattedContacts,
   formattedMessages,
-  getWxidByBytesExtra
+  getWxidByBytesExtra,
+  getImagePath
 } from '../utils/database'
 
 export function useDatabase() {
@@ -19,7 +20,7 @@ export function useDatabase() {
   const userStore = useUserStore()
   const { handlerMapping, databases, chats, contactMapping } =
     storeToRefs(store)
-  const { userInfo } = storeToRefs(userStore)
+  const { userInfo, dataSavePath } = storeToRefs(userStore)
   const { setDatabases, setChats, setContact } = store
 
   const messages = ref<DatabaseMessage[]>([])
@@ -98,21 +99,6 @@ export function useDatabase() {
     return user
   }
 
-  const normalizedContentImage = async (message: DatabaseMsg) => {
-    const { content, bytesExtra } = message
-
-    console.log(content, bytesExtra)
-
-    for (const item of bytesExtra.message2) {
-      if (item.field1 != 4) continue
-      let pathh = item.field2
-      pathh = pathh.split('\\').slice(1).join('\\')
-      return pathh
-    }
-
-    return content
-  }
-
   const normalizedContent = async (message: DatabaseMsg) => {
     const { type, content } = message
 
@@ -120,7 +106,9 @@ export function useDatabase() {
       case 1:
         return content
       case 3:
-        return normalizedContentImage(message)
+        return await getImagePath(message, dataSavePath.value)
+      case 47:
+        return content
       default:
         return content
     }
