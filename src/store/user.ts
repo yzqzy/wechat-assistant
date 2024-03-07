@@ -11,7 +11,7 @@ export const useUserStore = defineStore('user', () => {
     return userInfo.value?.dataSavePath || ''
   })
 
-  const setUserInfo = (info: UserInfo) => {
+  const addUserInfo = (info: UserInfo) => {
     userInfo.value = info
   }
 
@@ -20,6 +20,6 @@ export const useUserStore = defineStore('user', () => {
     isLoggedIn,
     dataSavePath,
 
-    setUserInfo
+    addUserInfo
   }
 })

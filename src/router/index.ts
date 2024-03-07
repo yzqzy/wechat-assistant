@@ -154,7 +154,7 @@ router.beforeEach(async (to, from, next) => {
         // hook message
         await messageHook()
         // login success
-        store.setUserInfo(res.data)
+        store.addUserInfo(res.data)
       } else {
         console.log('获取用户信息失败')
       }

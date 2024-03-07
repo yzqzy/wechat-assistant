@@ -131,8 +131,14 @@ export const getImagePath = (message: DatabaseMsg, dataSavePath: string) => {
   return decodeDat(absPath, outPath)
 }
 
-export const getEmojiPath = (filePath: string, basePath: string) => {
+export const getEmojiPath = (content: string, dataSavePath: string) => {
+  console.log(content)
+
+  const pathh = ''
+  const absPath = `${dataSavePath}${pathh}`
+  const outPath = `${dataSavePath}Decode\\image`
   return new Promise<any>(resolve => {
-    ipcRenderer.invoke('decode-dat', filePath, basePath).then(resolve)
+    // ipcRenderer.invoke('decode-dat', filePath, basePath).then(resolve)
+    resolve(null)
   })
 }

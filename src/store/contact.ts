@@ -12,7 +12,7 @@ export const useContactStore = defineStore('contact', function () {
     }, {} as Record<string, string>)
   })
 
-  const setContactData = (data: Contact[]) => {
+  const addContactData = (data: Contact[]) => {
     contactData.value = data
   }
 
@@ -20,6 +20,6 @@ export const useContactStore = defineStore('contact', function () {
     contactData,
     contactMapping,
 
-    setContactData
+    addContactData
   }
 })

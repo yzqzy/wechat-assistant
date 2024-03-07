@@ -8,18 +8,23 @@ export const useDatabaseStore = defineStore('database', () => {
   const chats = ref<DatabaseChat[] | null>()
   const contacts = ref<DatabaseContact[] | null>()
 
+  const selectedChat = ref<DatabaseChat | null>(null)
+
   const handlerMapping = computed(() => {
     return databases.value?.reduce((acc, cur) => {
       acc[cur.databaseName] = cur.handle
       return acc
     }, {} as Record<string, number>)
   })
-  const setDatabases = (data: Database[] | null) => {
+  const addDatabases = (data: Database[] | null) => {
     databases.value = data
   }
 
-  const setChats = (data: DatabaseChat[] | null) => {
+  const addChats = (data: DatabaseChat[] | null) => {
     chats.value = data
+  }
+  const addSelectedChat = (data: DatabaseChat) => {
+    selectedChat.value = data
   }
 
   const contactMapping = computed(() => {
@@ -28,27 +33,30 @@ export const useDatabaseStore = defineStore('database', () => {
       return acc
     }, {} as Record<string, DatabaseContact>)
   })
-  const setContacts = (data: DatabaseContact[] | null) => {
+  const addContacts = (data: DatabaseContact[] | null) => {
     contacts.value = data
   }
-  const setContact = (data: DatabaseContact) => {
+  const addContact = (data: DatabaseContact) => {
     if (contactMapping.value && contactMapping.value[data.wxid]) {
       return
     }
-    contacts.value?.push(data)
+    addContacts([...(contacts.value || []), data])
   }
 
   return {
     handlerMapping,
     databases,
-    setDatabases,
+    addDatabases,
 
     chats,
-    setChats,
+    addChats,
+
+    selectedChat,
+    addSelectedChat,
 
     contactMapping,
     contacts,
-    setContacts,
-    setContact
+    addContacts,
+    addContact
   }
 })

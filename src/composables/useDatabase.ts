@@ -10,25 +10,27 @@ import {
   formattedContacts,
   formattedMessages,
   getWxidByBytesExtra,
-  getImagePath
+  getImagePath,
+  getEmojiPath
 } from '../utils/database'
 
 export function useDatabase() {
   const loading = ref(true)
 
-  const store = useDatabaseStore()
   const userStore = useUserStore()
-  const { handlerMapping, databases, chats, contactMapping } =
-    storeToRefs(store)
   const { userInfo, dataSavePath } = storeToRefs(userStore)
-  const { setDatabases, setChats, setContact } = store
+
+  const store = useDatabaseStore()
+  const { handlerMapping, databases, chats, contactMapping, selectedChat } =
+    storeToRefs(store)
+  const { addDatabases, addChats, addContact, addSelectedChat } = store
 
   const messages = ref<DatabaseMessage[]>([])
 
   const getDatabaseList = async () => {
     const response = await getDatabases()
     if (response.code != 1) return null
-    setDatabases(response.data)
+    addDatabases(response.data)
     return response.data
   }
 
@@ -56,7 +58,7 @@ export function useDatabase() {
     if (response.code != 1) return null
 
     const data = formattedChats(response.data)
-    setChats(data.filter(chat => chat.remark || chat))
+    addChats(data.filter(chat => chat.remark || chat))
 
     return data
   }
@@ -93,7 +95,7 @@ export function useDatabase() {
       // Get user from database
       const contact = await getContactByWxid(new_wxid)
       user = (contact && formattedContacts(contact)[0]) || null
-      if (user) setContact(user)
+      if (user) addContact(user)
     }
 
     return user
@@ -108,6 +110,7 @@ export function useDatabase() {
       case 3:
         return await getImagePath(message, dataSavePath.value)
       case 47:
+        await getEmojiPath(content, dataSavePath.value)
         return content
       default:
         return content
@@ -149,7 +152,8 @@ export function useDatabase() {
     if (response.code != 1) return null
 
     const data = await formattedMessages(response.data)
-    messages.value = await normalizedMessages(wxid, data.reverse())
+    const message_data = await normalizedMessages(wxid, data.reverse())
+    messages.value = message_data
   }
 
   onMounted(async () => {
@@ -169,6 +173,9 @@ export function useDatabase() {
 
     databases,
     chats,
+
+    selectedChat,
+    addSelectedChat,
 
     refreshChats,
 

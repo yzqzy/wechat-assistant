@@ -30,8 +30,8 @@
       <div class="right">
         <div class="chat-info">
           <div class="info">
-            <div class="remark">{{ selectedChat?.remark }}</div>
-            <div class="nickname">{{ selectedChat?.nickname }}</div>
+            <div class="remark">{{ selectedChat?.remark || selectedChat?.nickname }}</div>
+            <div v-if="selectedChat?.remark" class="nickname">{{ selectedChat?.nickname }}</div>
           </div>
           <div class="btns">
             <el-button circle class="refresh-btn" :icon="Refresh" @click="refreshMessages" />
@@ -69,10 +69,9 @@ import { Search, Refresh } from '@element-plus/icons-vue';
 import { useDatabase } from '../../composables/useDatabase'
 import { DatabaseChat } from '../../typings'
 
-const { loading, chats, messages, getMessages, refreshChats } = useDatabase()
+const { loading, chats, messages, selectedChat, addSelectedChat, getMessages, refreshChats } = useDatabase()
 
 const keyword = ref('')
-const selectedChat = ref<DatabaseChat | null>(null)
 const messageRef = ref<HTMLDivElement | null>(null)
 
 const refreshMessages = () => {
@@ -116,7 +115,7 @@ const searchChats = computed(() => {
 })
 
 const handleSelectChat = (chat: DatabaseChat) => {
-  selectedChat.value = chat
+  addSelectedChat(chat)
 }
 </script>
 
