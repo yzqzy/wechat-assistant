@@ -38,6 +38,12 @@
           </div>
         </div>
         <div class="message-list scroll-bar" ref="messageRef">
+          <div class="refresh-spinner">
+            <el-icon v-if="refreshing">
+              <Loading />
+            </el-icon>
+          </div>
+
           <div class="message" :class="{ 'is-sender': msg.isSender }" v-for="(msg, idx) in messages"
             :key="msg.wxid + '' + idx">
             <div class="avator">
@@ -70,12 +76,12 @@
 </template>
 
 <script setup lang="ts" name="wx-msg">
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, onMounted, onBeforeUnmount } from 'vue';
 import { Search, Refresh } from '@element-plus/icons-vue';
 import { useDatabase } from '../../composables/useDatabase'
 import { DatabaseChat } from '../../typings'
 
-const { loading, chats, messages, selectedChat, addSelectedChat, getMessages, refreshChats } = useDatabase()
+const { loading, refreshing, chats, messages, selectedChat, setSelectedChat, getMessages, refreshChats, loadMoreData } = useDatabase()
 
 const keyword = ref('')
 const messageRef = ref<HTMLDivElement | null>(null)
@@ -85,10 +91,10 @@ const refreshMessages = () => {
   getMessages(selectedChat.value.wxid)
 }
 
-watch(selectedChat, refreshMessages)
-
 watch(messages, () => {
   try {
+    if (refreshing.value) return
+
     console.log('messages changed', messages.value)
 
     setTimeout(() => {
@@ -100,6 +106,21 @@ watch(messages, () => {
   } catch (error) {
     console.log(error)
   }
+})
+
+const handleScroll = () => {
+  const { scrollTop } = messageRef.value!
+  if (messages.value.length == 0) return
+  if (scrollTop <= 20) loadMoreData()
+}
+
+onMounted(() => {
+  setTimeout(() => {
+    messageRef.value?.addEventListener('scroll', handleScroll)
+  }, 1000)
+})
+onBeforeUnmount(() => {
+  messageRef.value?.removeEventListener('scroll', handleScroll)
 })
 
 const formattedName = computed(() => {
@@ -121,7 +142,7 @@ const searchChats = computed(() => {
 })
 
 const handleSelectChat = (chat: DatabaseChat) => {
-  addSelectedChat(chat)
+  setSelectedChat(chat)
 }
 </script>
 

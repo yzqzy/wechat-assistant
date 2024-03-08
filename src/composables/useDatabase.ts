@@ -1,4 +1,4 @@
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import { useUserStore } from '../store/user'
@@ -18,6 +18,7 @@ import {
 
 export function useDatabase() {
   const loading = ref(true)
+  const refreshing = ref(false)
 
   const userStore = useUserStore()
   const { userInfo, dataSavePath } = storeToRefs(userStore)
@@ -25,9 +26,20 @@ export function useDatabase() {
   const store = useDatabaseStore()
   const { handlerMapping, databases, chats, contactMapping, selectedChat } =
     storeToRefs(store)
-  const { addDatabases, addChats, addContact, addSelectedChat } = store
+  const { addDatabases, addChats, addContact, setSelectedChat } = store
 
   const messages = ref<DatabaseMessage[]>([])
+  const page = ref(1)
+
+  const resetParams = () => {
+    page.value = 1
+  }
+
+  watch(selectedChat, () => {
+    if (selectedChat.value == null) return
+    resetParams()
+    getMessages(selectedChat.value.wxid)
+  })
 
   const getDatabaseList = async () => {
     const response = await getDatabases()
@@ -138,6 +150,8 @@ export function useDatabase() {
   const getMessages = async (wxid: string) => {
     if (handlerMapping.value == null) return null
 
+    const offset = (page.value - 1) * 20
+
     const sql = `
       SELECT StrTalker, localId, Type, SubType, IsSender, CreateTime, StrContent, DisplayContent, CompressContent, BytesExtra 
       FROM MSG
@@ -148,7 +162,7 @@ export function useDatabase() {
             WHERE
               UsrName = '${wxid}'
           )
-      ORDER BY CreateTime DESC limit 20;
+      ORDER BY CreateTime DESC LIMIT 20 OFFSET ${offset};
     `
     const handle = handlerMapping.value['MSG0.db']
     const response = await execSql(handle, sql)
@@ -156,7 +170,27 @@ export function useDatabase() {
 
     const data = await formattedMessages(response.data)
     const message_data = await normalizedMessages(wxid, data.reverse())
-    messages.value = message_data
+
+    if (page.value == 1) {
+      messages.value = message_data
+    } else {
+      // TODO： 分页加载数据不渲染
+      messages.value = [...message_data, ...messages.value]
+      console.log(messages.value)
+    }
+  }
+
+  const loadMoreData = async () => {
+    if (refreshing.value || selectedChat.value == null) return
+    refreshing.value = true
+
+    page.value += 1
+
+    await getMessages(selectedChat.value.wxid)
+
+    setTimeout(() => {
+      refreshing.value = false
+    }, 600)
   }
 
   onMounted(async () => {
@@ -177,16 +211,18 @@ export function useDatabase() {
 
   return {
     loading,
+    refreshing,
 
     databases,
     chats,
 
     selectedChat,
-    addSelectedChat,
-
-    refreshChats,
+    setSelectedChat,
 
     messages,
-    getMessages
+    getMessages,
+
+    refreshChats,
+    loadMoreData
   }
 }

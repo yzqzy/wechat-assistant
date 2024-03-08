@@ -23,7 +23,7 @@ export const useDatabaseStore = defineStore('database', () => {
   const addChats = (data: DatabaseChat[] | null) => {
     chats.value = data
   }
-  const addSelectedChat = (data: DatabaseChat) => {
+  const setSelectedChat = (data: DatabaseChat) => {
     selectedChat.value = data
   }
 
@@ -52,7 +52,7 @@ export const useDatabaseStore = defineStore('database', () => {
     addChats,
 
     selectedChat,
-    addSelectedChat,
+    setSelectedChat,
 
     contactMapping,
     contacts,

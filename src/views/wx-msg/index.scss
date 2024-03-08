@@ -1,3 +1,12 @@
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .scroll-bar {
   &::-webkit-scrollbar{
     width: 6px;
@@ -154,6 +163,18 @@
   .message-list {
     flex: 1;
     overflow-y: auto;
+    padding-top: 10px;
+    box-sizing: border-box;
+
+    .refresh-spinner {
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      
+      .el-icon {
+        animation: spin 2s linear infinite;
+      }
+    }
 
     .message {
       display: flex;      
