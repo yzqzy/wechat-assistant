@@ -107,12 +107,14 @@ export function useDatabase() {
     const { type, content } = message
 
     switch (type) {
-      case 1:
+      case 1: // text message
         return content
-      case 3:
+      case 3: // image message
         return await getImagePath(message, dataSavePath.value)
-      case 47:
+      case 47: // emoji message
         return await getEmojiPath(content, dataSavePath.value)
+      case 10000: // system message
+        return content.replace(/^<revokemsg>/, '').replace(/<\/revokemsg>$/, '')
       default:
         return content
     }

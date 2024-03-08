@@ -48,7 +48,7 @@
                 {{ msg.user?.remark || msg.user?.nickname || '' }}
               </div>
               <div class="msg">
-                <div v-if="msg.type === 1">
+                <div v-if="msg.type === 1 || msg.type === 10000">
                   {{ msg.content }}
                 </div>
                 <div v-else-if="msg.type === 3">
@@ -56,6 +56,9 @@
                 </div>
                 <div v-else-if="msg.type === 47">
                   <el-image class="image small" :src="msg.content" alt="image" fit="contain" />
+                </div>
+                <div v-else>
+                  {{ msg.content }}
                 </div>
               </div>
             </div>
