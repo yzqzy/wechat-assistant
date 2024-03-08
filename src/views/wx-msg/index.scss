@@ -192,9 +192,13 @@
           line-height: 40px;
 
           .image {
-            border: 2px solid #eee;
-            max-height: 200px;
-            max-width: 200px;
+            width: 160px;
+            height: 160px;
+
+            &.small {
+              width: 140px;
+              height: 140px;
+            }
           }
         }
       }

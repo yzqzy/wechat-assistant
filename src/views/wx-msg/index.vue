@@ -51,8 +51,11 @@
                 <div v-if="msg.type === 1">
                   {{ msg.content }}
                 </div>
-                <div v-if="msg.type === 3">
-                  <img class="image" :src="msg.content" alt="image" />
+                <div v-else-if="msg.type === 3">
+                  <el-image class="image" :src="msg.content" alt="image" fit="contain" />
+                </div>
+                <div v-else-if="msg.type === 47">
+                  <el-image class="image small" :src="msg.content" alt="image" fit="contain" />
                 </div>
               </div>
             </div>
@@ -64,7 +67,7 @@
 </template>
 
 <script setup lang="ts" name="wx-msg">
-import { computed, ref, watch, nextTick } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { Search, Refresh } from '@element-plus/icons-vue';
 import { useDatabase } from '../../composables/useDatabase'
 import { DatabaseChat } from '../../typings'

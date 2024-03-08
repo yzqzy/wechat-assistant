@@ -1,20 +1,5 @@
 import { DatabaseChat, DatabaseContact, DatabaseMsg } from '../typings'
-
-const { ipcRenderer } = window
-
-const msgBytesExtraParser = (bytesExtra: string) => {
-  return new Promise<any>(resolve => {
-    ipcRenderer.invoke('msg-parser', bytesExtra).then(data => {
-      resolve((data && JSON.parse(data)) || {})
-    })
-  })
-}
-
-const decodeDat = (filePath: string, basePath: string) => {
-  return new Promise<any>(resolve => {
-    ipcRenderer.invoke('decode-dat', filePath, basePath).then(resolve)
-  })
-}
+import { msgBytesExtraParser } from './wx-msg'
 
 export const formattedChats = (chats: string[][]): DatabaseChat[] => {
   chats.shift()
@@ -99,46 +84,5 @@ export const formattedContacts = (contacts: string[][]): DatabaseContact[] => {
       smalllAvatar,
       bigAvatar
     }
-  })
-}
-
-export const getWxidByBytesExtra = (data: any) => {
-  data = data && data.message2
-  if (Array.isArray(data)) {
-    for (const item of data) {
-      if (item.field1 !== 1) continue
-      return item.field2
-    }
-  }
-  return null
-}
-
-const normalizedContentImage = (message: DatabaseMsg) => {
-  const { content, bytesExtra } = message
-  for (const item of bytesExtra.message2) {
-    if (item.field1 != 4) continue
-    let pathh = item.field2
-    pathh = pathh.split('\\').slice(1).join('\\')
-    return pathh
-  }
-  return content
-}
-
-export const getImagePath = (message: DatabaseMsg, dataSavePath: string) => {
-  const pathh = normalizedContentImage(message)
-  const absPath = `${dataSavePath}${pathh}`
-  const outPath = `${dataSavePath}Decode\\image`
-  return decodeDat(absPath, outPath)
-}
-
-export const getEmojiPath = (content: string, dataSavePath: string) => {
-  console.log(content)
-
-  const pathh = ''
-  const absPath = `${dataSavePath}${pathh}`
-  const outPath = `${dataSavePath}Decode\\image`
-  return new Promise<any>(resolve => {
-    // ipcRenderer.invoke('decode-dat', filePath, basePath).then(resolve)
-    resolve(null)
   })
 }

@@ -34,4 +34,15 @@ FROM
     Contact as contact
     INNER JOIN ContactHeadImgUrl as img ON contact.UserName = img.usrName
 WHERE
-    UserName = 'wxid_wgne4dks02zn12'
+    UserName = 'wxid_wgne4dks02zn12';
+
+# 获取emoji表情地址
+select
+    case
+        when thumburl is NULL
+        or thumburl = '' then cdnurl
+        else thumburl
+    end as selected_url
+from CustomEmotion
+where
+    md5 = 'BBE1B0F763C19F2F4A16E515BBA60596';

@@ -4,15 +4,17 @@ import { storeToRefs } from 'pinia'
 import { useUserStore } from '../store/user'
 import { useDatabaseStore } from '../store/database'
 import { getDatabases, execSql } from '../api'
+import {
+  getWxidByBytesExtra,
+  getImagePath,
+  getEmojiPath
+} from '../utils/wx-msg'
 import { DatabaseContact, DatabaseMessage, DatabaseMsg } from '../typings'
 import {
   formattedChats,
   formattedContacts,
-  formattedMessages,
-  getWxidByBytesExtra,
-  getImagePath,
-  getEmojiPath
-} from '../utils/database'
+  formattedMessages
+} from '../utils/formatted'
 
 export function useDatabase() {
   const loading = ref(true)
@@ -110,8 +112,7 @@ export function useDatabase() {
       case 3:
         return await getImagePath(message, dataSavePath.value)
       case 47:
-        await getEmojiPath(content, dataSavePath.value)
-        return content
+        return await getEmojiPath(content, dataSavePath.value)
       default:
         return content
     }
@@ -157,6 +158,10 @@ export function useDatabase() {
   }
 
   onMounted(async () => {
+    if (selectedChat.value != null) {
+      await getMessages(selectedChat.value.wxid)
+    }
+
     if (databases.value != null) {
       loading.value = false
       return
