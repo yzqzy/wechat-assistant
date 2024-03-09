@@ -44,17 +44,17 @@ jobs:
       - name: Cleanup Artifacts for MacOS
         if: matrix.os == 'macos-latest'
         run: |
-          npx rimraf "release/!(*.dmg)"
+          npx rimraf --glob "release/!(*.dmg)"
 
       - name: Cleanup Artifacts for Ubuntu
         if: matrix.os == 'ubuntu-latest'
         run: |
-          npx rimraf "release/!(*.AppImage)"
+          npx rimraf --glob "release/!(*.AppImage)"
 
       - name: Cleanup Artifacts for Windows
         if: matrix.os == 'windows-latest'
         run: |
-          npx rimraf "release/!(*.exe)"
+          npx rimraf --glob "release/!(*.exe)"
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
