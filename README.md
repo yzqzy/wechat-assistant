@@ -40,6 +40,8 @@ PC 微信助手，基于 Electron、WeChat Hook 实现。
 
 [开发者手册](doc/开发者手册.md)
 
+[数据库简述](doc/数据库简述.md)
+
 ## 四、Star 历史
 
 [![Star History Chart](https://api.star-history.com/svg?repos=yzqzy/wechat-assistant&type=Date)](https://star-history.com/#yzqzy/wechat-assistant&Date)
