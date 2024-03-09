@@ -92,8 +92,16 @@ const refreshMessages = () => {
   getMessages(selectedChat.value.wxid)
 }
 
+const scrollToBottom = () => {
+  messageRef.value?.scrollTo({
+    top: messageRef.value?.scrollHeight,
+    behavior: 'smooth'
+  })
+}
+
 watch(selectedChat, () => {
   if (selectedChat.value == null) return
+  scrollToBottom()
   resetParams()
   getMessages(selectedChat.value.wxid)
 })
@@ -101,13 +109,7 @@ watch(selectedChat, () => {
 watch(messages, () => {
   try {
     if (refreshing.value) return
-
-    setTimeout(() => {
-      messageRef.value?.scrollTo({
-        top: messageRef.value?.scrollHeight,
-        behavior: 'smooth'
-      })
-    }, 300)
+    setTimeout(scrollToBottom, 300)
   } catch (error) {
     console.log(error)
   }

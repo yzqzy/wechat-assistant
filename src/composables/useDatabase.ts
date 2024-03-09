@@ -18,7 +18,9 @@ import {
 
 export function useDatabase() {
   const loading = ref(true)
+
   const refreshing = ref(false)
+  const loadFinished = ref(false)
 
   const userStore = useUserStore()
   const { userInfo, dataSavePath } = storeToRefs(userStore)
@@ -32,6 +34,7 @@ export function useDatabase() {
   const page = ref(1)
 
   const resetParams = () => {
+    loadFinished.value = false
     page.value = 1
   }
 
@@ -168,15 +171,19 @@ export function useDatabase() {
     if (page.value == 1) {
       messages.value = message_data
     } else {
+      if (message_data.length == 0) {
+        loadFinished.value = true
+        return
+      }
       messages.value = [...messages.value, ...message_data]
-      console.log(messages.value)
     }
   }
 
   const loadMoreData = async () => {
-    if (refreshing.value || selectedChat.value == null) return
-    refreshing.value = true
+    if (refreshing.value || selectedChat.value == null || loadFinished.value)
+      return
 
+    refreshing.value = true
     page.value += 1
 
     await getMessages(selectedChat.value.wxid)
