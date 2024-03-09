@@ -51,7 +51,6 @@
     "file-type": "^19.0.0",
     "lodash": "^4.17.21",
     "lossless-json": "^4.0.1",
-    "lz4": "^0.6.5",
     "nprogress": "^0.2.0",
     "pinia": "^2.1.7",
     "protobufjs": "^7.2.6",
