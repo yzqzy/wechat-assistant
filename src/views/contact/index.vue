@@ -18,8 +18,8 @@
 
       <!-- 表格区域 -->
       <el-table v-loading="loading" ref="multipleTableRef" :data="tableData" height="70vh" class="table"
-        header-cell-class-name="table-header" @selection-change="handleSelectionChange" @select="handleSelectionRowChange"
-        @select-all="handleSelectionAllChange">
+        header-cell-class-name="table-header" @selection-change="handleSelectionChange"
+        @select="handleSelectionRowChange" @select-all="handleSelectionAllChange">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="wxid" label="ID" width="220"></el-table-column>
         <el-table-column prop="nickname" label="昵称" align="center"></el-table-column>

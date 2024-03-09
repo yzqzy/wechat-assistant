@@ -50,6 +50,44 @@ const exec = async (
   return res
 }
 
+const sendImages = async (wxid: string, data: any) => {
+  let res: any
+
+  data.image_url =
+    typeof data.image_url === 'string' ? [data.image_url] : data.image_url
+
+  while (data.image_url.length) {
+    const url = data.image_url.shift()
+
+    if (!url) continue
+
+    await delay()
+
+    res = await sendImagesMsg(wxid, url)
+  }
+
+  return res
+}
+
+const sendFiles = async (wxid: string, data: any) => {
+  let res: any
+
+  data.file_url =
+    typeof data.file_url === 'string' ? [data.file_url] : data.file_url
+
+  while (data.file_url.length) {
+    const url = data.file_url.shift()
+
+    if (!url) continue
+
+    await delay()
+
+    res = await sendFileMsg(wxid, url)
+  }
+
+  return res
+}
+
 export const useMessage = () => {
   const sendMsg = async (wxid: string, data: any, args?: ExtendedParams) => {
     const { isAt, atWxIds } = args || {}
@@ -63,9 +101,9 @@ export const useMessage = () => {
         res = await sendTextMsg(wxid, data.message)
       }
     } else if (data.mode === MessageType.IMAGE) {
-      res = await sendImagesMsg(wxid, data.image_url)
+      res = await sendImages(wxid, data)
     } else if (data.mode === MessageType.FILE) {
-      res = await sendFileMsg(wxid, data.file_url)
+      res = await sendFiles(wxid, data)
     } else if (data.mode === MessageType.WX_ARTICLE) {
       res = await forwardPublicMsg({
         wxid,
