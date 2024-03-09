@@ -81,21 +81,26 @@ import { Search, Refresh } from '@element-plus/icons-vue';
 import { useDatabase } from '../../composables/useDatabase'
 import { DatabaseChat } from '../../typings'
 
-const { loading, refreshing, chats, messages, selectedChat, setSelectedChat, getMessages, refreshChats, loadMoreData } = useDatabase()
+const { loading, refreshing, chats, messages, selectedChat, setSelectedChat, getMessages, resetParams, refreshChats, loadMoreData } = useDatabase()
 
 const keyword = ref('')
 const messageRef = ref<HTMLDivElement | null>(null)
 
 const refreshMessages = () => {
   if (!selectedChat.value) return
+  resetParams()
   getMessages(selectedChat.value.wxid)
 }
+
+watch(selectedChat, () => {
+  if (selectedChat.value == null) return
+  resetParams()
+  getMessages(selectedChat.value.wxid)
+})
 
 watch(messages, () => {
   try {
     if (refreshing.value) return
-
-    console.log('messages changed', messages.value)
 
     setTimeout(() => {
       messageRef.value?.scrollTo({
@@ -111,7 +116,13 @@ watch(messages, () => {
 const handleScroll = () => {
   const { scrollTop } = messageRef.value!
   if (messages.value.length == 0) return
-  if (scrollTop <= 20) loadMoreData()
+
+  const scrollHeight = messageRef.value!.scrollHeight
+  const scrollValue = Math.abs(scrollTop) + messageRef.value!.offsetHeight
+
+  if (scrollValue >= scrollHeight - 20) {
+    loadMoreData()
+  }
 }
 
 onMounted(() => {

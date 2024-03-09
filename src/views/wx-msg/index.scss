@@ -111,6 +111,7 @@
 }
 
 .right {
+  position: relative;
   display: flex;
   flex-direction: column;
   width: 50vw;
@@ -161,12 +162,18 @@
   }
 
   .message-list {
+    display: flex;
+    flex-direction: column-reverse;
     flex: 1;
     overflow-y: auto;
-    padding-top: 10px;
+    padding-bottom: 10px;
     box-sizing: border-box;
 
     .refresh-spinner {
+      position: absolute;
+      top: 60px;
+      left: 0;
+      z-index: 999;
       display: flex;
       width: 100%;
       justify-content: center;

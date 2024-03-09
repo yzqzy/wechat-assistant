@@ -35,12 +35,6 @@ export function useDatabase() {
     page.value = 1
   }
 
-  watch(selectedChat, () => {
-    if (selectedChat.value == null) return
-    resetParams()
-    getMessages(selectedChat.value.wxid)
-  })
-
   const getDatabaseList = async () => {
     const response = await getDatabases()
     if (response.code != 1) return null
@@ -169,13 +163,12 @@ export function useDatabase() {
     if (response.code != 1) return null
 
     const data = await formattedMessages(response.data)
-    const message_data = await normalizedMessages(wxid, data.reverse())
+    const message_data = await normalizedMessages(wxid, data)
 
     if (page.value == 1) {
       messages.value = message_data
     } else {
-      // TODO： 分页加载数据不渲染
-      messages.value = [...message_data, ...messages.value]
+      messages.value = [...messages.value, ...message_data]
       console.log(messages.value)
     }
   }
@@ -222,6 +215,7 @@ export function useDatabase() {
     messages,
     getMessages,
 
+    resetParams,
     refreshChats,
     loadMoreData
   }
