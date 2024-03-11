@@ -115,6 +115,8 @@ export function useDatabase() {
   const normalizedContent = async (message: DatabaseMsg) => {
     const { type, content } = message
 
+    // TODO: handle other types of messages
+
     switch (type) {
       case 1: // text message
         return content

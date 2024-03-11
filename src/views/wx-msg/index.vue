@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="title">
-      <h2>聊天记录备份（功能开发中）</h2>
+      <h2>聊天记录备份</h2>
     </div>
     <div class="container" v-loading.fullscreen.lock="loading">
       <div class="left">
@@ -46,28 +46,27 @@
 
           <div class="message" :class="{ 'is-sender': msg.isSender }" v-for="(msg, idx) in messages"
             :key="msg.wxid + '' + idx">
-            <div class="avator">
-              <img :src="msg.user?.smalllAvatar || ''" alt="head-img" />
-            </div>
-            <div class="content">
-              <div v-if="!msg.isSender" class="username">
-                {{ msg.user?.remark || msg.user?.nickname || '' }}
+            <template v-if="enabled_message_types.includes(msg.type)">
+              <div class="avator">
+                <img :src="msg.user?.smalllAvatar || ''" alt="head-img" />
               </div>
-              <div class="msg">
-                <div v-if="msg.type === 1 || msg.type === 10000">
-                  {{ msg.content }}
+              <div class="content">
+                <div v-if="!msg.isSender" class="username">
+                  {{ msg.user?.remark || msg.user?.nickname || '' }}
                 </div>
-                <div v-else-if="msg.type === 3">
-                  <el-image class="image" :src="msg.content" alt="image" fit="contain" />
-                </div>
-                <div v-else-if="msg.type === 47">
-                  <el-image class="image small" :src="msg.content" alt="image" fit="contain" />
-                </div>
-                <div v-else>
-                  {{ msg.content }}
+                <div class="msg">
+                  <div v-if="msg.type === 1 || msg.type === 10000">
+                    {{ msg.content }}
+                  </div>
+                  <div v-else-if="msg.type === 3">
+                    <el-image class="image" :src="msg.content" alt="image" fit="contain" />
+                  </div>
+                  <div v-else-if="msg.type === 47">
+                    <el-image class="image small" :src="msg.content" alt="image" fit="contain" />
+                  </div>
                 </div>
               </div>
-            </div>
+            </template>
           </div>
         </div>
       </div>
@@ -85,6 +84,9 @@ const { loading, refreshing, chats, messages, selectedChat, setSelectedChat, get
 
 const keyword = ref('')
 const messageRef = ref<HTMLDivElement | null>(null)
+
+// message types that are enabled to display in chat history
+const enabled_message_types = [1, 3, 47, 10000]
 
 const refreshMessages = () => {
   if (!selectedChat.value) return
@@ -108,6 +110,8 @@ watch(selectedChat, () => {
 
 watch(messages, () => {
   try {
+    console.log('messages changed', messages)
+
     if (refreshing.value) return
     setTimeout(scrollToBottom, 300)
   } catch (error) {
