@@ -1,4 +1,4 @@
-import request from '../utils/request'
+import request from '@/utils/request'
 import { Result } from './common'
 
 // hook 消息

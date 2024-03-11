@@ -35,6 +35,7 @@
           </div>
           <div class="btns">
             <el-button circle class="refresh-btn" :icon="Refresh" @click="refreshMessages" />
+            <el-button circle class="download-btn" :icon="Download" @click="downloadMessages" />
           </div>
         </div>
         <div class="message-list scroll-bar" ref="messageRef">
@@ -76,9 +77,9 @@
 
 <script setup lang="ts" name="wx-msg">
 import { computed, ref, watch, onMounted, onBeforeUnmount } from 'vue';
-import { Search, Refresh } from '@element-plus/icons-vue';
-import { useDatabase } from '../../composables/useDatabase'
-import { DatabaseChat } from '../../typings'
+import { Search, Refresh, Download } from '@element-plus/icons-vue';
+import { DatabaseChat } from '@/typings'
+import { useDatabase } from './useDatabase'
 
 const { loading, refreshing, chats, messages, selectedChat, setSelectedChat, getMessages, resetParams, refreshChats, loadMoreData } = useDatabase()
 
@@ -92,6 +93,10 @@ const refreshMessages = () => {
   if (!selectedChat.value) return
   resetParams()
   getMessages(selectedChat.value.wxid)
+}
+
+const downloadMessages = () => {
+  // TODO: download messages
 }
 
 const scrollToBottom = () => {
@@ -165,4 +170,4 @@ const handleSelectChat = (chat: DatabaseChat) => {
 
 <style lang="scss" scoped>
 @import './index.scss';
-</style>
+</style>./useDatabase

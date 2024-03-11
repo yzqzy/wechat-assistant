@@ -9,8 +9,8 @@ import {
   sendFileMsg,
   sendImagesMsg,
   sendTextMsg
-} from '../api'
-import { delaySync, getRandomInt } from '../utils/tools'
+} from '@/api'
+import { delaySync, getRandomInt } from '@/utils/tools'
 
 interface ExtendedParams {
   isAt?: boolean

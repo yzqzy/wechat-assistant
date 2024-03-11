@@ -21,8 +21,8 @@
             <el-button type="primary" plain class="btn" @click="handleShowEditTask(scope.$index)">编辑</el-button>
             <el-button :type="scope.row.enabled ? 'danger' : 'primary'" plain class="btn"
               @click="handleEnabledTask(scope.$index)">{{ scope.row.enabled ?
-                '禁用' :
-                '启用' }}</el-button>
+          '禁用' :
+          '启用' }}</el-button>
             <el-button type="danger" plain class="btn" @click="handleDeleteTask(scope.$index)">删除</el-button>
           </template>
         </el-table-column>
@@ -39,13 +39,13 @@
 
 <script setup lang="ts" name="cron">
 import { ref } from 'vue';
+import { ElMessage, ElMessageBox } from 'element-plus';
 import _ from 'lodash'
 
-import TaskForm from './TaskForm.vue';
-
-import type { CronTask } from '../../store/cron-task'
+import type { CronTask } from '@/store/cron-task'
 import { useTask } from './useTask'
-import { ElMessage, ElMessageBox } from 'element-plus';
+
+import TaskForm from './TaskForm.vue';
 
 const { tasks, taskData, contactData, handleAddTask, handleEditTask, handleRemoveTask } = useTask()
 

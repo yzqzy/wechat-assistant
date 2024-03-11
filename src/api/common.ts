@@ -1,4 +1,4 @@
-import request from '../utils/request'
+import request from '@/utils/request'
 
 export interface Result<T> {
   code: number

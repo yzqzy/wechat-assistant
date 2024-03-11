@@ -8,11 +8,11 @@ import { storeToRefs } from 'pinia'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
-import Home from '../views/home.vue'
+import Home from '@/views/home.vue'
 
-import { checkLogin, getUserInfo } from '../api/index'
-import { useUserStore } from '../store/user'
-import { useHook } from '../composables/useHook'
+import { checkLogin, getUserInfo } from '@/api/index'
+import { useUserStore } from '@/store/user'
+import { useHook } from '@/composables/useHook'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -28,7 +28,7 @@ const routes: RouteRecordRaw[] = [
         path: '/dashboard',
         name: '看板',
         component: () =>
-          import(/* webpackChunkName: "dashboard" */ '../views/dashboard.vue')
+          import(/* webpackChunkName: "dashboard" */ '@/views/dashboard.vue')
       },
       {
         path: '/contact',
@@ -37,7 +37,7 @@ const routes: RouteRecordRaw[] = [
           title: '联系人'
         },
         component: () =>
-          import(/* webpackChunkName: "contact" */ '../views/contact/index.vue')
+          import(/* webpackChunkName: "contact" */ '@/views/contact/index.vue')
       },
       {
         path: '/chatroom',
@@ -47,7 +47,7 @@ const routes: RouteRecordRaw[] = [
         },
         component: () =>
           import(
-            /* webpackChunkName: "chatroom" */ '../views/chatroom/index.vue'
+            /* webpackChunkName: "chatroom" */ '@/views/chatroom/index.vue'
           )
       },
       {
@@ -57,7 +57,7 @@ const routes: RouteRecordRaw[] = [
           title: '定时任务'
         },
         component: () =>
-          import(/* webpackChunkName: "cron" */ '../views/cron/index.vue')
+          import(/* webpackChunkName: "cron" */ '@/views/cron/index.vue')
       },
       {
         path: '/trigger',
@@ -66,7 +66,7 @@ const routes: RouteRecordRaw[] = [
           title: '触发任务'
         },
         component: () =>
-          import(/* webpackChunkName: "trigger" */ '../views/trigger/index.vue')
+          import(/* webpackChunkName: "trigger" */ '@/views/trigger/index.vue')
       },
       {
         path: '/wx-msg',
@@ -75,7 +75,7 @@ const routes: RouteRecordRaw[] = [
           title: '聊天记录备份'
         },
         component: () =>
-          import(/* webpackChunkName: "wx-msg" */ '../views/wx-msg/index.vue')
+          import(/* webpackChunkName: "wx-msg" */ '@/views/wx-msg/index.vue')
       },
       {
         path: '/ocr',
@@ -83,8 +83,7 @@ const routes: RouteRecordRaw[] = [
         meta: {
           title: '图像文字识别 - OCR'
         },
-        component: () =>
-          import(/* webpackChunkName: "ocr" */ '../views/ocr.vue')
+        component: () => import(/* webpackChunkName: "ocr" */ '@/views/ocr.vue')
       },
       {
         path: '/about',
@@ -93,7 +92,7 @@ const routes: RouteRecordRaw[] = [
           title: '关于作者'
         },
         component: () =>
-          import(/* webpackChunkName: "about" */ '../views/about.vue')
+          import(/* webpackChunkName: "about" */ '@/views/about.vue')
       }
     ]
   },
@@ -104,7 +103,7 @@ const routes: RouteRecordRaw[] = [
       title: '微信注入页面'
     },
     component: () =>
-      import(/* webpackChunkName: "injector" */ '../views/injector.vue')
+      import(/* webpackChunkName: "injector" */ '@/views/injector.vue')
   },
   {
     path: '/403',
@@ -112,7 +111,7 @@ const routes: RouteRecordRaw[] = [
     meta: {
       title: '没有权限'
     },
-    component: () => import(/* webpackChunkName: "403" */ '../views/403.vue')
+    component: () => import(/* webpackChunkName: "403" */ '@/views/403.vue')
   }
 ]
 

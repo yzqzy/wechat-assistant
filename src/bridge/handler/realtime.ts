@@ -7,12 +7,12 @@ import {
   useTriggerTaskStore,
   TriggerTask,
   TriggerTaskType
-} from '../../store/trigger-task'
-import { useMessage } from '../../composables/useMessage'
-import { useMessageStore } from '../../store/realtime'
-import { useContactStore } from '../../store/contact'
-import { RealtimeMessage } from '../../typings'
-import { MessageType } from '../../api'
+} from '@/store/trigger-task'
+import { useMessage } from '@/composables/useMessage'
+import { useMessageStore } from '@/store/realtime'
+import { useContactStore } from '@/store/contact'
+import { RealtimeMessage } from '@/typings'
+import { MessageType } from '@/api'
 
 const { sendMsgBatch, forwardMsgBatch } = useMessage()
 

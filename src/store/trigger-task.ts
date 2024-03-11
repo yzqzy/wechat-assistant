@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { defineStore } from 'pinia'
-import { TaskStore } from '../utils/store'
+import { TaskStore } from '@/utils/store'
 import { computed } from 'vue'
 
 export enum TriggerTaskType {

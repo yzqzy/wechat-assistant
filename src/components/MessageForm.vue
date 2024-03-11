@@ -76,7 +76,7 @@
 import { ElMessage, FormInstance, FormRules, UploadProps, UploadRawFile } from 'element-plus';
 import { computed, ref, watchEffect, watch } from 'vue';
 
-import { MessageType, messageMapping } from '../api'
+import { MessageType, messageMapping } from '@/api'
 
 const props = defineProps<{
   mode?: MessageType,

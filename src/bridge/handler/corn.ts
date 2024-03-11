@@ -1,9 +1,9 @@
 import { storeToRefs } from 'pinia'
 import { IpcRendererEvent } from 'electron'
 
-import { useMessage } from '../../composables/useMessage'
-import { useUserStore } from '../../store/user'
-import { CronTask } from '../../store/cron-task'
+import { useMessage } from '@/composables/useMessage'
+import { useUserStore } from '@/store/user'
+import { CronTask } from '@/store/cron-task'
 
 const { sendMsgBatch } = useMessage()
 

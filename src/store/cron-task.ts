@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 
-import { TaskStore } from '../utils/store'
-import { MessageType } from '../api'
+import { TaskStore } from '@/utils/store'
+import { MessageType } from '@/api'
 
 export enum CronTaskMode {
   CUSTOM = 'custom',

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
-import { Contact } from '../api'
+import { Contact } from '@/api'
 
 export const useContactStore = defineStore('contact', function () {
   const contactData = ref<Contact[]>([])

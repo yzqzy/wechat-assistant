@@ -1,6 +1,6 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
-import { UserInfo } from '../api/index'
+import { UserInfo } from '@/api/index'
 
 export const useUserStore = defineStore('user', () => {
   const userInfo = ref<UserInfo | null>(null)

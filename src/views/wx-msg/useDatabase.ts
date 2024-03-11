@@ -1,20 +1,16 @@
 import { onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 
-import { useUserStore } from '../store/user'
-import { useDatabaseStore } from '../store/database'
-import { getDatabases, execSql } from '../api'
-import {
-  getWxidByBytesExtra,
-  getImagePath,
-  getEmojiPath
-} from '../utils/wx-msg'
-import { DatabaseContact, DatabaseMessage, DatabaseMsg } from '../typings'
+import { useUserStore } from '@/store/user'
+import { useDatabaseStore } from '@/store/database'
+import { getDatabases, execSql } from '@/api'
+import { getWxidByBytesExtra, getImagePath, getEmojiPath } from '@/utils/wx-msg'
+import { DatabaseContact, DatabaseMessage, DatabaseMsg } from '@/typings'
 import {
   formattedChats,
   formattedContacts,
   formattedMessages
-} from '../utils/formatted'
+} from '@/utils/formatted'
 
 export function useDatabase() {
   const loading = ref(true)

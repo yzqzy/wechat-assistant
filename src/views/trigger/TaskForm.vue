@@ -40,9 +40,9 @@
 import _ from 'lodash';
 import { computed, ref } from 'vue';
 import type { FormInstance, FormRules } from 'element-plus'
-import { TriggerTask, TriggerTaskType, triggerMapping } from '../../store/trigger-task'
-import { Contact } from '../../api';
-import { getRandomId } from '../../utils/tools';
+import { TriggerTask, TriggerTaskType, triggerMapping } from '@/store/trigger-task'
+import { Contact } from '@/api';
+import { getRandomId } from '@/utils/tools';
 
 const props = defineProps<{
   data: Contact[]

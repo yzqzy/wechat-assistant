@@ -1,8 +1,8 @@
 import { onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 
-import { useContactStore } from '../store/contact'
-import { getContactList } from '../api'
+import { useContactStore } from '@/store/contact'
+import { getContactList } from '@/api'
 
 export const useContact = () => {
   const store = useContactStore()

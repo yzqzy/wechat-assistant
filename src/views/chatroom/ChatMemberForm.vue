@@ -18,7 +18,7 @@
 import { FormInstance, FormRules } from 'element-plus';
 import { ref } from 'vue';
 
-import { Contact } from '../../api';
+import { Contact } from '@/api';
 
 defineProps<{
   data?: Contact[];

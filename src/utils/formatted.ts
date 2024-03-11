@@ -1,4 +1,4 @@
-import { DatabaseChat, DatabaseContact, DatabaseMsg } from '../typings'
+import { DatabaseChat, DatabaseContact, DatabaseMsg } from '@/typings'
 import { msgBytesExtraParser } from './wx-msg'
 
 export const formattedChats = (chats: string[][]): DatabaseChat[] => {

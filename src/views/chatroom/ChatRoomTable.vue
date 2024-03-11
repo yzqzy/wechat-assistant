@@ -52,9 +52,9 @@
 import { computed, reactive } from 'vue';
 import { Search } from '@element-plus/icons-vue';
 
-import type { ChatRoom } from '../../api'
-import { textIncludes } from '../../utils/tools'
-import { useExport } from '../../composables/useExport'
+import type { ChatRoom } from '@/api'
+import { textIncludes } from '@/utils/tools'
+import { useExport } from '@/composables/useExport'
 
 const { exportXlsx } = useExport()
 

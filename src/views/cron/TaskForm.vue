@@ -54,7 +54,8 @@
         <el-switch v-model="form.enabled"></el-switch>
       </el-form-item>
       <el-form-item label="任务参数">
-        <textarea class="textarea" disabled :value="JSON.stringify(form.params, null, 2)" cols="100" rows="10"></textarea>
+        <textarea class="textarea" disabled :value="JSON.stringify(form.params, null, 2)" cols="100"
+          rows="10"></textarea>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onConfirm(ruleForm)">{{ props.task ? '编辑' : '新增' }}</el-button>
@@ -68,11 +69,11 @@
 import _ from 'lodash';
 import { computed, ref } from 'vue';
 import type { FormInstance, FormRules } from 'element-plus'
-import MessageForm from '../../components/MessageForm.vue';
-import { CronTask, CronTaskMode } from '../../store/cron-task'
-import { MessageType, Contact } from '../../api';
-import { formatCron, genCron, weekConverter } from '../../utils/cron';
-import { getRandomId } from '../../utils/tools';
+import MessageForm from '@/components/MessageForm.vue';
+import { CronTask, CronTaskMode } from '@/store/cron-task'
+import { MessageType, Contact } from '@/api';
+import { formatCron, genCron, weekConverter } from '@/utils/cron';
+import { getRandomId } from '@/utils/tools';
 
 const props = defineProps<{
   data: Contact[]

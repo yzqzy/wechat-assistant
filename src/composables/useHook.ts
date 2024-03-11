@@ -1,4 +1,4 @@
-import { hookSyncMsg, unhookSyncMsg } from '../api'
+import { hookSyncMsg, unhookSyncMsg } from '@/api'
 
 export const useHook = () => {
   const messageHook = async () => {

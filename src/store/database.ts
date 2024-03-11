@@ -1,7 +1,7 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
-import { Database } from '../api/database'
-import { DatabaseChat, DatabaseContact } from '../typings'
+import { Database } from '@/api/database'
+import { DatabaseChat, DatabaseContact } from '@/typings'
 
 export const useDatabaseStore = defineStore('database', () => {
   const databases = ref<Database[] | null>()

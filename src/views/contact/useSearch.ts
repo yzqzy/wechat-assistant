@@ -1,7 +1,7 @@
 import { computed, reactive } from 'vue'
 
-import { useContact } from '../../composables/useContact'
-import { textIncludes } from '../../utils/tools'
+import { useContact } from '@/composables/useContact'
+import { textIncludes } from '@/utils/tools'
 
 export const useSearchTable = () => {
   const query = reactive({

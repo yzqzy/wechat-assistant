@@ -1,5 +1,5 @@
 import { ComputedRef, ref } from 'vue'
-import { Contact, Room } from '../../api'
+import { Contact, Room } from '@/api'
 import { ElTable } from 'element-plus'
 
 type Props = {

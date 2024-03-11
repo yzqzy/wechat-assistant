@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, watchEffect } from 'vue'
-import { RealtimeMessage } from '../typings'
+import { RealtimeMessage } from '@/typings'
 
 export const useMessageStore = defineStore('realtime-message', function () {
   const maxQueueSize =

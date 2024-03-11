@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts" name="dashboard">
-import { useUserStore } from '../store/user'
+import { useUserStore } from '@/store/user'
 
 const { userInfo } = useUserStore()
 </script>
@@ -61,4 +61,4 @@ const { userInfo } = useUserStore()
   display: inline-block;
   width: 120px;
 }
-</style>../store/user
+</style>

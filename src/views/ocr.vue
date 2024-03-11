@@ -28,8 +28,8 @@
 import { ElMessage, UploadProps, UploadRawFile } from 'element-plus';
 import { ref } from 'vue';
 
-import { delaySync } from '../utils/tools';
-import { ocr } from '../api';
+import { delaySync } from '@/utils/tools';
+import { ocr } from '@/api';
 
 const fileList = ref<UploadProps['fileList']>([]);
 const result = ref<string>('');

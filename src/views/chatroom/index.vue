@@ -12,14 +12,14 @@
       </div>
 
       <!-- 选择区域 -->
-      <chat-room-section :data="tableData" :multiple-selection="multipleSelection" :handle-show-dialog="handleShowDialog"
-        :handle-clear-selection="handleClearSelection"
+      <chat-room-section :data="tableData" :multiple-selection="multipleSelection"
+        :handle-show-dialog="handleShowDialog" :handle-clear-selection="handleClearSelection"
         :handle-remover-seclection="handleRemoverSeclection"></chat-room-section>
 
       <!-- 表格区域 -->
       <el-table v-loading="loading" ref="multipleTableRef" :data="tableData" height="70vh" class="table"
-        header-cell-class-name="table-header" @selection-change="handleSelectionChange" @select="handleSelectionRowChange"
-        @select-all="handleSelectionAllChange">
+        header-cell-class-name="table-header" @selection-change="handleSelectionChange"
+        @select="handleSelectionRowChange" @select-all="handleSelectionAllChange">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="wxid" label="ID" width="220"></el-table-column>
         <el-table-column prop="nickname" label="群聊名称" align="center"></el-table-column>
@@ -76,21 +76,21 @@ import { ref, computed } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
 
-import ChatRoomSection from '../../components/MultipleSection/Section.vue';
-import MessageForm from '../../components/MessageForm.vue';
+import ChatRoomSection from '@/components/MultipleSection/Section.vue';
+import MessageForm from '@/components/MessageForm.vue';
 import ChatMemberForm from './ChatMemberForm.vue';
 import ChatRoomTable from './ChatRoomTable.vue';
 
-import { useUserStore } from '../../store/user'
-import type { Room, ChatRoom } from '../../api'
+import { useUserStore } from '@/store/user'
+import type { Room, ChatRoom } from '@/api'
 import {
   getMemberFromChatRoom, quitChatRoom,
   addMemberToChatRoom, inviteMemberToChatRoom, delMemberFromChatRoom
-} from '../../api';
+} from '@/api';
 
-import { useSection } from '../../components/MultipleSection/useSection'
-import { useMessage } from '../../composables/useMessage'
-import { useExport } from '../../composables/useExport';
+import { useSection } from '@/components/MultipleSection/useSection'
+import { useMessage } from '@/composables/useMessage'
+import { useExport } from '@/composables/useExport';
 import { useSearchTable } from './useSearch';
 
 const {

@@ -1,11 +1,11 @@
 import { computed } from 'vue'
 
-import { messageMapping } from '../../api'
+import { messageMapping } from '@/api'
 
 import { storeToRefs } from 'pinia'
-import { useCronTaskStore } from '../../store/cron-task'
-import { useContact } from '../../composables/useContact'
-import { formatCron } from '../../utils/cron'
+import { useCronTaskStore } from '@/store/cron-task'
+import { useContact } from '@/composables/useContact'
+import { formatCron } from '@/utils/cron'
 
 export const useTask = () => {
   const store = useCronTaskStore()

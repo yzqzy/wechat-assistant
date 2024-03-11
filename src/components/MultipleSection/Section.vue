@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts" setup generic="T extends Contact | Room">
-import type { Contact, Room } from '../../api'
+import type { Contact, Room } from '@/api'
 
 defineProps<{
   multipleSelection: T[],

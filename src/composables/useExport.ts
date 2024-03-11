@@ -1,4 +1,4 @@
-import { downloadXlsx } from '../utils/tools'
+import { downloadXlsx } from '@/utils/tools'
 
 interface ExportProps {
   title: string
