@@ -88,7 +88,8 @@ export const getEmojiPath = async (
   const url = thumb ? thumburl : cdnurl
 
   if ((!url || url == '') && md5) {
-    console.log('TODO', emoji_info, content)
+    // TODO: md5 parse from content
+    console.log(emoji_info, content)
     return ''
   }
 
