@@ -61,10 +61,10 @@
                     {{ msg.content }}
                   </div>
                   <div class="image" v-else-if="msg.type === 3">
-                    <el-image class="image" :src="msg.content" alt="image" fit="contain" />
+                    <el-image class="image" :src="msg.content" fit="contain" />
                   </div>
                   <div class="image" v-else-if="msg.type === 47">
-                    <el-image class="image small" :src="msg.content" alt="image" fit="contain" />
+                    <el-image class="image small" :src="msg.content" fit="contain" />
                   </div>
                   <div class="system" v-else-if="msg.type === 10000">
                     {{ msg.content }}

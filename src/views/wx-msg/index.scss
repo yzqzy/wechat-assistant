@@ -224,7 +224,8 @@
           font-size: 14px;
           flex-direction: row;
           flex-wrap: wrap;
-          line-height: 40px;
+          line-height: 18px;
+          width: 100%;
 
           .image {
             width: 160px;
@@ -234,6 +235,10 @@
               width: 140px;
               height: 140px;
             }
+          }
+
+          .text {
+            width: 60%;
           }
 
           .system {
@@ -247,6 +252,15 @@
       
       &.is-sender {
         flex-direction: row-reverse;
+
+        .msg {
+          justify-content: flex-end;
+
+          .text {
+            padding-top: 13px;
+            text-align: right;
+          }
+        }
 
         .content {
           align-items: flex-end;
