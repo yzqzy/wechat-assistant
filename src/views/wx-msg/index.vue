@@ -39,7 +39,7 @@
             <el-button circle class="download-btn" :icon="Download" @click="downloadMessages" />
           </div>
         </div>
-        <div class="message-list scroll-bar" ref="messageRef">
+        <div v-loading="messageLoading" class="message-list scroll-bar" ref="messageRef">
           <div class="refresh-spinner">
             <el-icon v-if="refreshing && !loading">
               <Loading />
@@ -87,15 +87,11 @@ import { DatabaseChat } from '@/typings'
 import { useExport } from '@/composables/useExport'
 import { useDatabase } from './useDatabase'
 
-const { loading, refreshing, chats, messages, selectedChat, setSelectedChat, getMessages, resetParams, refreshChats, loadMoreData } = useDatabase()
+const { loading, messageLoading, refreshing, chats, messages, selectedChat, setSelectedChat, getMessages, resetParams, refreshChats, loadMoreData } = useDatabase()
 const { exportXlsx } = useExport()
 
 const keyword = ref('')
 const messageRef = ref<HTMLDivElement | null>(null)
-
-watch(selectedChat, () => {
-  console.log('selected chat changed', selectedChat)
-})
 
 // message types that are enabled to display in chat history
 const enabled_message_types = [1, 3, 47, 10000]
@@ -140,8 +136,6 @@ watch(selectedChat, () => {
 
 watch(messages, () => {
   try {
-    console.log('messages changed', messages)
-
     if (refreshing.value) return
     setTimeout(scrollToBottom, 300)
   } catch (error) {

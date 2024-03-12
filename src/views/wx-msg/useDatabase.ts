@@ -3,7 +3,12 @@ import { storeToRefs } from 'pinia'
 
 import { useUserStore } from '@/store/user'
 import { useDatabaseStore } from '@/store/database'
-import { getDatabases, execSql } from '@/api'
+import {
+  getDatabases,
+  queryChats,
+  queryContactByWxid,
+  queryMessages
+} from '@/api'
 import { getWxidByBytesExtra, getImagePath, getEmojiPath } from '@/utils/wx-msg'
 import { DatabaseContact, DatabaseMessage, DatabaseMsg } from '@/typings'
 import {
@@ -16,6 +21,8 @@ export function useDatabase() {
   const loading = ref(true)
 
   const refreshing = ref(false)
+
+  const messageLoading = ref(false)
   const loadFinished = ref(false)
 
   const userStore = useUserStore()
@@ -30,6 +37,7 @@ export function useDatabase() {
   const page = ref(1)
 
   const resetParams = () => {
+    messageLoading.value = false
     loadFinished.value = false
     page.value = 1
   }
@@ -51,17 +59,9 @@ export function useDatabase() {
     if (handlerMapping.value == null) return null
     if (chats.value && !forceUpdate) return chats.value
 
-    const sql = `
-      SELECT chat.strUsrName, chat.nOrder, chat.strNickName, contact.Alias, contact.Remark, contact.NickName, chat.strContent, chat.nMsgType, chat.nMsgLocalId, chat.nMsgStatus, img.smallHeadImgUrl, img.bigHeadImgUrl, chat.nUnReadCount, chat.nTime
-      FROM
-        Session as chat
-        INNER JOIN ContactHeadImgUrl as img ON chat.strUsrName = img.usrName
-        INNER JOIN Contact as contact ON chat.strUsrName = contact.UserName
-      ORDER BY nOrder DESC;
-    `
     const handle = handlerMapping.value['MicroMsg.db']
 
-    const response = await execSql(handle, sql)
+    const response = await queryChats(handle)
     if (response.code != 1) return null
 
     const data = formattedChats(response.data)
@@ -73,16 +73,8 @@ export function useDatabase() {
   const getContactByWxid = async (wxid: string) => {
     if (handlerMapping.value == null) return null
 
-    const sql = `
-      SELECT contact.UserName, contact.Alias, contact.Remark, contact.NickName, img.smallHeadImgUrl, img.bigHeadImgUrl
-      FROM
-        Contact as contact
-        INNER JOIN ContactHeadImgUrl as img ON contact.UserName = img.usrName
-      WHERE
-        UserName = '${wxid}'
-    `
     const handle = handlerMapping.value['MicroMsg.db']
-    const response = await execSql(handle, sql)
+    const response = await queryContactByWxid(handle, wxid)
     if (response.code != 1) return null
 
     return response.data
@@ -145,22 +137,12 @@ export function useDatabase() {
   const getMessages = async (wxid: string) => {
     if (handlerMapping.value == null) return null
 
+    if (!refreshing.value) messageLoading.value = true
+
     const offset = (page.value - 1) * 20
 
-    const sql = `
-      SELECT StrTalker, localId, Type, SubType, IsSender, CreateTime, StrContent, DisplayContent, CompressContent, BytesExtra 
-      FROM MSG
-        WHERE
-          TalkerId = (
-            SELECT rowid as TalkerId
-            FROM Name2ID
-            WHERE
-              UsrName = '${wxid}'
-          )
-      ORDER BY CreateTime DESC LIMIT 20 OFFSET ${offset};
-    `
     const handle = handlerMapping.value['MSG0.db']
-    const response = await execSql(handle, sql)
+    const response = await queryMessages({ handle, wxid, offset })
     if (response.code != 1) return null
 
     const data = await formattedMessages(response.data)
@@ -175,6 +157,8 @@ export function useDatabase() {
       }
       messages.value = [...messages.value, ...message_data]
     }
+
+    messageLoading.value = false
   }
 
   const loadMoreData = async () => {
@@ -209,6 +193,7 @@ export function useDatabase() {
 
   return {
     loading,
+    messageLoading,
     refreshing,
 
     databases,
