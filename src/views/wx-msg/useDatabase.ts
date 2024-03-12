@@ -1,3 +1,4 @@
+import moment from 'moment'
 import { onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 
@@ -7,15 +8,20 @@ import {
   getDatabases,
   queryChats,
   queryContactByWxid,
-  queryMessages
+  queryMessages,
+  queryMessagesByTime
 } from '@/api'
 import { getWxidByBytesExtra, getImagePath, getEmojiPath } from '@/utils/wx-msg'
+import { useExport } from '@/composables/useExport'
 import { DatabaseContact, DatabaseMessage, DatabaseMsg } from '@/typings'
 import {
   formattedChats,
   formattedContacts,
   formattedMessages
 } from '@/utils/formatted'
+
+// message types that are enabled to display in chat history
+export const enabled_message_types = [1, 3, 47, 10000]
 
 export function useDatabase() {
   const loading = ref(true)
@@ -32,6 +38,8 @@ export function useDatabase() {
   const { handlerMapping, databases, chats, contactMapping, selectedChat } =
     storeToRefs(store)
   const { addDatabases, addChats, addContact, setSelectedChat } = store
+
+  const { exportXlsx } = useExport()
 
   const messages = ref<DatabaseMessage[]>([])
   const page = ref(1)
@@ -121,13 +129,16 @@ export function useDatabase() {
 
   const normalizedMessages = async (
     wxid: string,
-    messages: DatabaseMsg[]
+    messages: DatabaseMsg[],
+    rewrite = true
   ): Promise<DatabaseMessage[]> => {
     const result: DatabaseMessage[] = []
 
     for (const message of messages) {
       const user = await normailzedUser(wxid, message)
-      message.content = await normalizedContent(message)
+      if (rewrite) {
+        message.content = await normalizedContent(message)
+      }
       result.push({ ...message, user })
     }
 
@@ -175,6 +186,67 @@ export function useDatabase() {
     }, 600)
   }
 
+  const getMessagesByTime = async (
+    wxid: string,
+    startTime?: string,
+    endTime?: string
+  ) => {
+    if (handlerMapping.value == null) return null
+
+    const handle = handlerMapping.value['MSG0.db']
+    const response = await queryMessagesByTime({
+      handle,
+      wxid,
+      startTime: moment(startTime).unix(),
+      endTime: moment(endTime).unix()
+    })
+    if (response.code != 1) return null
+
+    const data = await formattedMessages(response.data)
+    const message_data = await normalizedMessages(wxid, data, false)
+
+    return message_data
+  }
+
+  const exportMessages = async (
+    enabledTypes: number[],
+    format: string,
+    startTime?: string,
+    endTime?: string
+  ) => {
+    if (selectedChat.value == null) return
+
+    const current = selectedChat.value
+
+    const messages_data = await getMessagesByTime(
+      current.wxid,
+      startTime,
+      endTime
+    )
+    if (!messages_data) return
+
+    switch (format) {
+      case 'xlsx':
+        await exportXlsx({
+          title: `聊天记录_${current.remark || current.nickname}`,
+          columns: {
+            ['user.wxid']: '微信ID',
+            ['user.remark']: '备注',
+            ['user.nickname']: '昵称',
+            type: '分类',
+            subType: '子分类',
+            content: '聊天内容',
+            createTime: '发送时间'
+          },
+          data: messages_data.filter(msg => enabledTypes.includes(msg.type))
+        })
+        break
+      default:
+        console.log('Unsupported export format')
+        break
+    }
+  }
+
   onMounted(async () => {
     if (selectedChat.value != null) {
       await getMessages(selectedChat.value.wxid)
@@ -207,6 +279,8 @@ export function useDatabase() {
 
     resetParams,
     refreshChats,
-    loadMoreData
+    loadMoreData,
+
+    exportMessages
   }
 }

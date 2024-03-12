@@ -1,10 +1,9 @@
 import exceljs from 'exceljs'
 
-export const addDateSuffixToFileName = (fileName: string) => {
+export const addDateSuffixToFileName = (fileName: string, ext: string) => {
   const currentDate = new Date()
   const suffix = currentDate.toISOString().slice(0, 10).replace(/-/g, '')
-  const [name, ext] = fileName.split('.')
-  return `${name}_${suffix}.${ext}`
+  return `${fileName.replace(/\s/g, '_')}_${suffix}.${ext}`
 }
 
 const frontend_download = (fileName: string, buffer: any) => {
@@ -50,7 +49,7 @@ export const downloadXlsx = async (
   columns: Record<string, string>,
   data: any
 ) => {
-  const filename = addDateSuffixToFileName(`${fileName}.xlsx`)
+  const filename = addDateSuffixToFileName(fileName, 'xlsx')
   const config = normalizedConfig(columns, data)
   const buffer = await create_xlsx_Buffer(config)
   frontend_download(filename, buffer)
@@ -65,7 +64,7 @@ export const downloadPdf = async (
   columns: Record<string, string>,
   data: any
 ) => {
-  const filename = addDateSuffixToFileName(`${fileName}.pdf`)
+  const filename = addDateSuffixToFileName(fileName, 'pdf')
   const config = normalizedConfig(columns, data)
   const buffer = await create_xlsx_Buffer(config)
   frontend_download(filename, buffer)

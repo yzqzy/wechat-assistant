@@ -1,7 +1,7 @@
 <template>
   <!-- 消息类型选择 -->
   <el-radio-group v-if="multi" class="radio-group" v-model="mode">
-    <el-radio-button v-for="item in modes" :key="item.value" :label="item.value">{{ item.label
+    <el-radio-button v-for="item in modes" :key="item.value" :value="item.value">{{ item.label
       }}</el-radio-button>
   </el-radio-group>
 

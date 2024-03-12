@@ -6,6 +6,30 @@ FROM
     INNER JOIN Contact as contact ON chat.strUsrName = contact.UserName
 ORDER BY nOrder DESC;
 
+# 获取指定时间段的聊天记录
+SELECT
+    StrTalker,
+    localId,
+    Type,
+    SubType,
+    IsSender,
+    CreateTime,
+    StrContent,
+    DisplayContent,
+    CompressContent,
+    BytesExtra
+FROM MSG
+WHERE
+    TalkerId = (
+        SELECT rowid as TalkerId
+        FROM Name2ID
+        WHERE
+            UsrName = 'wxhelper'
+    )
+    AND CreateTime >= 1710000000
+    AND CreateTime <= 1710259199
+ORDER BY CreateTime;
+
 # 获取指定用户的聊天记录
 SELECT
     StrTalker,

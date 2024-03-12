@@ -3,6 +3,7 @@
     <div class="title">
       <h2>聊天记录备份</h2>
     </div>
+
     <div class="container" v-loading.fullscreen.lock="loading">
       <div class="left">
         <!-- 搜索栏 -->
@@ -76,6 +77,10 @@
         </div>
       </div>
     </div>
+
+    <el-dialog title="导出参数设置" v-model="exportVisiable" width="600px" destroy-on-close :close-on-click-modal="false">
+      <export-form @confirm="handleExportConfirm" @close="exportVisiable = false" />
+    </el-dialog>
   </div>
 </template>
 
@@ -84,40 +89,23 @@ import { computed, ref, watch, onMounted, onBeforeUnmount } from 'vue';
 import { Search, Refresh, Download } from '@element-plus/icons-vue';
 
 import { DatabaseChat } from '@/typings'
-import { useExport } from '@/composables/useExport'
-import { useDatabase } from './useDatabase'
+import ExportForm from './ExportForm.vue';
+import { useDatabase, enabled_message_types } from './useDatabase'
 
-const { loading, messageLoading, refreshing, chats, messages, selectedChat, setSelectedChat, getMessages, resetParams, refreshChats, loadMoreData } = useDatabase()
-const { exportXlsx } = useExport()
+const {
+  loading, messageLoading, refreshing, chats, messages, selectedChat,
+  setSelectedChat, getMessages, resetParams, refreshChats, loadMoreData, exportMessages
+} = useDatabase()
 
 const keyword = ref('')
 const messageRef = ref<HTMLDivElement | null>(null)
 
-// message types that are enabled to display in chat history
-const enabled_message_types = [1, 3, 47, 10000]
+const exportVisiable = ref(false)
 
 const refreshMessages = () => {
   if (!selectedChat.value) return
   resetParams()
   getMessages(selectedChat.value.wxid)
-}
-
-const downloadMessages = async () => {
-  if (!selectedChat.value) return
-
-  await exportXlsx({
-    title: `聊天记录_${selectedChat.value.remark || selectedChat.value.nickname}`,
-    columns: {
-      ['user.wxid']: '微信ID',
-      ['user.remark']: '备注',
-      ['user.nickname']: '昵称',
-      type: '分类',
-      subType: '子分类',
-      content: '聊天内容',
-      createTime: '发送时间',
-    },
-    data: messages.value.filter(msg => enabled_message_types.includes(msg.type))
-  })
 }
 
 const scrollToBottom = () => {
@@ -153,6 +141,17 @@ const handleScroll = () => {
   if (scrollValue >= scrollHeight - 20) {
     loadMoreData()
   }
+}
+
+const downloadMessages = async () => {
+  exportVisiable.value = true
+}
+
+const handleExportConfirm = async (form: any) => {
+  const { enabledTypes, format, time } = form
+  const [start, end] = time
+  await exportMessages(enabledTypes, format, start, end)
+  exportVisiable.value = false
 }
 
 onMounted(() => {

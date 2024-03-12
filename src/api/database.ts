@@ -50,12 +50,12 @@ export const queryContactByWxid = (handle: number, wxid: string) => {
 interface QueryMessage {
   handle: number
   wxid: string
-  offset: number
+  offset?: number
   limit?: number
 }
 
 export const queryMessages = (options: QueryMessage) => {
-  const { handle, wxid, offset, limit = 20 } = options
+  const { handle, wxid, offset = 0, limit = 20 } = options
 
   const sql = `
   SELECT StrTalker, localId, Type, SubType, IsSender, CreateTime, StrContent, DisplayContent, CompressContent, BytesExtra 
@@ -68,6 +68,36 @@ export const queryMessages = (options: QueryMessage) => {
           UsrName = '${wxid}'
       )
   ORDER BY CreateTime DESC LIMIT ${limit} OFFSET ${offset};
+`
+  return execSql(handle, sql)
+}
+
+interface QueryMessageByTime {
+  handle: number
+  wxid: string
+  startTime?: number
+  endTime?: number
+}
+
+export const queryMessagesByTime = (options: QueryMessageByTime) => {
+  const { handle, wxid, startTime, endTime } = options
+
+  const sql = `
+  SELECT StrTalker, localId, Type, SubType, IsSender, CreateTime, StrContent, DisplayContent, CompressContent, BytesExtra 
+  FROM MSG
+    WHERE
+      TalkerId = (
+        SELECT rowid as TalkerId
+        FROM Name2ID
+        WHERE
+          UsrName = '${wxid}'
+      )
+      ${
+        startTime && endTime
+          ? `AND CreateTime >= ${startTime} AND CreateTime <= ${endTime}`
+          : ''
+      }
+  ORDER BY CreateTime;
 `
   return execSql(handle, sql)
 }

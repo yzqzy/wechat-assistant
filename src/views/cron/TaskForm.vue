@@ -13,8 +13,8 @@
       <!-- 执行模式 -->
       <el-form-item label="执行模式">
         <el-radio-group v-model="form.mode">
-          <el-radio-button label="normal">普通模式</el-radio-button>
-          <el-radio-button label="custom">自定义模式</el-radio-button>
+          <el-radio-button value="normal">普通模式</el-radio-button>
+          <el-radio-button value="custom">自定义模式</el-radio-button>
         </el-radio-group>
       </el-form-item>
       <!-- 执行模式 custom -->
