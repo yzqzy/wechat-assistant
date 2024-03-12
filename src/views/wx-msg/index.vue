@@ -13,8 +13,9 @@
 
         <!-- 聊天列表 -->
         <div class="chat-list scroll-bar">
-          <div class="chat" :class="{ active: chat.username === selectedChat?.username }" v-for="chat in searchChats"
-            :key="chat.wxid" @click="handleSelectChat(chat)">
+          <div class="chat"
+            :class="{ active: chat.username === selectedChat?.username, disabled: chat.wxid.includes('gh_') }"
+            v-for="chat in searchChats" :key="chat.wxid" @click="handleSelectChat(chat)">
             <div class="avator">
               <img :src="chat.smalllAvatar" alt="head-img" />
             </div>
@@ -40,7 +41,7 @@
         </div>
         <div class="message-list scroll-bar" ref="messageRef">
           <div class="refresh-spinner">
-            <el-icon v-if="refreshing">
+            <el-icon v-if="refreshing && !loading">
               <Loading />
             </el-icon>
           </div>
@@ -56,14 +57,17 @@
                   {{ msg.user?.remark || msg.user?.nickname || '' }}
                 </div>
                 <div class="msg">
-                  <div v-if="msg.type === 1 || msg.type === 10000">
+                  <div class="text" v-if="msg.type === 1">
                     {{ msg.content }}
                   </div>
-                  <div v-else-if="msg.type === 3">
+                  <div class="image" v-else-if="msg.type === 3">
                     <el-image class="image" :src="msg.content" alt="image" fit="contain" />
                   </div>
-                  <div v-else-if="msg.type === 47">
+                  <div class="image" v-else-if="msg.type === 47">
                     <el-image class="image small" :src="msg.content" alt="image" fit="contain" />
+                  </div>
+                  <div class="system" v-else-if="msg.type === 10000">
+                    {{ msg.content }}
                   </div>
                 </div>
               </div>
@@ -78,13 +82,20 @@
 <script setup lang="ts" name="wx-msg">
 import { computed, ref, watch, onMounted, onBeforeUnmount } from 'vue';
 import { Search, Refresh, Download } from '@element-plus/icons-vue';
+
 import { DatabaseChat } from '@/typings'
+import { useExport } from '@/composables/useExport'
 import { useDatabase } from './useDatabase'
 
 const { loading, refreshing, chats, messages, selectedChat, setSelectedChat, getMessages, resetParams, refreshChats, loadMoreData } = useDatabase()
+const { exportXlsx } = useExport()
 
 const keyword = ref('')
 const messageRef = ref<HTMLDivElement | null>(null)
+
+watch(selectedChat, () => {
+  console.log('selected chat changed', selectedChat)
+})
 
 // message types that are enabled to display in chat history
 const enabled_message_types = [1, 3, 47, 10000]
@@ -95,8 +106,22 @@ const refreshMessages = () => {
   getMessages(selectedChat.value.wxid)
 }
 
-const downloadMessages = () => {
-  // TODO: download messages
+const downloadMessages = async () => {
+  if (!selectedChat.value) return
+
+  await exportXlsx({
+    title: `聊天记录_${selectedChat.value.remark || selectedChat.value.nickname}`,
+    columns: {
+      ['user.wxid']: '微信ID',
+      ['user.remark']: '备注',
+      ['user.nickname']: '昵称',
+      type: '分类',
+      subType: '子分类',
+      content: '聊天内容',
+      createTime: '发送时间',
+    },
+    data: messages.value.filter(msg => enabled_message_types.includes(msg.type))
+  })
 }
 
 const scrollToBottom = () => {
@@ -164,10 +189,11 @@ const searchChats = computed(() => {
 })
 
 const handleSelectChat = (chat: DatabaseChat) => {
+  if (chat.wxid.includes('gh_')) return
   setSelectedChat(chat)
 }
 </script>
 
 <style lang="scss" scoped>
 @import './index.scss';
-</style>./useDatabase
+</style>

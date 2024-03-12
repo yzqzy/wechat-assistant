@@ -1,5 +1,5 @@
-import { DatabaseMsg } from '@/typings'
 import convert from 'xml-js'
+import { DatabaseMsg } from '@/typings'
 
 const { ipcRenderer } = window
 

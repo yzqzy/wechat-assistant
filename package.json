@@ -26,7 +26,6 @@
   },
   "devDependencies": {
     "@types/nprogress": "^0.2.3",
-    "@types/winreg": "^1.2.36",
     "@vitejs/plugin-vue": "^5.0.1",
     "electron": "^28.1.0",
     "electron-builder": "^24.9.1",
@@ -47,16 +46,16 @@
     "cronstrue": "^2.47.0",
     "electron-store": "^8.1.0",
     "element-plus": "^2.5.1",
+    "exceljs": "^4.4.0",
     "fast-xml-parser": "^4.3.4",
     "file-type": "^19.0.0",
     "lodash": "^4.17.21",
     "lossless-json": "^4.0.1",
     "nprogress": "^0.2.0",
+    "pdf-lib": "^1.17.1",
     "pinia": "^2.1.7",
     "protobufjs": "^7.2.6",
     "vue-router": "^4.2.5",
-    "winreg": "^1.2.5",
-    "xlsx": "^0.18.5",
     "xml-js": "^1.6.11"
   }
 }
