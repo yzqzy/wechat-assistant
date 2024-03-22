@@ -1,4 +1,4 @@
-# Wechat Assistant
+# WeChat Assistant
 
 PC 微信助手，基于 Electron、WeChat Hook 实现。
 

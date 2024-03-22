@@ -31,3 +31,6 @@ yarn.lock
 
 # wechat-injector
 assets-injector
+
+# docs
+docs/.vitepress/cache
