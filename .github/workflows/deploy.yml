@@ -2,7 +2,7 @@ name: Deploy VitePress site to Pages
 
 on:
   push:
-    branches: [main]
+    branches: [dev]
 
   workflow_dispatch:
 
@@ -31,7 +31,7 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Install dependencies
-        run: npm ci
+        run: npm install
       - name: Build with VitePress
         run: npm run docs:build
       - name: Upload artifact
