@@ -4,6 +4,8 @@ outline: deep
 
 # 功能
 
+介绍 WeChat Assistant 的主要功能模块。
+
 ## 一、联系人管理
 
 * 拍一拍

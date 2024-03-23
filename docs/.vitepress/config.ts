@@ -2,7 +2,7 @@ import { defineConfig } from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: 'WeChat Assistant',
+  title: '微信助手',
   description: 'wechat assistant for wechat management',
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
