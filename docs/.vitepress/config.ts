@@ -6,7 +6,7 @@ export default defineConfig({
   description: 'wechat assistant for wechat management',
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
-    logo: './assets/logo.png',
+    logo: '/logo.png',
 
     nav: [
       { text: '指引', link: '/guide' },

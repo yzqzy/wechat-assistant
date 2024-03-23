@@ -6,7 +6,7 @@ hero:
   name: "微信助手"
   text: "WeChat Assistant"
   image:
-    src: /assets/logo.png
+    src: /logo.png
     alt: VitePress
   actions:
     - theme: brand
