@@ -10,18 +10,21 @@ hero:
     alt: VitePress
   actions:
     - theme: brand
-      text: Markdown Examples
-      link: /markdown-examples
+      text: 功能介绍
+      link: /features
     - theme: alt
-      text: API Examples
-      link: /api-examples
+      text: 如何使用
+      link: /getting-started
 
 features:
-  - title: Feature A
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature B
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature C
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+  - title: 群聊管理
+    details: 支持群发消息、拉人进群、成员列表导出等功能
+    link: /features.html#二、群聊管理
+  - title: 任务管理
+    details: 支持定时任务、触发任务
+    link: /features.html#三、任务管理
+  - title: 聊天记录备份
+    details: 还原微信聊天界面，支持导出聊天记录
+    link: /features.html#四、聊天记录备份
 ---
-
+  

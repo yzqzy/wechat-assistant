@@ -34,8 +34,17 @@ export default defineConfig({
       {
         text: '指引',
         items: [
-          { text: '开始', link: '/guide' },
-          { text: 'Runtime API Examples', link: '/api-examples' }
+          { text: '微信助手是什么', link: '/guide' },
+          { text: '功能', link: '/features' },
+          { text: '快速开始', link: '/getting-started' },
+          { text: '聊天记录迁移', link: '/chat-history-migration' }
+        ]
+      },
+      {
+        text: '开发指南',
+        items: [
+          { text: '如何开发', link: '/developer' },
+          { text: '数据库阐述', link: '/database' }
         ]
       }
     ],
@@ -45,6 +54,14 @@ export default defineConfig({
     footer: {
       message: 'Released under the MIT License.',
       copyright: 'Copyright © 2024-present heora'
+    },
+
+    lastUpdated: {
+      text: 'Updated at',
+      formatOptions: {
+        dateStyle: 'short',
+        timeStyle: 'medium'
+      }
     }
   }
 })
