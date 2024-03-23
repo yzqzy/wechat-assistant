@@ -35,9 +35,9 @@ export default defineConfig({
       {
         text: '指引',
         items: [
-          { text: '微信助手是什么', link: '/guide' },
-          { text: '功能', link: '/features' },
+          { text: '微信助手', link: '/guide' },
           { text: '快速开始', link: '/getting-started' },
+          { text: '功能', link: '/features' },
           { text: '聊天记录迁移', link: '/chat-history-migration' }
         ]
       },
