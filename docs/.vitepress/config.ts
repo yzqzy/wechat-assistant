@@ -2,6 +2,7 @@ import { defineConfig } from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+  base: '/wechat-assistant/',
   title: '微信助手',
   description: 'wechat assistant for wechat management',
   head: [['link', { rel: 'icon', href: '/favicon.ico' }]],
