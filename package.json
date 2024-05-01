@@ -48,7 +48,7 @@
     "axios": "^1.6.5",
     "cron": "^3.1.6",
     "cronstrue": "^2.47.0",
-    "electron-store": "^8.1.0",
+    "electron-store": "^8.2.0",
     "element-plus": "^2.5.1",
     "exceljs": "^4.4.0",
     "fast-xml-parser": "^4.3.4",
