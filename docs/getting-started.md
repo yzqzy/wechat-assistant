@@ -27,8 +27,8 @@
 
 如果你没有注入 dll，会进入以下页面。
 
-<img src="https://img.yueluo.club/wechat-assistant/injector.png" width="600px" />
+<img src="./assets/injector.png" width="600px" />
 
 注入成功后，即可正常使用程序。
 
-<img src="https://img.yueluo.club/wechat-assistant/application_mosaic.png" width="600px" />
+<img src="./assets/application_mosaic.png" width="600px" />
