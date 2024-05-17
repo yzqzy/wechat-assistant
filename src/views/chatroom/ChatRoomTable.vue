@@ -130,9 +130,11 @@ const handleExportXlsx = async () => {
     columns: {
       wxid: 'ID',
       nickname: '昵称',
-      account: '微信号'
+      account: '微信号',
+      headImage: '头像'
     },
-    data: filterData.value
+    imageFields: ['headImage'],
+    data: filterData.value,
   })
 }
 </script>
