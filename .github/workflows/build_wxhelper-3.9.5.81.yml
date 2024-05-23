@@ -1,4 +1,4 @@
-name: Build
+name: Build wxhelper-3.9.5.81
 
 on:
   push:
