@@ -11,7 +11,7 @@ export default defineConfig({
     logo: '/logo.png',
 
     nav: [
-      { text: '指引', link: '/guide' },
+      { text: '指南', link: '/guide' },
       {
         text: '相关链接',
         items: [
@@ -34,12 +34,13 @@ export default defineConfig({
 
     sidebar: [
       {
-        text: '指引',
+        text: '指南',
         items: [
           { text: '微信助手', link: '/guide' },
           { text: '快速开始', link: '/getting-started' },
-          { text: '功能', link: '/features' },
-          { text: '聊天记录迁移', link: '/chat-history-migration' }
+          { text: '功能介绍', link: '/features' },
+          { text: '聊天记录迁移', link: '/chat-history-migration' },
+          { text: '常见问题', link: '/faq' }
         ]
       },
       {

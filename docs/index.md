@@ -10,10 +10,13 @@ hero:
     alt: VitePress
   actions:
     - theme: brand
+      text: 使用指南
+      link: /guide
+    - theme: alt
       text: 功能介绍
       link: /features
     - theme: alt
-      text: 如何使用
+      text: 快速开始
       link: /getting-started
 
 features:

@@ -8,7 +8,7 @@
 
 > 如果你不会使用命令行工具，可以跳过 3 步骤，直接运行微信助手客户端。
 
-1. 从 [release](https://github.com/yzqzy/wechat-assistant/releases/tag/v0.0.0) 中下载相关文件
+1. 从 [WeChat Assets](https://github.com/yzqzy/wechat-assistant/releases/tag/v0.0.0) 中下载相关文件
 2. 安装 WeChatSetup 3.9.5.81 版本并且登录
 3. 使用 Injector 工具进行注入，如果成功的话你将会看到: `Successfully injected module!`
 
