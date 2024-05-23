@@ -112,7 +112,11 @@ const normalizedContent = async (
     const value = fields.reduce((pre, field) => pre[field], item)
 
     if (imageFields.includes(key)) {
-      item[key] = await remoteFileToBase64(value)
+      try {
+        item[key] = await remoteFileToBase64(value)
+      } catch (error) {
+        item[key] = ''
+      }
     } else {
       item[key] = value
     }
