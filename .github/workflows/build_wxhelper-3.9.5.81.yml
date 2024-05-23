@@ -2,8 +2,6 @@ name: Build wxhelper-3.9.5.81
 
 on:
   push:
-    branches:
-      - wxhelper-3.9.5.81
     tags:
       - 'v*'
 
