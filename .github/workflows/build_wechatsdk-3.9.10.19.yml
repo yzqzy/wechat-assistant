@@ -2,19 +2,20 @@ name: Build wechatsdk-3.9.10.19
 
 on:
   push:
-    - [wechatsdk-3.9.10.19]
-  tags:
-    - 'v*'
-  paths-ignore:
-    - '**.md'
-    - '**.spec.js'
-    - '.idea'
-    - '.vscode'
-    - '.dockerignore'
-    - 'Dockerfile'
-    - '.gitignore'
-    - '.github/**'
-    - '!.github/workflows/build.yml'
+    branches:
+      - [wechatsdk-3.9.10.19]
+    tags:
+      - 'v*'
+    paths-ignore:
+      - '**.md'
+      - '**.spec.js'
+      - '.idea'
+      - '.vscode'
+      - '.dockerignore'
+      - 'Dockerfile'
+      - '.gitignore'
+      - '.github/**'
+      - '!.github/workflows/build.yml'
 
 jobs:
   build:
