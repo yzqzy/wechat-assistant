@@ -26,7 +26,7 @@ export interface UserInfo {
 }
 
 export const getUserInfo = async (): Promise<Result<UserInfo>> =>
-  (await request.post('/api/userInfo')).data
+  (await request.post('/api', { type: 28 })).data
 
 export interface Contact {
   customAccount: string
