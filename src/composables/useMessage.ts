@@ -104,14 +104,6 @@ export const useMessage = () => {
       res = await sendImages(wxid, data)
     } else if (data.mode === MessageType.FILE) {
       res = await sendFiles(wxid, data)
-    } else if (data.mode === MessageType.WX_ARTICLE) {
-      res = await forwardPublicMsg({
-        wxid,
-        title: data.title,
-        url: data.url,
-        thumbUrl: data.thumb_url,
-        digest: data.digest
-      })
     }
 
     return res

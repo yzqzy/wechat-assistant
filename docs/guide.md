@@ -11,7 +11,7 @@ PC 微信助手，基于 Electron、WeChat Hook 实现。
 
 > 3.9.5.81 存在 “微信提示版本低，需升级微信问题” 问题，[issue](https://github.com/yzqzy/wechat-assistant/issues/22)。
 
-2. wxhelper-3.9.8.25 版本（开发中）。
+2. wxhelper-3.9.8.25 版本。
 
 ## 2. 交流群
 

@@ -20,9 +20,6 @@ hero:
       link: /getting-started
 
 features:
-  - title: 群聊管理
-    details: 支持群发消息、拉人进群、成员列表导出等功能
-    link: /features.html#二、群聊管理
   - title: 任务管理
     details: 支持定时任务、触发任务
     link: /features.html#三、任务管理

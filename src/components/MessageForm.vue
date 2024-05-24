@@ -47,22 +47,6 @@
       </div>
     </el-form-item>
 
-    <!-- 公众号消息 -->
-    <template v-if="mode === 'wx_article'">
-      <el-form-item label="名称" prop="title">
-        <el-input v-model="form.title" placeholder="请输入文章名称" />
-      </el-form-item>
-      <el-form-item label="文章地址" prop="url">
-        <el-input v-model="form.url" placeholder="请输入文章地址" />
-      </el-form-item>
-      <el-form-item label="缩略图地址" prop="thumb_url">
-        <el-input v-model="form.thumb_url" placeholder="请输入缩略图地址" />
-      </el-form-item>
-      <el-form-item label="摘要" prop="digest">
-        <el-input v-model="form.digest" placeholder="请输入摘要" />
-      </el-form-item>
-    </template>
-
     <!-- 发送按钮 -->
     <slot name="footer">
       <el-form-item>
@@ -139,12 +123,6 @@ watch(mode, () => {
 })
 
 const clean = () => {
-  if (mode.value !== MessageType.WX_ARTICLE) {
-    form.value.title = '';
-    form.value.url = '';
-    form.value.thumb_url = '';
-    form.value.digest = '';
-  }
   if (mode.value != MessageType.IMAGE) {
     form.value.image_url = [];
   }

@@ -45,10 +45,3 @@ export interface Room extends Contact {}
 
 export const getContactList = async (): Promise<Result<Contact[]>> =>
   (await request.post('/api/getContactList')).data
-
-export const ocr = async (imagePath: string): Promise<Result<string>> =>
-  (
-    await request.post('/api/ocr', {
-      imagePath
-    })
-  ).data

@@ -4,28 +4,14 @@ import { Result } from './common'
 export enum MessageType {
   TEXT = 'text',
   IMAGE = 'image',
-  FILE = 'file',
-  WX_ARTICLE = 'wx_article'
+  FILE = 'file'
 }
 
 export const messageMapping = {
   [MessageType.TEXT]: '文本消息',
   [MessageType.IMAGE]: '图片消息',
-  [MessageType.FILE]: '文件消息',
-  [MessageType.WX_ARTICLE]: '公众号消息'
+  [MessageType.FILE]: '文件消息'
 }
-
-// 拍一拍
-export const sendPatMsg = async (
-  wxid: string,
-  receiver: string
-): Promise<Result<null>> =>
-  (
-    await request.post('/api/sendPatMsg', {
-      wxid,
-      receiver
-    })
-  ).data
 
 // 发送文本消息
 export const sendTextMsg = async (

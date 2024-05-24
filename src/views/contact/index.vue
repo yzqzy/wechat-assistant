@@ -33,10 +33,6 @@
         <el-table-column label="操作" width="320" align="center">
           <template #default="scope">
             <div>
-              <el-button v-if="!(scope.row.wxid.includes('chatroom') || /^gh_/.test(scope.row.wxid))" class="btn"
-                type="info" plain @click="handlePat(scope.$index)">
-                拍一拍
-              </el-button>
               <el-button type="primary" class="btn" plain @click="handleShowDialog(scope.$index)">
                 发消息
               </el-button>
@@ -61,14 +57,13 @@
 
 <script setup lang="ts" name="contact">
 import { ref } from 'vue';
-import { ElMessage, ElMessageBox, ElTable } from 'element-plus';
+import { ElTable } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
 
 import ContactSection from '@/components/MultipleSection/Section.vue';
 import MessageForm from '@/components/MessageForm.vue';
 
 import type { Contact } from '@/api'
-import { sendPatMsg } from '@/api';
 
 import { useSection } from '@/components/MultipleSection/useSection'
 import { useMessage } from '@/composables/useMessage'
@@ -136,25 +131,6 @@ const handleConfirm = async (data: any) => {
   await sendMsgBatch(wx_ids, data)
 
   reset()
-}
-
-const handlePat = (index: number) => {
-  const item = tableData.value[index];
-
-  ElMessageBox.confirm('确定要拍一拍吗？', '提示', {
-    type: 'warning'
-  })
-    .then(async () => {
-      const res = await sendPatMsg(item.wxid, item.wxid);
-
-      if (res.code === 1) {
-        ElMessage.success('拍一拍成功');
-        return
-      }
-
-      ElMessage.error('拍一拍失败');
-    })
-    .catch(() => { });
 }
 </script>
 

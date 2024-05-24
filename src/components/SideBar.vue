@@ -46,11 +46,6 @@ const items = [
         title: '联系人管理',
     },
     {
-        icon: 'ChatSquare',
-        index: '/chatroom',
-        title: '群聊管理',
-    },
-    {
         icon: 'List',
         index: '3',
         title: '任务管理',
@@ -69,17 +64,6 @@ const items = [
         icon: 'ChatDotRound',
         index: '/wx-msg',
         title: '聊天记录备份',
-    },
-    {
-        icon: 'Tools',
-        index: '5',
-        title: '工具集',
-        subs: [
-            {
-                index: '/ocr',
-                title: '图像文字识别',
-            },
-        ]
     },
     {
         icon: 'CoffeeCup',

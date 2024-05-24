@@ -40,17 +40,6 @@ const routes: RouteRecordRaw[] = [
           import(/* webpackChunkName: "contact" */ '@/views/contact/index.vue')
       },
       {
-        path: '/chatroom',
-        name: 'ChatRoom',
-        meta: {
-          title: '群聊管理'
-        },
-        component: () =>
-          import(
-            /* webpackChunkName: "chatroom" */ '@/views/chatroom/index.vue'
-          )
-      },
-      {
         path: '/cron',
         name: 'CRON',
         meta: {
@@ -76,14 +65,6 @@ const routes: RouteRecordRaw[] = [
         },
         component: () =>
           import(/* webpackChunkName: "wx-msg" */ '@/views/wx-msg/index.vue')
-      },
-      {
-        path: '/ocr',
-        name: 'OCR',
-        meta: {
-          title: '图像文字识别 - OCR'
-        },
-        component: () => import(/* webpackChunkName: "ocr" */ '@/views/ocr.vue')
       },
       {
         path: '/about',
