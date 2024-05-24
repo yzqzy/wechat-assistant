@@ -1,32 +1,49 @@
 import request from '@/utils/request'
 
-export interface Result<T> {
-  code: number
-  msg: string
-  data: T
+interface Robot {
+  alias: string
+  isLogin: boolean
+  nickName: string
+  pid: string
+  port: string
+  smallHeadImgUrl: string
+  userName: string
 }
 
-export const checkLogin = async (): Promise<Result<null>> =>
-  (await request.post('/api/checkLogin')).data
+export interface Result<T> {
+  data: {
+    data: T
+    desc: ''
+    status: number
+  }
+  description: string
+  error_code: number
+  robot: Robot
+}
 
 export interface UserInfo {
-  country: string
+  uin: number
+  userName: string
+  nickName: string
+  alias: string
+  phone: string
   province: string
-  city: string
-  account: string
-  name: string
-  headImage: string
-  mobile: string
+  nation: string
+  sex: number
   signature: string
-  wxid: string
+
+  bigHeadImgUrl: string
+  smallHeadImgUrl: string
+
+  isLogin: boolean
 
   dbKey: string
-  dataSavePath: string
-  currentDataPath: string
+  exePath: string
+  cachePath: string
 }
 
 export const getUserInfo = async (): Promise<Result<UserInfo>> =>
-  (await request.post('/api', { type: 28 })).data
+  (await request.post('/api/', { type: 28 })).data
 
 export interface Contact {
   customAccount: string

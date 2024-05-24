@@ -8,7 +8,7 @@ export const useUserStore = defineStore('user', () => {
   const isLoggedIn = computed(() => userInfo.value !== null)
 
   const dataSavePath = computed(() => {
-    return userInfo.value?.dataSavePath || ''
+    return userInfo.value?.cachePath || ''
   })
 
   const addUserInfo = (info: UserInfo) => {

@@ -10,7 +10,7 @@ import 'nprogress/nprogress.css'
 
 import Home from '@/views/home.vue'
 
-import { checkLogin, getUserInfo } from '@/api/index'
+import { getUserInfo } from '@/api/index'
 import { useUserStore } from '@/store/user'
 import { useHook } from '@/composables/useHook'
 
@@ -116,27 +116,19 @@ router.beforeEach(async (to, from, next) => {
     next()
   } else {
     if (to.path != '/injector') {
-      try {
-        const loginRes = await checkLogin()
-
-        if (loginRes.code != 1) {
-          redirect(next)
-          return
-        }
-      } catch (error) {
-        redirect(next)
-        return
-      }
-
       const res = await getUserInfo()
 
-      if (res.code == 1) {
+      console.log('res', res)
+
+      if (res.error_code == 10000) {
         // hook message
-        await messageHook()
+        // await messageHook()
         // login success
-        store.addUserInfo(res.data)
+        store.addUserInfo(res.data.data)
       } else {
         console.log('获取用户信息失败')
+        redirect(next)
+        return
       }
     }
     next()

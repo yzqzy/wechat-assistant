@@ -1,28 +1,28 @@
 <template>
   <div class="container">
     <el-row>
-      <div class="welcome"> Hello {{ userInfo?.name || userInfo?.account }} 👋🏼，欢迎使用微信助手！</div>.
+      <div class="welcome"> Hello {{ userInfo?.alias || userInfo?.nickName }} 👋🏼，欢迎使用微信助手！</div>.
     </el-row>
     <el-row class="mb20">
-      <el-avatar :size="120" :src="userInfo?.headImage" />
+      <el-avatar :size="120" :src="userInfo?.smallHeadImgUrl" />
     </el-row>
     <el-row>
       <el-col>
         <div class="user-info-list">
           <span>微信ID：</span>
-          {{ userInfo?.wxid }}
+          {{ userInfo?.userName }}
         </div>
         <div class="user-info-list">
           <span>微信号：</span>
-          {{ userInfo?.account }}
+          {{ userInfo?.nickName }}
         </div>
         <div class="user-info-list">
           <span>手机号：</span>
-          {{ userInfo?.mobile }}
+          {{ userInfo?.phone }}
         </div>
         <div class="user-info-list">
           <span>地区：</span>
-          {{ userInfo?.country }}-{{ userInfo?.province }}-{{ userInfo?.city }}
+          {{ userInfo?.nation }}-{{ userInfo?.province }}
         </div>
         <div class="user-info-list">
           <span>个性签名：</span>
