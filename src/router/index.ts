@@ -118,11 +118,9 @@ router.beforeEach(async (to, from, next) => {
     if (to.path != '/injector') {
       const res = await getUserInfo()
 
-      console.log('res', res)
-
       if (res.error_code == 10000) {
         // hook message
-        // await messageHook()
+        await messageHook()
         // login success
         store.addUserInfo(res.data.data)
       } else {

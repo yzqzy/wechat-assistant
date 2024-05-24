@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import { Result } from './common'
+import { Result } from '@/typings'
 
 export enum MessageType {
   TEXT = 'text',

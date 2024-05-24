@@ -1,24 +1,10 @@
 import request from '@/utils/request'
+import { Result } from '@/typings'
 
-interface Robot {
-  alias: string
-  isLogin: boolean
-  nickName: string
-  pid: string
-  port: string
-  smallHeadImgUrl: string
-  userName: string
-}
-
-export interface Result<T> {
-  data: {
-    data: T
-    desc: ''
-    status: number
-  }
-  description: string
-  error_code: number
-  robot: Robot
+export interface UserInfoResult<T> {
+  data: T
+  desc: string
+  status: number
 }
 
 export interface UserInfo {
@@ -42,8 +28,9 @@ export interface UserInfo {
   cachePath: string
 }
 
-export const getUserInfo = async (): Promise<Result<UserInfo>> =>
-  (await request.post('/api/', { type: 28 })).data
+export const getUserInfo = async (): Promise<
+  Result<UserInfoResult<UserInfo>>
+> => (await request.post('/api/', { type: 28 })).data
 
 export interface Contact {
   customAccount: string

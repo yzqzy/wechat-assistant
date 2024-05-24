@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import { Result } from './common'
+import { Result } from '@/typings'
 
 interface Table {
   name: string

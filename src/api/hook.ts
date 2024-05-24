@@ -1,24 +1,48 @@
 import request from '@/utils/request'
-import { Result } from './common'
+import { Result } from '@/typings'
 
-// hook 消息
+export interface Hook {
+  cookie: string
+  desc: string
+  status: number
+}
+
+interface HookResult {
+  data: Hook[]
+  message: string
+  status: number
+}
+
+// hook 消息 (tcp)
 export const hookSyncMsg = async ({
-  ip,
+  host,
   port
 }: {
-  ip: string
-  port: string
-}): Promise<Result<null>> =>
+  host: string
+  port: number
+}): Promise<Result<Hook>> =>
   (
-    await request.post('/api/hookSyncMsg', {
-      ip,
+    await request.post('/api/', {
+      type: 1001,
+      host,
       port,
-      url: '',
-      timeout: '3000',
-      enableHttp: '0'
+      protocol: 1
     })
   ).data
 
 // 取消 hook 消息
-export const unhookSyncMsg = async (): Promise<Result<null>> =>
-  (await request.post('/api/unhookSyncMsg')).data
+export const unhookSyncMsg = async (cookie: string): Promise<Result<Hook>> =>
+  (
+    await request.post('/api/', {
+      type: 1002,
+      cookie
+    })
+  ).data
+
+// hook 消息列表
+export const hookSyncMsgList = async (): Promise<Result<HookResult>> =>
+  (
+    await request.post('/api/', {
+      type: 1003
+    })
+  ).data

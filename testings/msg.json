@@ -1,0 +1,31 @@
+{
+  "data": {
+    "content": "2",
+    "createTime": 1716545083,
+    "extraInfo": "<msgsource>\n    <sec_msg_node>\n        <alnode>\n            <fr>1</fr>\n        </alnode>\n    </sec_msg_node>\n    <pua>1</pua>\n</msgsource>\n",
+    "isChatroomMsg": 0,
+    "isSender": 1,
+    "md5": "1d691acb5fef9101407fce93a0bfc8cc",
+    "msgSvrId": 4061446545376341064,
+    "msgType": 1,
+    "talker": "filehelper",
+    "talkerInfo": {
+      "alias": "",
+      "nickName": "鏂囦欢浼犺緭鍔╂墜",
+      "smallHeadImgUrl": "https://wx.qlogo.cn/mmhead/ver_1/zhwugWaZibEP1y6J6ibfpeWxSSkYHGkicibtlCkzwLGe14oSO3tQCeMcKvogvmBibae62ia1jLchzmDDqqkSyMdRoxZCnj0ibuAT7e3eK1d65OhuUc/132",
+      "userName": "filehelper"
+    },
+    "userName": "wxid_3w0lupg9j01622"
+  },
+  "pushTime": 1716545085,
+  "pushType": 4,
+  "robot": {
+    "alias": "_heora",
+    "isLogin": true,
+    "nickName": "heora",
+    "pid": 12424,
+    "port": 19088,
+    "smallHeadImgUrl": "https://wx.qlogo.cn/mmhead/ver_1/NvwUiaxjNTVboMMQjEwofia1iaTMc3AnIgAeToyHibg5NLFrZzG7llkBzYvmbhJ1YGhuheJQ21LRx7bPv52yV8bJp3cz3OgUVpSlENO4ah3iarjibT4KQU52jIDo0PPm0B1icoE/132",
+    "userName": "wxid_3w0lupg9j01622"
+  }
+}

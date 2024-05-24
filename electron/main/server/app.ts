@@ -18,16 +18,14 @@ export const createServer = (window: BrowserWindow) => {
     )
     console.log('[tcp-server]: client connected')
 
-    let data = Buffer.from('')
-
     socket.on('data', chunk => {
-      data = Buffer.concat([data, chunk])
-    })
+      const size = chunk.readUInt32BE(0)
+      const data = chunk.slice(4).toString('utf8')
 
-    socket.on('end', () => {
-      const decodedData = data.toString('utf8')
-      console.log(`[tcp-server]: received data: ${decodedData}`)
-      win?.webContents.send('main-process-realtime-message', decodedData)
+      console.log(`[tcp-server]: received size: ${size}`)
+      console.log(`[tcp-server]: received data: ${data}`)
+
+      win?.webContents.send('main-process-realtime-message', data)
     })
 
     socket.on('close', () => {

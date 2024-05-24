@@ -11,7 +11,7 @@ import {
 import { useMessage } from '@/composables/useMessage'
 import { useMessageStore } from '@/store/realtime'
 import { useContactStore } from '@/store/contact'
-import { RealtimeMessage } from '@/typings'
+import { RealtimeMessage, RealtimeMessageResult } from '@/typings'
 import { MessageType } from '@/api'
 
 const { sendMsgBatch, forwardMsgBatch } = useMessage()
@@ -36,7 +36,7 @@ const preventRevocationHandler = (
 ) => {
   if (
     !(
-      message.type.value == '10002' &&
+      message.msgType.value == '10002' &&
       message.content.includes('撤回了一条消息')
     )
   )
@@ -54,7 +54,7 @@ const preventRevocationHandler = (
 
   const { newmsgid, replacemsg } = xml.sysmsg.revokemsg
 
-  const oldMsg = messages.find(m => m.msgId.value === newmsgid)
+  const oldMsg = messages.find(m => m.msgSvrId.value === newmsgid)
   if (!oldMsg) return
 
   const originMsgContent = oldMsg.content.replace(`${revocationPrefix}`, '')
@@ -71,7 +71,9 @@ const preventRevocationHandler = (
 
 // Red packet
 const redPacketHandler = (task: TriggerTask, message: RealtimeMessage) => {
-  if (!(message.type.value == '10000' && message.content.includes('收到红包')))
+  if (
+    !(message.msgType.value == '10000' && message.content.includes('收到红包'))
+  )
     return
 
   const contactStore = useContactStore()
@@ -81,7 +83,7 @@ const redPacketHandler = (task: TriggerTask, message: RealtimeMessage) => {
   console.log('[Red packet]: task:', task.uid, task.name)
 
   const newMsg = `"${
-    contactMapping.value[message.fromUser]
+    contactMapping.value[message.userName]
   }" 正在发红包，请速去查看 ！！！`
 
   // Send message to receiver
@@ -100,7 +102,7 @@ const redPacketHandler = (task: TriggerTask, message: RealtimeMessage) => {
 
 // Text message
 const textMessageHandler = (task: TriggerTask, message: RealtimeMessage) => {
-  if (message.type.value !== '1') return
+  if (message.msgType.value !== '1') return
 
   console.log('[Receive Realtime message]: text:', message)
 
@@ -117,7 +119,7 @@ const textMessageHandler = (task: TriggerTask, message: RealtimeMessage) => {
   const { contactMapping } = storeToRefs(contactStore)
 
   const newMsg = `来自"${
-    contactMapping.value[message.fromUser]
+    contactMapping.value[message.userName]
   }"的消息 :\n\n${content}`
 
   console.log('[Receive Realtime message]: task:', task.uid, task.name)
@@ -143,7 +145,7 @@ const forwardMessageHandler = async (
   }
 
   // Forward message to receiver
-  forwardMsgBatch(task.receiver_ids, message.msgId.value)
+  forwardMsgBatch(task.receiver_ids, message.msgSvrId.value)
 }
 
 // realtime message handler
@@ -155,8 +157,8 @@ const messageParser = (message: RealtimeMessage) => {
   const { subs } = storeToRefs(triggerTaskStore)
   const { findTaskBySub } = triggerTaskStore
 
-  if (subs.value.has(message.fromUser)) {
-    const tasks = findTaskBySub(message.fromUser)
+  if (subs.value.has(message.userName)) {
+    const tasks = findTaskBySub(message.userName)
 
     console.log('[Receive Realtime message]: message:', subs, tasks)
 
@@ -192,7 +194,8 @@ export const realtimeMsgParser = (_event: IpcRendererEvent, ...args: any[]) => {
     '[Receive Main-process realtime message]: -----------------------------------------------------------'
   )
   try {
-    messageParser(parseJson(args[0]) as RealtimeMessage)
+    const response = parseJson(args[0]) as RealtimeMessageResult
+    messageParser(response.data)
   } catch (error) {
     console.error('[Receive Main-process realtime message]:', error)
   }
