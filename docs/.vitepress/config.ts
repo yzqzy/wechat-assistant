@@ -25,7 +25,11 @@ export default defineConfig({
                 text: 'Injector',
                 link: 'https://github.com/nefarius/Injector'
               },
-              { text: 'WeChatMsg', link: 'https://github.com/LC044/WeChatMsg' }
+              { text: 'WeChatMsg', link: 'https://github.com/LC044/WeChatMsg' },
+              {
+                text: 'WeChatAPI',
+                link: 'https://www.wechatsdk.com/zh'
+              }
             ]
           }
         ]
