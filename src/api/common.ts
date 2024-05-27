@@ -33,19 +33,23 @@ export const getUserInfo = async (): Promise<
 > => (await request.post('/api/', { type: 28 })).data
 
 export interface Contact {
-  customAccount: string
-  encryptName: string
-  nickname: string
-  pinyin: string
-  pinyinAll: string
-  reserved1: number
-  reserved2: number
-  type: number
-  verifyFlag: number
-  wxid: string
+  NickName: string
+  PYInitial: string
+  Remark: string
+  RemarkPYInitial: string
+  UserName: string
+  smallHeadImgUrl: string
 }
 
 export interface Room extends Contact {}
 
-export const getContactList = async (): Promise<Result<Contact[]>> =>
-  (await request.post('/api/getContactList')).data
+export const getContactList = async (): Promise<
+  Result<UserInfoResult<Contact[]>>
+> =>
+  (
+    await request.post('/api/', {
+      type: 10058,
+      dbName: 'MicroMsg.db',
+      sql: `SELECT UserName,Remark,NickName,PYInitial,RemarkPYInitial,t2.smallHeadImgUrl FROM Contact t1 LEFT JOIN ContactHeadImgUrl t2 ON t1.UserName = t2.usrName WHERE t1.VerifyFlag = 0 AND (t1.Type = 3 OR t1.Type > 50) and t1.Type != 2050 AND t1.UserName NOT IN ('qmessage', 'tmessage') ORDER BY t1.Remark DESC;`
+    })
+  ).data

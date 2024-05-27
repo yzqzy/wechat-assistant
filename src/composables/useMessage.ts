@@ -3,8 +3,6 @@ import { ElMessage } from 'element-plus'
 
 import {
   MessageType,
-  forwardMsg,
-  forwardPublicMsg,
   sendAtTextMsg,
   sendFileMsg,
   sendImagesMsg,
@@ -129,27 +127,7 @@ export const useMessage = () => {
     }
   }
 
-  const forwardMsgBatch = async (
-    wx_ids: string[] | undefined,
-    msgId: string,
-    args?: ExtendedParams
-  ) => {
-    const { callback } = args || {}
-    const res = await exec(wx_ids, forwardMsg, msgId)
-
-    if (callback) {
-      return callback(res)
-    }
-
-    if (res && res.code >= 1) {
-      ElMessage.success('转发成功')
-    } else {
-      ElMessage.error('转发失败')
-    }
-  }
-
   return {
-    forwardMsgBatch,
     sendMsgBatch
   }
 }

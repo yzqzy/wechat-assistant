@@ -21,15 +21,14 @@
         header-cell-class-name="table-header" @selection-change="handleSelectionChange"
         @select="handleSelectionRowChange" @select-all="handleSelectionAllChange">
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="wxid" label="ID" width="220"></el-table-column>
-        <el-table-column prop="nickname" label="昵称" align="center"></el-table-column>
-        <el-table-column prop="customAccount" label="微信号" align="center">
+        <el-table-column prop="UserName" label="ID" width="220"></el-table-column>
+        <el-table-column prop="NickName" label="昵称" align="center"></el-table-column>
+        <el-table-column prop="Remark" label="微信号" align="center">
           <template #default="scope">
-            <div>{{ scope.row.customAccount || '--' }}</div>
+            <div>{{ scope.row.Remark || '--' }}</div>
           </template>
         </el-table-column>
-        <el-table-column prop="pinyin" label="拼音缩写" align="center"></el-table-column>
-        <el-table-column prop="pinyinAll" label="拼音" align="center"></el-table-column>
+        <el-table-column prop="PYInitial" label="拼音" align="center"></el-table-column>
         <el-table-column label="操作" width="320" align="center">
           <template #default="scope">
             <div>
@@ -86,11 +85,10 @@ const { exportXlsx } = useExport()
 const handleExportXlsx = () => exportXlsx({
   title: '联系人列表',
   columns: {
-    wxid: 'ID',
-    nickname: '昵称',
-    customAccount: '微信号',
-    pinyin: '拼音缩写',
-    pinyinAll: '拼音'
+    UserName: 'ID',
+    NickName: '昵称',
+    Remark: '微信号',
+    PYInitial: '拼音'
   },
   data: filterData.value
 })
@@ -122,8 +120,8 @@ const handleConfirm = async (data: any) => {
   if (!contactData.value && (isMultiple.value && multipleSelection.value.length === 0)) return
 
   const wx_ids = isMultiple.value
-    ? multipleSelection.value.map(item => item.wxid)
-    : contactData.value && [contactData.value.wxid] || []
+    ? multipleSelection.value.map(item => item.UserName)
+    : contactData.value && [contactData.value.UserName] || []
 
   if (wx_ids.length > 2)
     loading.value = true

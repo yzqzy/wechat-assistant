@@ -14,7 +14,7 @@ import { useContactStore } from '@/store/contact'
 import { RealtimeMessage, RealtimeMessageResult } from '@/typings'
 import { MessageType } from '@/api'
 
-const { sendMsgBatch, forwardMsgBatch } = useMessage()
+const { sendMsgBatch } = useMessage()
 
 interface RevocationMessage {
   sysmsg: {
@@ -131,23 +131,6 @@ const textMessageHandler = (task: TriggerTask, message: RealtimeMessage) => {
   })
 }
 
-// Forward message
-const forwardMessageHandler = async (
-  task: TriggerTask,
-  message: RealtimeMessage
-) => {
-  console.log('[Receive Realtime message]: forward:', message)
-  console.log('[Receive Realtime message]: task:', task.uid, task.name)
-
-  if (task.keyword && !message.content.includes(task.keyword)) {
-    console.log('[Receive Realtime message]: keyword not match')
-    return
-  }
-
-  // Forward message to receiver
-  forwardMsgBatch(task.receiver_ids, message.msgSvrId.value)
-}
-
 // realtime message handler
 const messageParser = (message: RealtimeMessage) => {
   const messageStore = useMessageStore()
@@ -177,10 +160,6 @@ const messageParser = (message: RealtimeMessage) => {
         case TriggerTaskType.RED_PACKET:
           console.log('[Receive Realtime message]: red packet')
           redPacketHandler(task, message)
-          break
-        case TriggerTaskType.FORWARD:
-          console.log('[Receive Realtime message]: forward')
-          forwardMessageHandler(task, message)
           break
       }
     })

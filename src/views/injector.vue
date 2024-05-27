@@ -2,8 +2,10 @@
   <div class="injector-page">
     <div class="injector-tip">请参照说明文档，对微信进程进行注入。</div>
     <div class="injector-desc">
-      <p>1. WeChatAssets 中下载相关资源</p>
-      <p>2. 打开 API_Launcher_xxxxxx.exe, 填写端口 "19088", 并启动微信</p>
+      <p>1. 从 WeChatAssets 中下载相关资源。</p>
+      <p>2. 打开 API_Launcher_xxxxxx.exe, 填写端口 "19088", 并启动微信。</p>
+      <p>3. 保持 API_Launcher_xxxxxx.exe 运行, 不需要关闭。</p>
+      <p>4. 打开微信后，点击返回首页即可正常使用。</p>
     </div>
     <div class="injector-btns">
       <router-link to="/">

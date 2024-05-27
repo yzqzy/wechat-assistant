@@ -10,7 +10,7 @@ export const useContact = () => {
 
   const fetchData = () => {
     getContactList().then(res => {
-      store.addContactData(res.data)
+      store.addContactData(res.data.data)
     })
   }
 

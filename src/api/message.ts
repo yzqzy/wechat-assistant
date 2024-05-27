@@ -19,9 +19,10 @@ export const sendTextMsg = async (
   msg: string
 ): Promise<Result<null>> =>
   (
-    await request.post('/api/sendTextMsg', {
-      wxid,
-      msg
+    await request.post('/api/', {
+      type: 10009,
+      userName: wxid,
+      msgContent: msg
     })
   ).data
 
@@ -32,10 +33,11 @@ export const sendAtTextMsg = async (
   msg: string
 ): Promise<Result<null>> =>
   (
-    await request.post('/api/sendAtText', {
-      wxids: wxids.join(','),
-      chatRoomId,
-      msg
+    await request.post('/api/', {
+      type: 10009,
+      userName: chatRoomId,
+      msgContent: msg,
+      atUserList: wxids.join(',')
     })
   ).data
 
@@ -45,9 +47,11 @@ export const sendImagesMsg = async (
   imagePath: string
 ): Promise<Result<null>> =>
   (
-    await request.post('/api/sendImagesMsg', {
+    await request.post('/api/', {
       wxid,
-      imagePath
+      type: 10010,
+      userName: wxid,
+      filePath: imagePath
     })
   ).data
 
@@ -57,39 +61,9 @@ export const sendFileMsg = async (
   filePath: string
 ): Promise<Result<null>> =>
   (
-    await request.post('/api/sendFileMsg', {
-      wxid,
+    await request.post('/api/', {
+      type: 10012,
+      userName: wxid,
       filePath
     })
   ).data
-
-interface ForwardPublicMsgParams {
-  wxid: string
-  appName?: string
-  userName?: string
-  title: string
-  url: string
-  thumbUrl: string
-  digest: string
-}
-
-// 发送公众号文章消息
-export const forwardPublicMsg = async ({
-  appName = '',
-  userName = '',
-  ...args
-}: ForwardPublicMsgParams): Promise<Result<null>> =>
-  (
-    await request.post('/api/forwardPublicMsg', {
-      appName,
-      userName,
-      ...args
-    })
-  ).data
-
-// 转发消息
-export const forwardMsg = async (
-  wxid: string,
-  msgId: string
-): Promise<Result<null>> =>
-  (await request.post('/api/forwardMsg', { wxid, msgId })).data

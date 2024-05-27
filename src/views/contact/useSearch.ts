@@ -16,9 +16,9 @@ export const useSearchTable = () => {
     const { keyword } = query
     return contactData.value.filter(item => {
       return (
-        textIncludes(item.nickname, keyword) ||
-        textIncludes(item.customAccount, keyword) ||
-        textIncludes(item.wxid, keyword)
+        textIncludes(item.NickName, keyword) ||
+        textIncludes(item.Remark, keyword) ||
+        textIncludes(item.UserName, keyword)
       )
     })
   })

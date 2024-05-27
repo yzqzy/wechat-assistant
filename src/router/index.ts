@@ -116,15 +116,20 @@ router.beforeEach(async (to, from, next) => {
     next()
   } else {
     if (to.path != '/injector') {
-      const res = await getUserInfo()
+      try {
+        const res = await getUserInfo()
 
-      if (res.error_code == 10000) {
-        // hook message
-        await messageHook()
-        // login success
-        store.addUserInfo(res.data.data)
-      } else {
-        console.log('获取用户信息失败')
+        if (res.error_code == 10000) {
+          // hook message
+          await messageHook()
+          // login success
+          store.addUserInfo(res.data.data)
+        } else {
+          console.log('获取用户信息失败')
+          redirect(next)
+          return
+        }
+      } catch (error) {
         redirect(next)
         return
       }
