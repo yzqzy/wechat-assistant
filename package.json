@@ -1,6 +1,6 @@
 {
   "name": "wechat-assistant",
-  "version": "1.0.12",
+  "version": "1.0.2",
   "main": "dist-electron/main/index.js",
   "description": "wechat assistant for wechat management",
   "author": "heora",
