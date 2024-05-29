@@ -2,10 +2,9 @@ name: Build wechatsdk-3.9.10.19
 
 on:
   push:
-    branches:
-      - 'wechatsdk-3.9.10.19'
     tags:
-      - 'v*'
+      - 'wechatsdk-3.9.10.19-*'
+
     paths-ignore:
       - '**.md'
       - '**.spec.js'
