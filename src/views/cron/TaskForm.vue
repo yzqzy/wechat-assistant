@@ -58,7 +58,7 @@
           rows="10"></textarea>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onConfirm(ruleForm)">{{ props.task ? '编辑' : '新增' }}</el-button>
+        <el-button type="primary" @click="onConfirm(ruleForm)">{{ props.task ? '保存' : '新增' }}</el-button>
         <el-button @click="onCancel">取消</el-button>
       </el-form-item>
     </el-form>
