@@ -47,7 +47,7 @@
 
       <el-form-item label="接收者" prop="receiver_ids">
         <el-select v-model="form.receiver_ids" multiple filterable placeholder="请选择接收者">
-          <el-option v-for="item in data" :key="item.wxid" :label="item.nickname" :value="item.wxid" />
+          <el-option v-for="item in data" :key="item.UserName" :label="item.NickName" :value="item.UserName" />
         </el-select>
       </el-form-item>
       <el-form-item label="是否启用">

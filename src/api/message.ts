@@ -48,7 +48,6 @@ export const sendImagesMsg = async (
 ): Promise<Result<null>> =>
   (
     await request.post('/api/', {
-      wxid,
       type: 10010,
       userName: wxid,
       filePath: imagePath

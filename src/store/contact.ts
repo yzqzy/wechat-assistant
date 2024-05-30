@@ -7,7 +7,7 @@ export const useContactStore = defineStore('contact', function () {
 
   const contactMapping = computed(() => {
     return contactData.value.reduce((acc, cur) => {
-      acc[cur.wxid] = cur.nickname
+      acc[cur.UserName] = cur.NickName
       return acc
     }, {} as Record<string, string>)
   })
