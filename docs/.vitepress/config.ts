@@ -28,7 +28,7 @@ export default defineConfig({
               { text: 'WeChatMsg', link: 'https://github.com/LC044/WeChatMsg' },
               {
                 text: 'WeChatAPI',
-                link: 'https://www.wechatsdk.com/zh'
+                link: 'https://github.com/WeChatAPIs/wechatAPI'
               }
             ]
           }

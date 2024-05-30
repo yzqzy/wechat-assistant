@@ -34,6 +34,8 @@ PC 微信助手，基于 Electron、WeChat Hook 实现。
 
 ## 二、使用说明
 
+[已支持版本介绍](docs/guide.md#一-已支持版本)
+
 [安装及使用说明](docs/getting-started.md)
 
 [聊天记录迁移说明](docs/chat-history-migration.md)
