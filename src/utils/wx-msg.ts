@@ -36,6 +36,7 @@ export const getWxidByBytesExtra = (data: any) => {
 
 const normalizedContentImage = (message: DatabaseMsg) => {
   const { content, bytesExtra } = message
+  if (!bytesExtra.message2) return content
   for (const item of bytesExtra.message2) {
     if (item.field1 != 4) continue
     let pathh = item.field2

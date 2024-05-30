@@ -5,7 +5,6 @@ import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/store/user'
 import { useDatabaseStore } from '@/store/database'
 import {
-  getDatabases,
   queryChats,
   queryContactByWxid,
   queryMessages,
@@ -35,9 +34,8 @@ export function useDatabase() {
   const { userInfo, dataSavePath } = storeToRefs(userStore)
 
   const store = useDatabaseStore()
-  const { handlerMapping, databases, chats, contactMapping, selectedChat } =
-    storeToRefs(store)
-  const { addDatabases, addChats, addContact, setSelectedChat } = store
+  const { chats, contactMapping, selectedChat } = storeToRefs(store)
+  const { addChats, addContact, setSelectedChat } = store
 
   const { exportXlsx } = useExport()
 
@@ -50,13 +48,6 @@ export function useDatabase() {
     page.value = 1
   }
 
-  const getDatabaseList = async () => {
-    const response = await getDatabases()
-    if (response.code != 1) return null
-    addDatabases(response.data)
-    return response.data
-  }
-
   const refreshChats = async () => {
     loading.value = true
     await getChats(true)
@@ -64,27 +55,20 @@ export function useDatabase() {
   }
 
   const getChats = async (forceUpdate = false) => {
-    if (handlerMapping.value == null) return null
     if (chats.value && !forceUpdate) return chats.value
 
-    const handle = handlerMapping.value['MicroMsg.db']
+    const response = await queryChats()
+    if (response.error_code != 10000) return null
 
-    const response = await queryChats(handle)
-    if (response.code != 1) return null
-
-    const data = formattedChats(response.data)
+    const data = formattedChats(response.data.data)
     addChats(data.filter(chat => chat.remark || chat))
 
     return data
   }
 
   const getContactByWxid = async (wxid: string) => {
-    if (handlerMapping.value == null) return null
-
-    const handle = handlerMapping.value['MicroMsg.db']
-    const response = await queryContactByWxid(handle, wxid)
-    if (response.code != 1) return null
-
+    const response = await queryContactByWxid(wxid)
+    if (response.error_code != 10000) return null
     return response.data
   }
 
@@ -92,7 +76,7 @@ export function useDatabase() {
     let user: DatabaseContact | null = null
 
     const new_wxid = message.isSender
-      ? userInfo.value?.wxid
+      ? userInfo.value?.userName
       : getWxidByBytesExtra(message.bytesExtra) || wxid
 
     if (contactMapping.value && new_wxid in contactMapping.value) {
@@ -101,7 +85,7 @@ export function useDatabase() {
     } else {
       // Get user from database
       const contact = await getContactByWxid(new_wxid)
-      user = (contact && formattedContacts(contact)[0]) || null
+      user = (contact && formattedContacts(contact.data)[0]) || null
       if (user) addContact(user)
     }
 
@@ -146,17 +130,14 @@ export function useDatabase() {
   }
 
   const getMessages = async (wxid: string) => {
-    if (handlerMapping.value == null) return null
-
     if (!refreshing.value) messageLoading.value = true
 
     const offset = (page.value - 1) * 20
 
-    const handle = handlerMapping.value['MSG0.db']
-    const response = await queryMessages({ handle, wxid, offset })
-    if (response.code != 1) return null
+    const response = await queryMessages({ wxid, offset })
+    if (response.error_code != 10000) return null
 
-    const data = await formattedMessages(response.data)
+    const data = await formattedMessages(response.data.data)
     const message_data = await normalizedMessages(wxid, data)
 
     if (page.value == 1) {
@@ -191,18 +172,14 @@ export function useDatabase() {
     startTime?: string,
     endTime?: string
   ) => {
-    if (handlerMapping.value == null) return null
-
-    const handle = handlerMapping.value['MSG0.db']
     const response = await queryMessagesByTime({
-      handle,
       wxid,
       startTime: moment(startTime).unix(),
       endTime: moment(endTime).unix()
     })
-    if (response.code != 1) return null
+    if (response.error_code != 10000) return null
 
-    const data = await formattedMessages(response.data)
+    const data = await formattedMessages(response.data.data)
     const message_data = await normalizedMessages(wxid, data, false)
 
     return message_data
@@ -252,12 +229,6 @@ export function useDatabase() {
       await getMessages(selectedChat.value.wxid)
     }
 
-    if (databases.value != null) {
-      loading.value = false
-      return
-    }
-
-    await getDatabaseList()
     await getChats()
 
     loading.value = false
@@ -268,7 +239,6 @@ export function useDatabase() {
     messageLoading,
     refreshing,
 
-    databases,
     chats,
 
     selectedChat,

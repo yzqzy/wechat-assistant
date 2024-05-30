@@ -22,7 +22,7 @@ export const msgBytesExtraParser = (extra: string) => {
     }
   `)
   const MessageType = root.lookupType('MessageBytesExtra')
-  const buffer = Buffer.from(extra, 'base64')
+  const buffer = Buffer.from(extra, 'hex')
   const message = MessageType.decode(buffer)
   const decodedData = MessageType.toObject(message, {
     longs: Number,

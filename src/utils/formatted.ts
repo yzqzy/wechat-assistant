@@ -1,88 +1,100 @@
 import { DatabaseChat, DatabaseContact, DatabaseMsg } from '@/typings'
 import { msgBytesExtraParser } from './wx-msg'
+import {
+  DatabaseOriginChat,
+  DatabaseOriginContact,
+  DatabaseOriginMsg
+} from '@/api'
 
-export const formattedChats = (chats: string[][]): DatabaseChat[] => {
-  chats.shift()
+export const formattedChats = (chats: DatabaseOriginChat[]): DatabaseChat[] => {
   return chats.map(chat => {
-    const [
-      wxid,
-      order,
-      username,
-      alias,
-      remark,
-      nickname,
-      lastMsg,
-      msgType,
-      msgLocalId,
-      msgStatus,
-      smalllAvatar,
-      bigAvatar,
-      unReadCount,
-      time
-    ] = chat
+    const {
+      Alias,
+      NickName,
+      Remark,
+      bigHeadImgUrl,
+      nMsgLocalID,
+      nMsgStatus,
+      nMsgType,
+      nOrder,
+      nTime,
+      nUnReadCount,
+      smallHeadImgUrl,
+      strContent,
+      strNickName,
+      strUsrName
+    } = chat
     return {
-      wxid,
-      order: Number(order),
-      username,
-      alias,
-      remark,
-      nickname,
-      lastMsg,
-      msgType: Number(msgType),
-      msgLocalId,
-      msgStatus: Number(msgStatus),
-      smalllAvatar,
-      bigAvatar,
-      unReadCount: Number(unReadCount),
-      time: new Date(Number(time) * 1000)
+      wxid: strUsrName,
+      order: Number(nOrder),
+      username: strNickName,
+      alias: Alias,
+      remark: Remark,
+      nickname: NickName,
+      lastMsg: strContent,
+      msgType: Number(nMsgType),
+      msgLocalId: nMsgLocalID,
+      msgStatus: Number(nMsgStatus),
+      smalllAvatar: smallHeadImgUrl,
+      bigAvatar: bigHeadImgUrl,
+      unReadCount: Number(nUnReadCount),
+      time: new Date(Number(nTime) * 1000)
     }
   })
 }
 
 export const formattedMessages = async (
-  messages: string[][]
+  messages: DatabaseOriginMsg[]
 ): Promise<DatabaseMsg[]> => {
   const data = []
   for (let i = 1; i < messages.length; i++) {
-    const [
-      wxid,
-      localId,
-      type,
-      subType,
-      isSender,
-      createTime,
-      content,
-      displayContent,
-      compresssContent,
-      bytesExtra
-    ] = messages[i]
+    const {
+      BytesExtra,
+      CompressContent,
+      CreateTime,
+      DisplayContent,
+      IsSender,
+      StrContent,
+      StrTalker,
+      SubType,
+      Type,
+      localId
+    } = messages[i]
     data.push({
-      wxid,
+      wxid: StrTalker,
       localId,
-      type: Number(type),
-      subType: Number(subType),
-      isSender: isSender === '1',
-      createTime: new Date(Number(createTime) * 1000),
-      content,
-      displayContent,
-      compresssContent,
-      bytesExtra: await msgBytesExtraParser(bytesExtra)
+      type: Number(Type),
+      subType: Number(SubType),
+      isSender: IsSender === '1',
+      createTime: new Date(Number(CreateTime) * 1000),
+      content: StrContent,
+      displayContent: DisplayContent,
+      compresssContent: CompressContent,
+      bytesExtra: await msgBytesExtraParser(BytesExtra)
     })
   }
   return data
 }
 
-export const formattedContacts = (contacts: string[][]): DatabaseContact[] => {
-  contacts.shift()
+export const formattedContacts = (
+  contacts: DatabaseOriginContact[]
+): DatabaseContact[] => {
   return contacts.map(contact => {
-    const [wxid, alias, remark, nickname, smalllAvatar, bigAvatar] = contact
+    const {
+      Alias,
+      NickName,
+      Remark,
+      bigHeadImgUrl,
+      smallHeadImgUrl,
+      UserName
+    } = contact
     return {
-      wxid,
-      alias,
-      nickname,
-      remark,
-      smalllAvatar,
-      bigAvatar
+      wxid: UserName,
+      alias: Alias,
+      nickname: NickName,
+      remark: Remark,
+      smalllAvatar: smallHeadImgUrl,
+      bigAvatar: bigHeadImgUrl
     }
   })
 }
