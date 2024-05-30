@@ -23,3 +23,8 @@ wechatsdk-3.9.10.19。
     * [x] 支持文本、图片、拍一拍等系统消息
   * [x] 支持 “好友/群聊” 聊天记录备份
     * [x] 支持 Excel 导出
+
+## 三、参考
+
+* [WeChatAPIs](https://github.com/WeChatAPIs/wechatAPI) : wechatsdk
+* [WeChatMsg](https://github.com/LC044/WeChatMsg) : 留痕、提取微信聊天记录

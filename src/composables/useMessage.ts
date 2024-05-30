@@ -1,4 +1,4 @@
-import _, { rest } from 'lodash'
+import _ from 'lodash'
 import { ElMessage } from 'element-plus'
 
 import {
@@ -51,11 +51,13 @@ const exec = async (
 const sendImages = async (wxid: string, data: any) => {
   let res: any
 
-  data.image_url =
-    typeof data.image_url === 'string' ? [data.image_url] : data.image_url
+  const images =
+    typeof data.image_url === 'string'
+      ? [data.image_url]
+      : _.cloneDeep(data.image_url)
 
-  while (data.image_url.length) {
-    const url = data.image_url.shift()
+  while (images.length) {
+    const url = images.shift()
 
     if (!url) continue
 
@@ -70,11 +72,13 @@ const sendImages = async (wxid: string, data: any) => {
 const sendFiles = async (wxid: string, data: any) => {
   let res: any
 
-  data.file_url =
-    typeof data.file_url === 'string' ? [data.file_url] : data.file_url
+  const files =
+    typeof data.file_url === 'string'
+      ? [data.file_url]
+      : _.cloneDeep(data.file_url)
 
-  while (data.file_url.length) {
-    const url = data.file_url.shift()
+  while (files.length) {
+    const url = files.shift()
 
     if (!url) continue
 
@@ -120,7 +124,7 @@ export const useMessage = () => {
       return callback(res)
     }
 
-    if (res && res.code >= 1) {
+    if (res && res.error_code == 10000) {
       ElMessage.success('发送成功')
     } else {
       ElMessage.error('发送失败')

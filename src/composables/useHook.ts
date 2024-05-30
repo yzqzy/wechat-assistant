@@ -4,7 +4,7 @@ import { delaySync } from '@/utils/tools'
 const removeAllHooks = async () => {
   const response = await hookSyncMsgList()
 
-  if (response.error_code === 10000) {
+  if (response && response.error_code === 10000) {
     const list = response.data.data
 
     for (const item of list) {

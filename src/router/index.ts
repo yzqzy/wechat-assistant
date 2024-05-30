@@ -119,7 +119,7 @@ router.beforeEach(async (to, from, next) => {
       try {
         const res = await getUserInfo()
 
-        if (res.error_code == 10000) {
+        if (res && res.error_code == 10000) {
           // hook message
           await messageHook()
           // login success

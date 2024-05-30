@@ -58,7 +58,7 @@
 
 <script lang="ts" setup>
 import { ElMessage, FormInstance, FormRules, UploadProps, UploadRawFile } from 'element-plus';
-import { computed, ref, watchEffect, watch } from 'vue';
+import { computed, ref, watchEffect, watch, onMounted } from 'vue';
 
 import { MessageType, messageMapping } from '@/api'
 
@@ -67,6 +67,21 @@ const props = defineProps<{
   multi?: boolean,
   form?: any,
 }>();
+
+const setFormFields = () => {
+  const { image_url = [], file_url = [] } = props.form || {}
+  const files = image_url.length ? image_url : file_url
+  fileList.value = files.map((url: string) => ({
+    name: url.split('\\').pop(),
+    url: url,
+    raw: null,
+    status: 'success',
+    uid: new Date().getTime()
+  }))
+}
+onMounted(() => {
+  setFormFields()
+})
 
 const emit = defineEmits<{
   (e: 'confirm', _: any): void,
@@ -173,7 +188,6 @@ const handleRemoveFile = (index: number) => {
 
 const addFile = (rawFile: UploadRawFile, field: 'image_url' | 'file_url'): void => {
   if (cache.value.has(rawFile)) return;
-
   fileList.value = [...fileList.value, {
     name: rawFile.name,
     url: URL.createObjectURL(rawFile),

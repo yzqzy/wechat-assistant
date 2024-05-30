@@ -1,8 +1,11 @@
 <template>
   <div class="header">
-    <div class="logo">
+    <div class="title-box">
       <el-avatar class="user-avator" :size="32" :src="logo" />
-      <span class="title">微信助手</span>
+      <div class="title-info">
+        <span class="title">微信助手</span>
+        <span class="version">wechatsdk-3.9.10.19-v1</span>
+      </div>
     </div>
   </div>
 </template>
@@ -20,7 +23,7 @@ import logo from '@/assets/img/logo.png';
   box-sizing: border-box;
 }
 
-.header .logo {
+.header .title-box {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -31,10 +34,22 @@ import logo from '@/assets/img/logo.png';
     margin-right: 18px;
   }
 
-  .title {
-    font-size: 26px;
-    color: #000;
-    font-weight: bold;
+  .title-info {
+    display: flex;
+    flex-direction: column;
+
+    .title {
+      font-size: 26px;
+      color: #000;
+      font-weight: bold;
+    }
+
+    .version {
+      margin-top: 5px;
+      color: #666;
+      font-size: 14px;
+    }
   }
+
 }
 </style>
