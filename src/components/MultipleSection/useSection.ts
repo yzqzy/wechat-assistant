@@ -18,10 +18,10 @@ export const useSection = (props: Props) => {
     }
   }
   const handleSelectionRowChange = (contact: Contact[], row: Contact) => {
-    const isDelete = contact.every(item => item.wxid !== row.wxid)
+    const isDelete = contact.every(item => item.UserName !== row.UserName)
     if (!isDelete) return
     const index = multipleSelection.value.findIndex(
-      item => item.wxid === row.wxid
+      item => item.UserName === row.UserName
     )
     if (index === -1) return
     handleRemoverSeclection(index)

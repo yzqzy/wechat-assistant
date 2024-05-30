@@ -15,7 +15,7 @@
       <div class="selected-item" v-for="(item, index) in multipleSelection" :key="index"
         @click="handleRemoverSeclection(index)">
         <div class="info">
-          <span>{{ item.nickname }}</span>
+          <span>{{ item.NickName }}</span>
           <el-icon :size="18" class="icon">
             <CircleClose />
           </el-icon>
