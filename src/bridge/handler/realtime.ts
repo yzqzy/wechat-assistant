@@ -9,7 +9,6 @@ import {
   TriggerTaskType
 } from '@/store/trigger-task'
 import { useMessage } from '@/composables/useMessage'
-import { useMessageStore } from '@/store/realtime'
 import { useContactStore } from '@/store/contact'
 import { RealtimeMessage, RealtimeMessageResult } from '@/typings'
 import { MessageType } from '@/api'
@@ -31,33 +30,29 @@ interface RevocationMessage {
 // Prevent revocation
 const preventRevocationHandler = (
   task: TriggerTask,
-  message: RealtimeMessage,
-  messages: RealtimeMessage[]
+  message: RealtimeMessage
 ) => {
-  if (
-    !(
-      message.msgType.value == '10002' &&
-      message.content.includes('撤回了一条消息')
-    )
-  )
+  const type = message.msgType || message.type
+
+  if (!(type.value == '10002' && message.content.includes('撤回了一条消息')))
     return
 
   console.log('[Prevent revocation]: message:', message)
 
-  const revocationPrefix = message.content.split('\n')[0]
-  const revocationMsg = message.content.split('\n')[1]
-
   const parser = new XMLParser()
-  const xml = parser.parse(revocationMsg) as RevocationMessage
+  const xml = parser.parse(message.content) as RevocationMessage
   if (!xml.sysmsg.revokemsg) return
   console.log('[Prevent revocation]: xml:', xml.sysmsg.revokemsg)
 
-  const { newmsgid, replacemsg } = xml.sysmsg.revokemsg
+  const { replacemsg } = xml.sysmsg.revokemsg
 
-  const oldMsg = messages.find(m => m.msgSvrId.value === newmsgid)
-  if (!oldMsg) return
+  const oldMsg = message.revokedMsg
 
-  const originMsgContent = oldMsg.content.replace(`${revocationPrefix}`, '')
+  console.log(oldMsg)
+
+  if (!oldMsg || (oldMsg && oldMsg.Type !== '1')) return
+
+  const originMsgContent = oldMsg.StrContent
   const newMsg = `${replacemsg} :\n${originMsgContent}`
 
   console.log('[Prevent revocation]: task:', task.uid, task.name)
@@ -71,8 +66,13 @@ const preventRevocationHandler = (
 
 // Red packet
 const redPacketHandler = (task: TriggerTask, message: RealtimeMessage) => {
+  const type = message.msgType || message.type
+
   if (
-    !(message.msgType.value == '10000' && message.content.includes('收到红包'))
+    !(
+      type.value == '10000' &&
+      ['发出红包', '收到红包'].some(str => message.content.includes(str))
+    )
   )
     return
 
@@ -83,7 +83,7 @@ const redPacketHandler = (task: TriggerTask, message: RealtimeMessage) => {
   console.log('[Red packet]: task:', task.uid, task.name)
 
   const newMsg = `"${
-    contactMapping.value[message.userName]
+    contactMapping.value[message.talker || message.to]
   }" 正在发红包，请速去查看 ！！！`
 
   // Send message to receiver
@@ -106,8 +106,12 @@ const textMessageHandler = (task: TriggerTask, message: RealtimeMessage) => {
 
   console.log('[Receive Realtime message]: text:', message)
 
-  const content = message.content.split('\n')[1]
+  const content = message.content
 
+  if (!task.keyword) {
+    console.log('[Receive Realtime message]: no keyword')
+    return
+  }
   if (task.keyword && !content.includes(task.keyword)) {
     console.log('[Receive Realtime message]: keyword not match')
     return
@@ -119,7 +123,7 @@ const textMessageHandler = (task: TriggerTask, message: RealtimeMessage) => {
   const { contactMapping } = storeToRefs(contactStore)
 
   const newMsg = `来自"${
-    contactMapping.value[message.userName]
+    contactMapping.value[message.talker]
   }"的消息 :\n\n${content}`
 
   console.log('[Receive Realtime message]: task:', task.uid, task.name)
@@ -133,15 +137,17 @@ const textMessageHandler = (task: TriggerTask, message: RealtimeMessage) => {
 
 // realtime message handler
 const messageParser = (message: RealtimeMessage) => {
-  const messageStore = useMessageStore()
-  const { messages } = storeToRefs(messageStore)
-
   const triggerTaskStore = useTriggerTaskStore()
   const { subs } = storeToRefs(triggerTaskStore)
   const { findTaskBySub } = triggerTaskStore
 
-  if (subs.value.has(message.userName)) {
-    const tasks = findTaskBySub(message.userName)
+  console.log('[Receive Realtime message]: message:', message)
+  console.log('[Receive Realtime message]: subs:', subs.value)
+
+  const sign = message.talker || message.to
+
+  if (subs.value.has(sign)) {
+    const tasks = findTaskBySub(sign)
 
     console.log('[Receive Realtime message]: message:', subs, tasks)
 
@@ -155,7 +161,7 @@ const messageParser = (message: RealtimeMessage) => {
           break
         case TriggerTaskType.PREVENT_REVOCATION:
           console.log('[Receive Realtime message]: prevent revocation')
-          preventRevocationHandler(task, message, messages.value)
+          preventRevocationHandler(task, message)
           break
         case TriggerTaskType.RED_PACKET:
           console.log('[Receive Realtime message]: red packet')
@@ -163,8 +169,6 @@ const messageParser = (message: RealtimeMessage) => {
           break
       }
     })
-
-    messageStore.addMessage(message)
   }
 }
 

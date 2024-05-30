@@ -53,3 +53,14 @@ export const getContactList = async (): Promise<
       sql: `SELECT UserName,Remark,NickName,PYInitial,RemarkPYInitial,t2.smallHeadImgUrl FROM Contact t1 LEFT JOIN ContactHeadImgUrl t2 ON t1.UserName = t2.usrName WHERE t1.VerifyFlag = 0 AND (t1.Type = 3 OR t1.Type > 50) and t1.Type != 2050 AND t1.UserName NOT IN ('qmessage', 'tmessage') ORDER BY t1.Remark DESC;`
     })
   ).data
+
+export const getChatRoomList = async (): Promise<
+  Result<UserInfoResult<Contact[]>>
+> =>
+  (
+    await request.post('/api/', {
+      type: 10058,
+      dbName: 'MicroMsg.db',
+      sql: `SELECT UserName,Remark, NickName,PYInitial,RemarkPYInitial FROM Contact t1 WHERE t1.Type in(2,2050);`
+    })
+  ).data

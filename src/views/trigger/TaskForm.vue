@@ -14,13 +14,13 @@
       </el-form-item>
       <el-form-item label="观察者" prop="observer_ids">
         <el-select v-model="form.observer_ids" multiple filterable placeholder="请选择观察者">
-          <el-option v-for="item in data" :key="item.wxid" :label="item.nickname" :value="item.wxid" />
+          <el-option v-for="item in data" :key="item.UserName" :label="item.NickName" :value="item.UserName" />
         </el-select>
         <p class="label-desc">观察者: 需要被监听的群聊或者联系人</p>
       </el-form-item>
       <el-form-item label="接收者" prop="receiver_ids">
         <el-select v-model="form.receiver_ids" multiple filterable placeholder="请选择接收者">
-          <el-option v-for="item in data" :key="item.wxid" :label="item.nickname" :value="item.wxid" />
+          <el-option v-for="item in data" :key="item.UserName" :label="item.NickName" :value="item.UserName" />
         </el-select>
         <p class="label-desc">接收者: 当任务被触发时，将会发送给这些人</p>
       </el-form-item>
@@ -87,7 +87,7 @@ const form = ref<TriggerTask>(_.cloneDeep(props.task) || {
   params: {}
 });
 const showKeywordField = computed(() => {
-  return form.value.type === TriggerTaskType.TEXT || form.value.type === TriggerTaskType.FORWARD
+  return form.value.type === TriggerTaskType.TEXT
 })
 
 const onConfirm = (formEl: FormInstance | undefined) => {

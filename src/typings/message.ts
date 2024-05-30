@@ -8,16 +8,13 @@ interface TalkerInfo {
   userName: string
 }
 
+interface RevokedMsg {
+  StrContent: string
+  StrTalker: string
+  Type: string
+}
+
 export interface RealtimeMessage {
-  // pid: string
-  // type: LosslessNumber
-  // msgId: LosslessNumber
-  // msgSequence: LosslessNumber
-  // content: string
-  // fromUser: string
-  // toUser: string
-  // createTime: LosslessNumber
-  // displayFullContent: string
   content: string
   createTime: LosslessNumber
   extraInfo: string
@@ -26,9 +23,13 @@ export interface RealtimeMessage {
   md5: string
   msgSvrId: LosslessNumber
   msgType: LosslessNumber
+  type: LosslessNumber
   talker: string
   talkerInfo: TalkerInfo
   userName: string
+  from: string
+  to: string
+  revokedMsg?: RevokedMsg
 }
 
 export interface RealtimeMessageResult {

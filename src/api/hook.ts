@@ -13,7 +13,7 @@ interface HookResult {
   status: number
 }
 
-// hook 消息 (tcp)
+// hook 消息
 export const hookSyncMsg = async ({
   host,
   port
@@ -24,9 +24,8 @@ export const hookSyncMsg = async ({
   (
     await request.post('/api/', {
       type: 1001,
-      host,
-      port,
-      protocol: 1
+      url: `http://${host}:${port}/api/recv_msg`,
+      protocol: 2
     })
   ).data
 

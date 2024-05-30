@@ -1,5 +1,5 @@
 import { BrowserWindow } from 'electron'
-import net from 'net'
+import express from 'express'
 
 let win: BrowserWindow | null = null
 
@@ -12,32 +12,22 @@ export const createServer = (window: BrowserWindow) => {
   )
     return
 
-  const server = net.createServer(socket => {
-    console.log(
-      '[tcp-server]: -----------------------------------------------------------'
-    )
-    console.log('[tcp-server]: client connected')
+  const app = express()
 
-    socket.on('data', chunk => {
-      const size = chunk.readUInt32BE(0)
-      const data = chunk.slice(4).toString('utf8')
+  app.use(express.json())
 
-      console.log(`[tcp-server]: received size: ${size}`)
-      console.log(`[tcp-server]: received data: ${data}`)
+  app.post('/api/recv_msg', (req: any, res: any) => {
+    const data = req.body
 
-      win?.webContents.send('main-process-realtime-message', data)
-    })
+    console.log(`[http-server]: received data: ${JSON.stringify(data)}`)
 
-    socket.on('close', () => {
-      console.log('[tcp-server]: client disconnected')
-    })
+    win?.webContents.send('main-process-realtime-message', JSON.stringify(data))
+
+    res.json({ success: 'true' })
   })
 
-  const port = import.meta.env.VITE_TCP_SERVER_PORT || '19099'
-
-  server.listen(port, () => {
-    console.log(`[tcp-server]: server listening on port ${port}`)
+  const port = import.meta.env.VITE_HTTP_SERVER_PORT || 3000
+  app.listen(port, () => {
+    console.log(`Server listening on port ${port}`)
   })
-
-  return server
 }
