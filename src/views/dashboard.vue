@@ -4,7 +4,7 @@
       <div class="welcome"> Hello {{ userInfo?.alias || userInfo?.nickName }} 👋🏼，欢迎使用微信助手！</div>.
     </el-row>
     <el-row class="mb20">
-      <el-avatar :size="120" :src="userInfo?.smallHeadImgUrl" />
+      <el-avatar :size="120" :src="userInfo?.smallHeadImgUrl || userInfo?.bigHeadImgUrl || defaultAvatar" />
     </el-row>
     <el-row>
       <el-col>
@@ -35,6 +35,7 @@
 
 <script setup lang="ts" name="dashboard">
 import { useUserStore } from '@/store/user'
+import defaultAvatar from '@/assets/img/avatar.png'
 
 const { userInfo } = useUserStore()
 </script>
