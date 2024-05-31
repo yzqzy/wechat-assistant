@@ -18,7 +18,7 @@ import logo from '@/assets/img/logo.png';
 .header {
   position: relative;
   width: 306px;
-  height: 80px;
+  height: 100px;
   padding-top: 10px;
   box-sizing: border-box;
 }
