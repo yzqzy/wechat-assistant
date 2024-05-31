@@ -15,14 +15,14 @@ PC 微信助手，基于 Electron、WeChat Hook 实现。
 
 * 基于微信 Windows 协议开发，功能相对较少。
 * 免费开源 hook，无使用时长限制。
-* 长期使用存在封号风险（目前未发现）。
+* 长期使用可能存在封号风险。
 * 3.9.5.81 存在 “微信提示版本低，需升级微信问题” 问题，[issue](https://github.com/yzqzy/wechat-assistant/issues/22)。
 
 ### [wxhelper-3.9.8.25](https://github.com/ttttupup/wxhelper)
 
 * 基于微信 Windows 协议开发，功能相对较少。
 * 免费开源 hook，无使用时长限制。
-* 长期使用存在封号风险（目前未发现）。
+* 长期使用可能存在封号风险。
 * 不支持群聊管理、工具集模块（开源 hook 限制，无法支持该功能）。
 
 ### [wechatsdk-3.9.10.19](https://github.com/WeChatAPIs/wechatAPI)
