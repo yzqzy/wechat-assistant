@@ -3,7 +3,7 @@ name: Build wxhelper-3.9.5.81
 on:
   push:
     tags:
-      - '3.9.5.81-*'
+      - 'wxhelper-3.9.5.81-*'
 
     paths-ignore:
       - '**.md'
