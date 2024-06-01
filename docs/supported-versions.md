@@ -33,3 +33,4 @@ outline: deep
 
 > wxhelper 3.9.8.25 版本由于开源功能限制，无法支持群聊管理和工具集模块。
 
+您可以从 [releases](https://github.com/yzqzy/wechat-assistant/releases) 下载微信助手程序安装包。
