@@ -19,7 +19,7 @@
     "docs:preview": "vitepress preview docs"
   },
   "devDependencies": {
-    "vitepress": "^1.0.1"
+    "vitepress": "^1.2.2"
   },
   "dependencies": {}
 }
