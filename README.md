@@ -35,7 +35,7 @@ PC 微信助手，基于 Electron、WeChat Hook 实现。
 
 ## 二、使用说明
 
-主要针对 [wxhelper](https://github.com/ttttupup/wxhelper)、[WeChatAPI](https://github.com/WeChatAPIs/wechatAPI) 进行适配支持。
+主要针对 [wxhelper](https://github.com/ttttupup/wxhelper)、[wechatsdk](https://github.com/WeChatAPIs/wechatAPI) 适配支持。
 
 针对不同版本，功能可能有所差异，您可以选择适合您的版本。具体细节请参考[版本使用说明](docs/supported-versions.md)。
 
