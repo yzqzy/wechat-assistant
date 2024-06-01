@@ -43,8 +43,15 @@ export default defineConfig({
           { text: '微信助手', link: '/guide' },
           { text: '快速开始', link: '/getting-started' },
           { text: '功能介绍', link: '/features' },
-          { text: '聊天记录迁移', link: '/chat-history-migration' },
-          { text: '常见问题', link: '/faq' }
+          { text: '已支持版本', link: '/supported-versions' },
+          { text: '联系我们', link: '/contact' }
+        ]
+      },
+      {
+        text: '使用技巧',
+        items: [
+          { text: '常见问题', link: '/faq' },
+          { text: '聊天记录迁移', link: '/chat-history-migration' }
         ]
       },
       {

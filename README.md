@@ -35,13 +35,11 @@ PC 微信助手，基于 Electron、WeChat Hook 实现。
 
 ## 二、使用说明
 
-[已支持版本介绍](docs/guide.md#一-已支持版本)
+主要针对 [wxhelper](https://github.com/ttttupup/wxhelper)、[WeChatAPI](https://github.com/WeChatAPIs/wechatAPI) 进行适配支持。
 
-[安装及使用说明](docs/getting-started.md)
+针对不同版本，功能可能有所差异，您可以选择适合您的版本。具体细节请参考[版本使用说明](docs/supported-versions.md)。
 
-[聊天记录迁移说明](docs/chat-history-migration.md)
-
-> 使用聊天记录备份功能需要首先将手机/平板的聊天记录迁移到电脑上，否则看到的不是完整记录。
+关于如何安装及使用该程序，请参考 [安装及使用说明](docs/getting-started.md)。
 
 ## 三、开发手册
 
@@ -56,5 +54,6 @@ PC 微信助手，基于 Electron、WeChat Hook 实现。
 ## 五、参考
 
 * [wxhelper](https://github.com/ttttupup/wxhelper) : Hook WeChat / 微信逆向
+* [wechatsdk](https://github.com/WeChatAPIs/wechatAPI): 强大的微信 API 工具
 * [Injector](https://github.com/nefarius/Injector) : 注入和弹出 DLL
 * [WeChatMsg](https://github.com/LC044/WeChatMsg) : 留痕、提取微信聊天记录
