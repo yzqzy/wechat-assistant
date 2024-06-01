@@ -22,14 +22,14 @@ export default defineConfig({
                 link: 'https://github.com/ttttupup/wxhelper'
               },
               {
+                text: 'wechatsdk',
+                link: 'https://github.com/WeChatAPIs/wechatAPI'
+              },
+              {
                 text: 'Injector',
                 link: 'https://github.com/nefarius/Injector'
               },
-              { text: 'WeChatMsg', link: 'https://github.com/LC044/WeChatMsg' },
-              {
-                text: 'WeChatAPI',
-                link: 'https://github.com/WeChatAPIs/wechatAPI'
-              }
+              { text: 'WeChatMsg', link: 'https://github.com/LC044/WeChatMsg' }
             ]
           }
         ]
