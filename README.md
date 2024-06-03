@@ -2,11 +2,13 @@
 
 PC 微信助手，基于 Electron、WeChat Hook 实现。
 
-> 存在微信提示版本低，需升级微信问题，暂无解决方案，[issue](https://github.com/yzqzy/wechat-assistant/issues/22)。
-
 > 本仓库发布内容仅供学习研究，请勿用于非法或商业用途！ 如因此引起任何法律纠纷，与作者无关！ 没有后门或木马，也不会获取或存储任何信息。 请按照国家法律法规及腾讯的相关原则学习研究！ 我们不对用户的任何下载或任何行为负责。 请下载后24小时内删除！
 
-## 一、功能一览
+## 一、支持版本
+
+wxhelper-3.9.8.25。
+
+## 二、支持功能
 
 - 联系人管理
   *	[x] 发送 “文本、图片、文件” 消息
@@ -24,25 +26,7 @@ PC 微信助手，基于 Electron、WeChat Hook 实现。
     * [x] 支持 Excel 导出
     * [ ] 支持 PDF 导出
 
-## 二、使用说明
-
-[安装及使用说明](docs/getting-started.md)
-
-[聊天记录迁移说明](docs/chat-history-migration.md)
-
-> 使用聊天记录备份功能需要首先将手机/平板的聊天记录迁移到电脑上，否则看到的不是完整记录。
-
-## 三、开发手册
-
-[开发者手册](docs/developer.md)
-
-[数据库简述](docs/database.md)
-
-## 四、Star 历史
-
-[![Star History Chart](https://api.star-history.com/svg?repos=yzqzy/wechat-assistant&type=Date)](https://star-history.com/#yzqzy/wechat-assistant&Date)
-
-## 五、参考
+## 三、参考
 
 * [wxhelper](https://github.com/ttttupup/wxhelper) : Hook WeChat / 微信逆向
 * [Injector](https://github.com/nefarius/Injector) : 注入和弹出 DLL
