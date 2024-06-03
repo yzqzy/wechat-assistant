@@ -10,7 +10,9 @@
       </div>
 
       <!-- 任务列表 -->
-      <el-table class="table" height="70vh" :data="taskData">
+      <el-table class="table" height="70vh" :data="taskData" show-overflow-tooltip :tooltip-options="{
+          popperClass: 'custom-tooltip'
+        }">
         <el-table-column prop="type" label="任务类型" width="120" align="center" />
         <el-table-column prop="name" label="任务名称" align="center" />
         <el-table-column prop="observer_ids" label="观察者" align="center" />

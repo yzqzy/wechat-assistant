@@ -56,6 +56,10 @@ const items = [
         title: '任务管理',
         subs: [
             {
+                index: '/contact-tag',
+                title: '标签管理',
+            },
+            {
                 index: '/cron',
                 title: '定时任务',
             },

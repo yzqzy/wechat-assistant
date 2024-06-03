@@ -1,6 +1,6 @@
 import { Ref, ref } from 'vue'
 
-class Store<T> {
+class BaseStore<T> {
   constructor(private readonly key: string) {}
 
   get(): Promise<T[]> {
@@ -20,41 +20,41 @@ class Store<T> {
   }
 }
 
-export class TaskStore<T> {
-  private store: Store<T>
-  private _tasks: Ref<T[]> = ref([])
+export class Store<T> {
+  private store: BaseStore<T>
+  private _data: Ref<T[]> = ref([])
 
   constructor(key: string) {
-    this.store = new Store<T>(key)
+    this.store = new BaseStore<T>(key)
     this.initialize()
   }
 
   private initialize() {
     this.store.get().then(savedTasks => {
-      this._tasks.value = savedTasks
+      this._data.value = savedTasks
     })
   }
 
   private updateStore() {
-    this.store.set(this._tasks.value)
+    this.store.set(this._data.value)
   }
 
-  get tasks() {
-    return this._tasks
+  get data() {
+    return this._data
   }
 
-  addTask = (task: T) => {
-    this._tasks.value.push(task)
+  add = (task: T) => {
+    this._data.value.push(task)
     this.updateStore()
   }
 
-  editTask = (index: number, task: T) => {
-    this._tasks.value[index] = task
+  edit = (index: number, task: T) => {
+    this._data.value[index] = task
     this.updateStore()
   }
 
-  removeTask = (index: number) => {
-    this._tasks.value.splice(index, 1)
+  remove = (index: number) => {
+    this._data.value.splice(index, 1)
     this.updateStore()
   }
 }

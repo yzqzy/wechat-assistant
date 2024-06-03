@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-import { TaskStore } from '@/utils/store'
+import { Store } from '@/utils/store'
 import { MessageType } from '@/api'
 
 export enum CronTaskMode {
@@ -33,12 +33,12 @@ const CronTaskHelper = {
 
 export const useCronTaskStore = defineStore('cron_task', function () {
   const CRON_SAVED_TASKS_KEY = 'cron_tasks'
-  const store = new TaskStore<CronTask>(CRON_SAVED_TASKS_KEY)
-  const { tasks } = store
+  const store = new Store<CronTask>(CRON_SAVED_TASKS_KEY)
+  const { data: tasks } = store
 
   const addTask = (task: CronTask) => {
     CronTaskHelper.start(task)
-    store.addTask(task)
+    store.add(task)
   }
 
   const editTask = (index: number, task: CronTask) => {
@@ -46,12 +46,12 @@ export const useCronTaskStore = defineStore('cron_task', function () {
     if (task.enabled) {
       CronTaskHelper.start(task)
     }
-    store.editTask(index, task)
+    store.edit(index, task)
   }
 
   const removeTask = (index: number) => {
     CronTaskHelper.remove(tasks.value[index])
-    store.removeTask(index)
+    store.remove(index)
   }
 
   return {

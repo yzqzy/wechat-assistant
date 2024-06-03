@@ -10,7 +10,9 @@
       </div>
 
       <!-- 任务列表 -->
-      <el-table class="table" height="70vh" :data="taskData">
+      <el-table class="table" height="70vh" :data="taskData" show-overflow-tooltip :tooltip-options="{
+          popperClass: 'custom-tooltip'
+        }">
         <el-table-column prop="mode" label="任务模式" width="120" align="center" />
         <el-table-column prop="name" label="任务名称" align="center" />
         <el-table-column prop="type" label="消息类型" align="center" />
@@ -38,9 +40,9 @@
 </template>
 
 <script setup lang="ts" name="cron">
+import _ from 'lodash'
 import { ref } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import _ from 'lodash'
 
 import type { CronTask } from '@/store/cron-task'
 import { useTask } from './useTask'

@@ -51,6 +51,15 @@ const routes: RouteRecordRaw[] = [
           )
       },
       {
+        path: '/contact-tag',
+        name: 'ContactTag',
+        meta: {
+          title: '标签管理'
+        },
+        component: () =>
+          import(/* webpackChunkName: "tag" */ '@/views/contact-tag/index.vue')
+      },
+      {
         path: '/cron',
         name: 'CRON',
         meta: {

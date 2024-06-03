@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { defineStore } from 'pinia'
-import { TaskStore } from '@/utils/store'
+import { Store } from '@/utils/store'
 import { computed } from 'vue'
 
 export enum TriggerTaskType {
@@ -30,8 +30,8 @@ export interface TriggerTask {
 
 export const useTriggerTaskStore = defineStore('trigger_task', function () {
   const TRIGGER_SAVED_TASKS_KEY = 'trigger_tasks'
-  const store = new TaskStore<TriggerTask>(TRIGGER_SAVED_TASKS_KEY)
-  const { tasks, addTask, editTask, removeTask } = store
+  const store = new Store<TriggerTask>(TRIGGER_SAVED_TASKS_KEY)
+  const { data: tasks, add, edit, remove } = store
 
   const enabledTasks = computed(() => {
     return tasks.value.filter(task => task.enabled)
@@ -53,9 +53,9 @@ export const useTriggerTaskStore = defineStore('trigger_task', function () {
     subs,
     tasks,
 
-    addTask,
-    editTask,
-    removeTask,
+    addTask: add,
+    editTask: edit,
+    removeTask: remove,
     findTaskBySub
   }
 })
