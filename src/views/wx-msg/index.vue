@@ -18,7 +18,7 @@
             :class="{ active: chat.username === selectedChat?.username, disabled: chat.wxid.includes('gh_') }"
             v-for="chat in searchChats" :key="chat.wxid" @click="handleSelectChat(chat)">
             <div class="avator">
-              <img :src="chat.smalllAvatar" alt="head-img" />
+              <img :src="chat.smalllAvatar || chat.bigAvatar || defaultAvatar" alt="head-img" />
             </div>
             <div class="info">
               <div class="nickname">{{ formattedName(chat) }}</div>
@@ -51,7 +51,7 @@
             :key="msg.wxid + '' + idx">
             <template v-if="enabled_message_types.includes(msg.type)">
               <div class="avator">
-                <img :src="msg.user?.smalllAvatar || ''" alt="head-img" />
+                <img :src="msg.user?.smalllAvatar || msg.user?.bigAvatar || defaultAvatar" alt="head-img" />
               </div>
               <div class="content">
                 <div v-if="!msg.isSender" class="username">
@@ -87,6 +87,7 @@
 <script setup lang="ts" name="wx-msg">
 import { computed, ref, watch, onMounted, onBeforeUnmount } from 'vue';
 import { Search, Refresh, Download } from '@element-plus/icons-vue';
+import defaultAvatar from '@/assets/img/avatar.png'
 
 import { DatabaseChat } from '@/typings'
 import ExportForm from './ExportForm.vue';
