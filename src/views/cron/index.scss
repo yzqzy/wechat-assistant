@@ -11,3 +11,6 @@
 :deep(.el-dialog) {
   margin-top: 10vh !important;
 }
+:deep(.custom-tooltip) {
+  max-width: 400px;
+}
