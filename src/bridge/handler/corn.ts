@@ -27,17 +27,9 @@ const messageHandler = (task: CronTask) => {
   if (wx_ids.length === 0) return
 
   // Send message to receiver
-  sendMsgBatch(task.receiver_ids, {
-    mode: task.type,
-    ...task.params
-  })
+  sendMsgBatch(wx_ids, { mode: task.type, ...task.params })
 
-  console.log(
-    '[Send Msg Batch]:',
-    task.receiver_ids.join('、'),
-    task.type,
-    task.params
-  )
+  console.log('[Send Msg Batch]:', wx_ids.join('、'), task.type, task.params)
 }
 
 export const cronMsgParser = (_event: IpcRendererEvent, ...args: any[]) => {
