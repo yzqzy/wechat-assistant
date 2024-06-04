@@ -17,10 +17,6 @@
         <el-table-column fixed="right" label="操作" width="340">
           <template #default="scope">
             <el-button type="primary" plain class="btn" @click="handleShowEditTag(scope.$index)">编辑</el-button>
-            <el-button :type="scope.row.enabled ? 'danger' : 'primary'" plain class="btn"
-              @click="handleEnabledTag(scope.$index)">{{ scope.row.enabled ?
-          '禁用' :
-          '启用' }}</el-button>
             <el-button type="danger" plain class="btn" @click="handleDeleteTag(scope.$index)">删除</el-button>
           </template>
         </el-table-column>
@@ -42,12 +38,14 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 import { ContactTag } from '@/store/contact-tag';
 import ContactTagForm from './ContactTagForm.vue'
 
-import { useContactTag } from './useContactTag'
+import { useContactTag } from '@/composables/useContactTag'
+import { useContact } from '@/composables/useContact';
 
 const visible = ref(false)
 const contactTag = ref<ContactTag>()
 
-const { contactData, contactTagsData, addContactTag, editContactTag, removeContactTag } = useContactTag()
+const { contactData } = useContact()
+const { contactTags, contactTagsData, addContactTag, editContactTag, removeContactTag } = useContactTag()
 
 const reset = () => {
   contactTag.value = undefined
@@ -60,13 +58,13 @@ const handleShowAddTag = () => {
   visible.value = true
 }
 const handleShowEditTag = (index: number) => {
-  contactTag.value = _.cloneDeep(contactTagsData.value[index])
+  contactTag.value = _.cloneDeep(contactTags.value[index])
   visible.value = true
 }
 
 const handleConfirm = (data: ContactTag) => {
   if (contactTag.value) {
-    const index = contactTagsData.value.findIndex(item => item.uid === data.uid)
+    const index = contactTags.value.findIndex(item => item.uid === data.uid)
     editContactTag(index, data)
     ElMessage.success('编辑成功')
   } else {
@@ -74,22 +72,6 @@ const handleConfirm = (data: ContactTag) => {
     ElMessage.success('新增成功')
   }
   reset()
-}
-
-
-const handleEnabledTag = (index: number) => {
-  const data = _.cloneDeep(contactTagsData.value[index])
-  const operation = data.enabled ? '禁用' : '启用'
-
-  ElMessageBox.confirm(`确定要${operation}该标签吗？`, '提示', {
-    type: 'warning'
-  }).then(() => {
-    editContactTag(index, {
-      ...data,
-      enabled: !data.enabled
-    })
-    ElMessage.success('操作成功')
-  })
 }
 
 const handleDeleteTag = (index: number) => {

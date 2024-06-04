@@ -14,8 +14,9 @@
           popperClass: 'custom-tooltip'
         }">
         <el-table-column prop="mode" label="任务模式" width="120" align="center" />
-        <el-table-column prop="name" label="任务名称" align="center" />
         <el-table-column prop="type" label="消息类型" align="center" />
+        <el-table-column prop="name" label="任务名称" align="center" />
+        <el-table-column prop="receiver_mode" label="接收模式" align="center" />
         <el-table-column prop="receiver_ids" label="接收者" align="center" />
         <el-table-column prop="cron" label="运行规则" align="center" />
         <el-table-column label="操作" width="340" align="center">
@@ -33,7 +34,8 @@
       <!-- 任务弹窗 -->
       <el-dialog :title="task && task.name ? `编辑任务：${task.name}` : '新增任务'" v-model="visible" width="600px"
         destroy-on-close :close-on-click-modal="false" @close="handleClose">
-        <task-form :task="task" :data="contactData" @confirm="handleConfirm" @cancel="handleClose"></task-form>
+        <task-form :task="task" :contactData="contactData" :contact-tags-data="contactTagsData" @confirm="handleConfirm"
+          @cancel="handleClose"></task-form>
       </el-dialog>
     </div>
   </div>
@@ -49,7 +51,10 @@ import { useTask } from './useTask'
 
 import TaskForm from './TaskForm.vue';
 
-const { tasks, taskData, contactData, handleAddTask, handleEditTask, handleRemoveTask } = useTask()
+const {
+  tasks, taskData, contactData, contactTagsData,
+  handleAddTask, handleEditTask, handleRemoveTask
+} = useTask()
 
 const visible = ref(false)
 const task = ref<CronTask>()

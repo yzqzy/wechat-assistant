@@ -14,12 +14,17 @@ export const useContact = () => {
     })
   }
 
+  const getNamesByWxIds = (wx_ids: string[]) => {
+    return wx_ids.map(id => contactMapping.value[id]).join('、')
+  }
+
   onMounted(fetchData)
 
   return {
     contactData,
     contactMapping,
 
-    fetchData
+    fetchData,
+    getNamesByWxIds
   }
 }

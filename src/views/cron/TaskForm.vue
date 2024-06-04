@@ -45,11 +45,26 @@
         <p class="cron-desc">执行时间: {{ cronDesc }}</p>
       </form>
 
-      <el-form-item label="接收者" prop="receiver_ids">
-        <el-select v-model="form.receiver_ids" multiple filterable placeholder="请选择接收者">
-          <el-option v-for="item in data" :key="item.wxid" :label="item.nickname" :value="item.wxid" />
-        </el-select>
+      <el-form-item label="接收者">
+        <el-form-item prop="receiver_mode">
+          <el-select class="receiver-mode-select" style="width: 120px;" v-model="form.receiver_mode"
+            placeholder="请选择接收者模式">
+            <el-option label="普通模式" value="normal" />
+            <el-option label="分组模式" value="group" />
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="form.receiver_mode === 'normal'" prop="receiver_ids">
+          <el-select style="min-width: 200px;" v-model="form.receiver_ids" multiple filterable placeholder="请选择联系人">
+            <el-option v-for="item in contactData" :key="item.wxid" :label="item.nickname" :value="item.wxid" />
+          </el-select>
+        </el-form-item>
+        <el-form-item v-else prop="receiver_tags">
+          <el-select style="min-width: 200px;" v-model="form.receiver_tags" multiple filterable placeholder="请选择联系人分组">
+            <el-option v-for="item in contactTagsData" :key="item.uid" :label="item.name" :value="item.uid" />
+          </el-select>
+        </el-form-item>
       </el-form-item>
+
       <el-form-item label="是否启用">
         <el-switch v-model="form.enabled"></el-switch>
       </el-form-item>
@@ -69,14 +84,18 @@
 import _ from 'lodash';
 import { computed, ref } from 'vue';
 import type { FormInstance, FormRules } from 'element-plus'
+import { MessageType, Contact } from '@/api';
 import MessageForm from '@/components/MessageForm.vue';
 import { CronTask, CronTaskMode } from '@/store/cron-task'
-import { MessageType, Contact } from '@/api';
+import { ContactTag } from '@/store/contact-tag';
 import { formatCron, genCron, weekConverter } from '@/utils/cron';
 import { getRandomId } from '@/utils/tools';
+import { SelectMode } from '@/typings';
+
 
 const props = defineProps<{
-  data: Contact[]
+  contactData: Contact[]
+  contactTagsData: ContactTag[],
   task?: CronTask
 }>()
 
@@ -92,16 +111,31 @@ const rules = ref<FormRules>({
     { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
   ],
   receiver_ids: [
-    { type: 'array', required: true, message: '请选择接收者', trigger: 'change' }
-  ]
+    { type: 'array', required: true, message: '请选择联系人', trigger: 'change' }
+  ],
+  receiver_tags: [
+    { type: 'array', required: true, message: '请选择联系人分组', trigger: 'change' }
+  ],
 })
 
-const form = ref<CronTask>(_.cloneDeep(props.task) || {
+const normalizedTaskForm = (task: CronTask | undefined) => {
+  if (!task) return
+  return {
+    ...task,
+    receiver_mode: task.receiver_mode || SelectMode.NORMAL,
+    receiver_ids: task.receiver_ids || [],
+    receiver_tags: task.receiver_tags || [],
+  }
+}
+
+const form = ref<CronTask>(_.cloneDeep(normalizedTaskForm(props.task)) || {
   uid: getRandomId(),
   mode: CronTaskMode.NORMAL,
   type: MessageType.TEXT,
   name: '',
+  receiver_mode: SelectMode.NORMAL,
   receiver_ids: [],
+  receiver_tags: [],
   cron: '',
   enabled: false,
   params: {
@@ -154,14 +188,28 @@ const onCancel = () => {
   width: 200px;
 }
 
+.el-select {
+  &.receiver-mode-select {
+    margin-right: 10px;
+  }
+}
+
 :deep(.inner-form) {
   padding-left: 120px;
   padding-bottom: 20px;
   box-sizing: border-box;
 
+  .receiver-mode-select {
+    margin-right: 20px;
+  }
+
   .el-select {
     width: 300px;
     margin-right: 10px;
+
+    &.receiver-mode-select {
+      margin-right: 20px;
+    }
   }
 
   .el-form-item__content {

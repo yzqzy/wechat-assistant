@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 
 import { Store } from '@/utils/store'
+import { computed } from 'vue'
 
 export interface ContactTag {
   uid: string
@@ -13,12 +14,13 @@ export interface ContactTag {
 export const useContactTagStore = defineStore('contact-tag', function () {
   const CONTACT_TAG_SAVED_KEY = 'contact-tags'
   const store = new Store<ContactTag>(CONTACT_TAG_SAVED_KEY)
+
   const { data, add, remove, edit } = store
 
   return {
-    contactTags: data,
-    addContactTag: add,
-    editContactTag: edit,
-    removeContactTag: remove
+    data,
+    add,
+    edit,
+    remove
   }
 })

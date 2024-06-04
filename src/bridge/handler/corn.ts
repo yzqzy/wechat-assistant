@@ -2,6 +2,7 @@ import { storeToRefs } from 'pinia'
 import { IpcRendererEvent } from 'electron'
 
 import { useMessage } from '@/composables/useMessage'
+import { useContactTag } from '@/composables/useContactTag'
 import { useUserStore } from '@/store/user'
 import { CronTask } from '@/store/cron-task'
 
@@ -9,7 +10,21 @@ const { sendMsgBatch } = useMessage()
 
 // cron message handler
 const messageHandler = (task: CronTask) => {
-  if (!Array.isArray(task.receiver_ids)) return
+  if (!task) return
+
+  const { getWxIdsByTags } = useContactTag()
+
+  console.log('[Cron Task]:', task.name, task.receiver_mode)
+
+  let wx_ids: string[] = []
+
+  if (task.receiver_mode === 'group') {
+    wx_ids = getWxIdsByTags(task.receiver_tags)
+  } else {
+    wx_ids = task.receiver_ids
+  }
+
+  if (wx_ids.length === 0) return
 
   // Send message to receiver
   sendMsgBatch(task.receiver_ids, {

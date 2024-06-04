@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 
 import { Store } from '@/utils/store'
 import { MessageType } from '@/api'
+import { SelectMode } from '@/typings'
 
 export enum CronTaskMode {
   CUSTOM = 'custom',
@@ -13,7 +14,9 @@ export interface CronTask {
   mode: CronTaskMode
   type: MessageType
   name: string
+  receiver_mode: SelectMode
   receiver_ids: string[]
+  receiver_tags: string[]
   cron: string
   enabled: boolean
   params: any
