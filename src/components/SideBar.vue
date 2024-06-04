@@ -1,28 +1,28 @@
 <template>
     <div class="sidebar">
         <el-menu class="sidebar-el-menu" :default-active="onRoutes" unique-opened router>
-            <template v-for="item in items">
-                <template v-if="item.subs">
-                    <el-sub-menu :index="item.index" :key="item.index">
+            <template v-for="route in mainRoutes">
+                <template v-if="route.children">
+                    <el-sub-menu :index="route.path" :key="route.path">
                         <template #title>
                             <el-icon>
-                                <component :is="item.icon"></component>
+                                <component :is="route.meta?.icon"></component>
                             </el-icon>
-                            <span>{{ item.title }}</span>
+                            <span>{{ route.meta?.title }}</span>
                         </template>
-                        <template v-for="subItem in item.subs">
-                            <el-menu-item :index="subItem.index">
-                                {{ subItem.title }}
+                        <template v-for="subRoute in route.children">
+                            <el-menu-item :index="route.path + '/' + subRoute.path">
+                                {{ subRoute.meta?.title }}
                             </el-menu-item>
                         </template>
                     </el-sub-menu>
                 </template>
                 <template v-else>
-                    <el-menu-item :index="item.index" :key="item.index">
+                    <el-menu-item :index="route.path" :key="route.path">
                         <el-icon>
-                            <component :is="item.icon"></component>
+                            <component :is="route.meta?.icon"></component>
                         </el-icon>
-                        <template #title>{{ item.title }}</template>
+                        <template #title>{{ route.meta?.title }}</template>
                     </el-menu-item>
                 </template>
             </template>
@@ -33,68 +33,11 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
-
-const items = [
-    {
-        icon: 'HomeFilled',
-        index: '/dashboard',
-        title: '看板',
-    },
-    {
-        icon: 'User',
-        index: '/contact',
-        title: '联系人管理',
-    },
-    {
-        icon: 'ChatSquare',
-        index: '/chatroom',
-        title: '群聊管理',
-    },
-    {
-        icon: 'List',
-        index: '3',
-        title: '任务管理',
-        subs: [
-            {
-                index: '/contact-tag',
-                title: '标签管理',
-            },
-            {
-                index: '/cron',
-                title: '定时任务',
-            },
-            {
-                index: '/trigger',
-                title: '触发任务',
-            }
-        ]
-    },
-    {
-        icon: 'ChatDotRound',
-        index: '/wx-msg',
-        title: '聊天记录备份',
-    },
-    {
-        icon: 'Tools',
-        index: '5',
-        title: '工具集',
-        subs: [
-            {
-                index: '/ocr',
-                title: '图像文字识别',
-            },
-        ]
-    },
-    {
-        icon: 'CoffeeCup',
-        index: '/about',
-        title: '关于作者',
-    },
-];
+import { mainRoutes } from '@/router';
 
 const route = useRoute();
 const onRoutes = computed(() => {
-    return route.path;
+    return route.path.split('/')[1];
 });
 
 </script>
@@ -103,7 +46,7 @@ const onRoutes = computed(() => {
 .sidebar {
     position: absolute;
     left: 0;
-    top: 80px;
+    top: 90px;
     bottom: 0;
     display: flex;
     width: 306px;

@@ -8,50 +8,54 @@ import { storeToRefs } from 'pinia'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
-import Home from '@/views/home.vue'
+import Main from '@/views/main.vue'
 
 import { checkLogin, getUserInfo } from '@/api/index'
 import { useUserStore } from '@/store/user'
 import { useHook } from '@/composables/useHook'
 
-const routes: RouteRecordRaw[] = [
+export const mainRoutes: RouteRecordRaw[] = [
   {
-    path: '/',
-    redirect: '/dashboard'
+    path: '/dashboard',
+    name: 'Dashboard',
+    meta: {
+      title: '看板',
+      icon: 'HomeFilled'
+    },
+    component: () =>
+      import(/* webpackChunkName: "dashboard" */ '@/views/dashboard.vue')
   },
   {
-    path: '/',
-    name: 'Home',
-    component: Home,
+    path: '/contact',
+    name: 'Contact',
+    meta: {
+      title: '联系人管理',
+      icon: 'User'
+    },
+    component: () =>
+      import(/* webpackChunkName: "contact" */ '@/views/contact/index.vue')
+  },
+  {
+    path: '/chatroom',
+    name: 'ChatRoom',
+    meta: {
+      title: '群聊管理',
+      icon: 'ChatSquare'
+    },
+    component: () =>
+      import(/* webpackChunkName: "chatroom" */ '@/views/chatroom/index.vue')
+  },
+  {
+    path: '/task',
+    name: 'Task',
+
+    meta: {
+      title: '任务管理',
+      icon: 'List'
+    },
     children: [
       {
-        path: '/dashboard',
-        name: '看板',
-        component: () =>
-          import(/* webpackChunkName: "dashboard" */ '@/views/dashboard.vue')
-      },
-      {
-        path: '/contact',
-        name: 'Contact',
-        meta: {
-          title: '联系人'
-        },
-        component: () =>
-          import(/* webpackChunkName: "contact" */ '@/views/contact/index.vue')
-      },
-      {
-        path: '/chatroom',
-        name: 'ChatRoom',
-        meta: {
-          title: '群聊管理'
-        },
-        component: () =>
-          import(
-            /* webpackChunkName: "chatroom" */ '@/views/chatroom/index.vue'
-          )
-      },
-      {
-        path: '/contact-tag',
+        path: 'contact-tag',
         name: 'ContactTag',
         meta: {
           title: '标签管理'
@@ -60,7 +64,7 @@ const routes: RouteRecordRaw[] = [
           import(/* webpackChunkName: "tag" */ '@/views/contact-tag/index.vue')
       },
       {
-        path: '/cron',
+        path: 'cron',
         name: 'CRON',
         meta: {
           title: '定时任务'
@@ -69,64 +73,86 @@ const routes: RouteRecordRaw[] = [
           import(/* webpackChunkName: "cron" */ '@/views/cron/index.vue')
       },
       {
-        path: '/trigger',
+        path: 'trigger',
         name: 'Trigger',
         meta: {
           title: '触发任务'
         },
         component: () =>
           import(/* webpackChunkName: "trigger" */ '@/views/trigger/index.vue')
-      },
-      {
-        path: '/wx-msg',
-        name: 'WxMsg',
-        meta: {
-          title: '聊天记录备份'
-        },
-        component: () =>
-          import(/* webpackChunkName: "wx-msg" */ '@/views/wx-msg/index.vue')
-      },
-      {
-        path: '/ocr',
-        name: 'OCR',
-        meta: {
-          title: '图像文字识别 - OCR'
-        },
-        component: () => import(/* webpackChunkName: "ocr" */ '@/views/ocr.vue')
-      },
-      {
-        path: '/about',
-        name: 'About',
-        meta: {
-          title: '关于作者'
-        },
-        component: () =>
-          import(/* webpackChunkName: "about" */ '@/views/about.vue')
       }
     ]
   },
   {
-    path: '/injector',
-    name: 'Injector',
+    path: '/wx-msg',
+    name: 'WxMsg',
     meta: {
-      title: '微信注入页面'
+      title: '聊天记录备份',
+      icon: 'ChatDotRound'
     },
     component: () =>
-      import(/* webpackChunkName: "injector" */ '@/views/injector.vue')
+      import(/* webpackChunkName: "wx-msg" */ '@/views/wx-msg/index.vue')
   },
   {
-    path: '/403',
-    name: '403',
+    path: '/tools',
+    name: 'Tools',
     meta: {
-      title: '没有权限'
+      title: '工具集',
+      icon: 'Tools'
     },
-    component: () => import(/* webpackChunkName: "403" */ '@/views/403.vue')
+    children: [
+      {
+        path: 'ocr',
+        name: 'OCR',
+        meta: {
+          title: '图像文字识别'
+        },
+        component: () => import(/* webpackChunkName: "ocr" */ '@/views/ocr.vue')
+      }
+    ]
+  },
+  {
+    path: '/about',
+    name: 'About',
+    meta: {
+      title: '关于作者',
+      icon: 'CoffeeCup'
+    },
+    component: () => import(/* webpackChunkName: "about" */ '@/views/about.vue')
   }
 ]
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes
+  routes: [
+    {
+      path: '/',
+      redirect: '/dashboard'
+    },
+    {
+      path: '/',
+      name: 'main',
+      component: Main,
+      children: mainRoutes
+    },
+    {
+      path: '/injector',
+      name: 'Injector',
+      meta: {
+        title: '微信注入页面'
+      },
+      component: () =>
+        import(/* webpackChunkName: "injector" */ '@/views/injector.vue')
+    },
+    {
+      path: '/403',
+      name: '403',
+      meta: {
+        title: '没有权限'
+      },
+      component: () => import(/* webpackChunkName: "403" */ '@/views/403.vue')
+    }
+  ]
 })
 
 const redirect = (next: NavigationGuardNext) => next('/injector')
