@@ -10,6 +10,7 @@ import {
 } from '@/store/trigger-task'
 import { useMessage } from '@/composables/useMessage'
 import { useMessageStore } from '@/store/realtime'
+import { useContactTag } from '@/composables/useContactTag'
 import { useContactStore } from '@/store/contact'
 import { RealtimeMessage } from '@/typings'
 import { MessageType } from '@/api'
@@ -26,6 +27,22 @@ interface RevocationMessage {
       session: string
     }
   }
+}
+
+const getWxIds = (task: TriggerTask) => {
+  if (!task) return []
+
+  let wx_ids: string[] = []
+
+  const { getWxIdsByTags } = useContactTag()
+
+  if (task.receiver_mode === 'group') {
+    wx_ids = getWxIdsByTags(task.receiver_tags)
+  } else {
+    wx_ids = task.receiver_ids
+  }
+
+  return wx_ids
 }
 
 // Prevent revocation
@@ -63,7 +80,7 @@ const preventRevocationHandler = (
   console.log('[Prevent revocation]: task:', task.uid, task.name)
 
   // Send message to receiver
-  sendMsgBatch(task.receiver_ids, {
+  sendMsgBatch(getWxIds(task), {
     mode: MessageType.TEXT,
     message: newMsg
   })
@@ -84,15 +101,17 @@ const redPacketHandler = (task: TriggerTask, message: RealtimeMessage) => {
     contactMapping.value[message.fromUser]
   }" 正在发红包，请速去查看 ！！！`
 
+  const wx_ids = getWxIds(task)
+
   // Send message to receiver
   sendMsgBatch(
-    task.receiver_ids,
+    wx_ids,
     {
       mode: MessageType.TEXT,
       message: newMsg
     },
     {
-      isAt: task.receiver_ids.some(wxid => wxid.includes('@chatroom')),
+      isAt: wx_ids.some(wxid => wxid.includes('@chatroom')),
       atWxIds: ['notify@all']
     }
   )
@@ -123,7 +142,7 @@ const textMessageHandler = (task: TriggerTask, message: RealtimeMessage) => {
   console.log('[Receive Realtime message]: task:', task.uid, task.name)
 
   // Send message to receiver
-  sendMsgBatch(task.receiver_ids, {
+  sendMsgBatch(getWxIds(task), {
     mode: MessageType.TEXT,
     message: newMsg
   })
@@ -143,7 +162,7 @@ const forwardMessageHandler = async (
   }
 
   // Forward message to receiver
-  forwardMsgBatch(task.receiver_ids, message.msgId.value)
+  forwardMsgBatch(getWxIds(task), message.msgId.value)
 }
 
 // realtime message handler
@@ -157,8 +176,6 @@ const messageParser = (message: RealtimeMessage) => {
 
   if (subs.value.has(message.fromUser)) {
     const tasks = findTaskBySub(message.fromUser)
-
-    console.log('[Receive Realtime message]: message:', subs, tasks)
 
     if (!tasks || tasks.length === 0) return
 

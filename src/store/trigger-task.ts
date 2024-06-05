@@ -2,6 +2,7 @@ import _ from 'lodash'
 import { defineStore } from 'pinia'
 import { Store } from '@/utils/store'
 import { computed } from 'vue'
+import { SelectMode } from '@/typings'
 
 export enum TriggerTaskType {
   FORWARD = 'forward',
@@ -22,7 +23,9 @@ export interface TriggerTask {
   type: TriggerTaskType
   name: string
   observer_ids: string[]
+  receiver_mode: SelectMode
   receiver_ids: string[]
+  receiver_tags: string[]
   enabled: boolean
   keyword?: string
   params: any

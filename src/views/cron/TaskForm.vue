@@ -54,12 +54,12 @@
           </el-select>
         </el-form-item>
         <el-form-item v-if="form.receiver_mode === 'normal'" prop="receiver_ids">
-          <el-select style="min-width: 200px;" v-model="form.receiver_ids" multiple filterable placeholder="请选择联系人">
+          <el-select style="min-width: 200px;" v-model="form.receiver_ids" multiple filterable placeholder="请选择接收者">
             <el-option v-for="item in contactData" :key="item.wxid" :label="item.nickname" :value="item.wxid" />
           </el-select>
         </el-form-item>
         <el-form-item v-else prop="receiver_tags">
-          <el-select style="min-width: 200px;" v-model="form.receiver_tags" multiple filterable placeholder="请选择联系人分组">
+          <el-select style="min-width: 200px;" v-model="form.receiver_tags" multiple filterable placeholder="请选择接收者分组">
             <el-option v-for="item in contactTagsData" :key="item.uid" :label="item.name" :value="item.uid" />
           </el-select>
         </el-form-item>
@@ -92,7 +92,6 @@ import { formatCron, genCron, weekConverter } from '@/utils/cron';
 import { getRandomId } from '@/utils/tools';
 import { SelectMode } from '@/typings';
 
-
 const props = defineProps<{
   contactData: Contact[]
   contactTagsData: ContactTag[],
@@ -111,10 +110,10 @@ const rules = ref<FormRules>({
     { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
   ],
   receiver_ids: [
-    { type: 'array', required: true, message: '请选择联系人', trigger: 'change' }
+    { type: 'array', required: true, message: '请选择接收者', trigger: 'change' }
   ],
   receiver_tags: [
-    { type: 'array', required: true, message: '请选择联系人分组', trigger: 'change' }
+    { type: 'array', required: true, message: '请选择接收者分组', trigger: 'change' }
   ],
 })
 
@@ -199,17 +198,9 @@ const onCancel = () => {
   padding-bottom: 20px;
   box-sizing: border-box;
 
-  .receiver-mode-select {
-    margin-right: 20px;
-  }
-
   .el-select {
     width: 300px;
     margin-right: 10px;
-
-    &.receiver-mode-select {
-      margin-right: 20px;
-    }
   }
 
   .el-form-item__content {

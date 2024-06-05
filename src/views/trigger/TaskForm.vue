@@ -14,16 +14,33 @@
       </el-form-item>
       <el-form-item label="观察者" prop="observer_ids">
         <el-select v-model="form.observer_ids" multiple filterable placeholder="请选择观察者">
-          <el-option v-for="item in data" :key="item.wxid" :label="item.nickname" :value="item.wxid" />
+          <el-option v-for="item in contactData" :key="item.wxid" :label="item.nickname" :value="item.wxid" />
         </el-select>
         <p class="label-desc">观察者: 需要被监听的群聊或者联系人</p>
       </el-form-item>
-      <el-form-item label="接收者" prop="receiver_ids">
-        <el-select v-model="form.receiver_ids" multiple filterable placeholder="请选择接收者">
-          <el-option v-for="item in data" :key="item.wxid" :label="item.nickname" :value="item.wxid" />
-        </el-select>
+
+      <el-form-item label="接收者">
+        <el-form-item prop="receiver_mode">
+          <el-select class="receiver-mode-select" style="width: 120px;" v-model="form.receiver_mode"
+            placeholder="请选择接收者模式">
+            <el-option label="普通模式" value="normal" />
+            <el-option label="分组模式" value="group" />
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="form.receiver_mode === 'normal'" prop="receiver_ids">
+          <el-select style="min-width: 200px;" v-model="form.receiver_ids" multiple filterable placeholder="请选择接收者">
+            <el-option v-for="item in contactData" :key="item.wxid" :label="item.nickname" :value="item.wxid" />
+          </el-select>
+        </el-form-item>
+        <el-form-item v-else prop="receiver_tags">
+          <el-select style="min-width: 200px;" v-model="form.receiver_tags" multiple filterable placeholder="请选择接收者分组">
+            <el-option v-for="item in contactTagsData" :key="item.uid" :label="item.name" :value="item.uid" />
+          </el-select>
+        </el-form-item>
         <p class="label-desc">接收者: 当任务被触发时，将会发送给这些人</p>
       </el-form-item>
+
+
       <el-form-item label="是否启用">
         <el-switch v-model="form.enabled"></el-switch>
       </el-form-item>
@@ -41,11 +58,14 @@ import _ from 'lodash';
 import { computed, ref } from 'vue';
 import type { FormInstance, FormRules } from 'element-plus'
 import { TriggerTask, TriggerTaskType, triggerMapping } from '@/store/trigger-task'
+import { ContactTag } from '@/store/contact-tag';
 import { Contact } from '@/api';
 import { getRandomId } from '@/utils/tools';
+import { SelectMode } from '@/typings';
 
 const props = defineProps<{
-  data: Contact[]
+  contactData: Contact[]
+  contactTagsData: ContactTag[],
   task?: TriggerTask
 }>()
 
@@ -73,15 +93,30 @@ const rules = ref<FormRules>({
   ],
   receiver_ids: [
     { type: 'array', required: true, message: '请选择接收者', trigger: 'change' }
-  ]
+  ],
+  receiver_tags: [
+    { type: 'array', required: true, message: '请选择接收者分组', trigger: 'change' }
+  ],
 })
 
-const form = ref<TriggerTask>(_.cloneDeep(props.task) || {
+const normalizedTaskForm = (task: TriggerTask | undefined) => {
+  if (!task) return
+  return {
+    ...task,
+    receiver_mode: task.receiver_mode || SelectMode.NORMAL,
+    receiver_ids: task.receiver_ids || [],
+    receiver_tags: task.receiver_tags || [],
+  }
+}
+
+const form = ref<TriggerTask>(_.cloneDeep(normalizedTaskForm(props.task)) || {
   uid: getRandomId(),
   type: TriggerTaskType.TEXT,
   name: '',
   observer_ids: [],
+  receiver_mode: SelectMode.NORMAL,
   receiver_ids: [],
+  receiver_tags: [],
   enabled: false,
   keyword: '',
   params: {}
@@ -110,5 +145,11 @@ const onCancel = () => {
 .label-desc {
   color: #909399;
   font-size: 12px;
+}
+
+.el-select {
+  &.receiver-mode-select {
+    margin-right: 10px;
+  }
 }
 </style>

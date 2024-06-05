@@ -8,15 +8,12 @@ import { CronTask } from '@/store/cron-task'
 
 const { sendMsgBatch } = useMessage()
 
-// cron message handler
-const messageHandler = (task: CronTask) => {
-  if (!task) return
-
-  const { getWxIdsByTags } = useContactTag()
-
-  console.log('[Cron Task]:', task.name, task.receiver_mode)
+const getWxIds = (task: CronTask) => {
+  if (!task) return []
 
   let wx_ids: string[] = []
+
+  const { getWxIdsByTags } = useContactTag()
 
   if (task.receiver_mode === 'group') {
     wx_ids = getWxIdsByTags(task.receiver_tags)
@@ -24,7 +21,14 @@ const messageHandler = (task: CronTask) => {
     wx_ids = task.receiver_ids
   }
 
-  if (wx_ids.length === 0) return
+  return wx_ids
+}
+
+// cron message handler
+const messageHandler = (task: CronTask) => {
+  if (!task) return
+
+  const wx_ids = getWxIds(task)
 
   // Send message to receiver
   sendMsgBatch(wx_ids, { mode: task.type, ...task.params })

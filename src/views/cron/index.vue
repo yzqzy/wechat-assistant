@@ -34,8 +34,8 @@
       <!-- 任务弹窗 -->
       <el-dialog :title="task && task.name ? `编辑任务：${task.name}` : '新增任务'" v-model="visible" width="600px"
         destroy-on-close :close-on-click-modal="false" @close="handleClose">
-        <task-form :task="task" :contactData="contactData" :contact-tags-data="contactTagsData" @confirm="handleConfirm"
-          @cancel="handleClose"></task-form>
+        <task-form :task="task" :contact-data="contactData" :contact-tags-data="contactTagsData"
+          @confirm="handleConfirm" @cancel="handleClose"></task-form>
       </el-dialog>
     </div>
   </div>
