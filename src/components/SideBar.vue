@@ -83,7 +83,7 @@ const onRoutes = computed(() => {
 .sidebar {
     position: absolute;
     left: 0;
-    top: 80px;
+    top: 90px;
     bottom: 0;
     display: flex;
     width: 306px;
