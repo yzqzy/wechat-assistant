@@ -28,9 +28,11 @@ outline: deep
 
 ### 1. wxhelper
 
+> 微信版本: 3.9.5.81、3.9.8.25
+
 > 推荐使用管理员权限安装并运行微信助手，以便于进行 dll 注入。
 
-> 如果你不会使用命令行工具，可以根据程序中的提示进行操作，选择注入程序和文件，点击注入即可。
+> 如果你不会使用命令行工具，可以根据程序中的提示进行操作，选择对应的注入程序和文件，点击注入即可。
 
 使用 Injector 工具进行注入，如果成功的话你将会看到: `Successfully injected module!`
 
@@ -41,6 +43,10 @@ outline: deep
 > 如果你的系统不是 64 位或者一直没有注入成功，请参考 [issue-65](https://github.com/ttttupup/wxhelper/discussions/65)、[issue-4](https://github.com/yzqzy/wechat-assistant/issues/4)。
 
 ### 2. wechatsdk
+
+> 微信版本: 3.9.10.19
+
+> 安装 3.9.10.19 版本的微信，否则可能无法正常使用。
 
 wechatsdk 版本的注入方式比较简单，不需要下载 dll 文件。
 
