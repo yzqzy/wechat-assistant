@@ -4,7 +4,7 @@
       <el-avatar class="user-avator" :size="32" :src="logo" />
       <div class="title-info">
         <span class="title">微信助手</span>
-        <span class="version">wxhelper-3.9.5.81-v14</span>
+        <span class="version">wxhelper-3.9.5.81-v15</span>
       </div>
     </div>
   </div>
