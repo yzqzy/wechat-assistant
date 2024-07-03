@@ -111,6 +111,8 @@ const normalizedContent = async (
     const fields = key.split('.')
     const value = fields.reduce((pre, field) => pre[field], item)
 
+    if (typeof item === 'string') continue
+
     if (imageFields.includes(key)) {
       try {
         item[key] = await remoteFileToBase64(value)

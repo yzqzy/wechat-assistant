@@ -65,8 +65,8 @@
 
     <el-dialog :title="roomTitle" v-model="roomVisible" width="800px" destroy-on-close :close-on-click-modal="false"
       @close="handleCloseRoom">
-      <chat-room-table :title="roomTitle" :isAdmin="isAdmin" :chatroom="roomMemberData" @confirm="handleShowAtDialog"
-        @delete="handleDeleteMember"></chat-room-table>
+      <chat-room-table :title="roomTitle" :progress="progress" :isAdmin="isAdmin" :chatroom="roomMemberData"
+        @confirm="handleShowAtDialog" @delete="handleDeleteMember"></chat-room-table>
     </el-dialog>
   </div>
 </template>
@@ -107,6 +107,8 @@ const { sendMsgBatch } = useMessage()
 const { exportXlsx } = useExport()
 
 const loading = ref(false)
+
+const progress = ref(0)
 
 const { userInfo } = useUserStore()
 const isAdmin = computed(() => userInfo?.wxid === roomMemberData.value?.admin)
@@ -175,7 +177,9 @@ const handleViewDetail = async (index: number) => {
     roomMemberData.value = chatroom
     roomVisible.value = true
 
-    lazyFetchController.value = lazyFetchMembers(chatroom.members)
+    lazyFetchController.value = lazyFetchMembers(chatroom.members, (changeValue: number) => {
+      progress.value = changeValue
+    })
   } catch (error) { }
 }
 

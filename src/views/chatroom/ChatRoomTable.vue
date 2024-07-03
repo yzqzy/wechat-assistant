@@ -12,6 +12,11 @@
       <el-button type="warning" plain @click="handleExportXlsx">导出Excel</el-button>
     </div>
   </div>
+  <div class="progress-bar">
+    <p>{{ progressText }}</p>
+    <el-progress v-if="progress < 100" :percentage="progress" :stroke-width="2" :text-inside="true"
+      :status="progress >= 100 ? 'success' : 'active'"></el-progress>
+  </div>
   <div class="chatroom-table">
     <el-table :data="tableData" height="40vh" class="table" header-cell-class-name="table-header">
       <el-table-column prop="wxid" label="ID" width="220"></el-table-column>
@@ -62,6 +67,7 @@ const props = defineProps<{
   title: string,
   isAdmin: boolean,
   chatroom: ChatRoom | undefined,
+  progress: number,
 }>();
 
 
@@ -75,6 +81,12 @@ const query = reactive({
   keyword: '',
   pageIndex: 1,
   pageSize: 10
+})
+
+const progress = computed(() => props.progress)
+const progressText = computed(() => {
+  if (progress.value >= 100) return '群成员详情信息加载完成'
+  return `正在加载群成员详情信息 ${(progress.value).toFixed(2)}%`
 })
 
 const allTableData = computed(() => props.chatroom?.members || [])
@@ -148,6 +160,10 @@ const handleExportXlsx = async () => {
   .search-input {
     width: 200px;
   }
+}
+
+.progress-bar {
+  margin-bottom: 20px;
 }
 
 .chatroom-table {

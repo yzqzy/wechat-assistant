@@ -55,15 +55,25 @@ export const useSearchTable = () => {
     }, 3000)
   }
 
-  const lazyFetchMembers = (members: any[]) => {
+  const lazyFetchMembers = (
+    members: any[],
+    callback: (progress: number) => void
+  ) => {
     let isAbort = false
 
     const offset = members.findIndex(item => typeof item === 'string')
 
-    if (offset === -1) return
-
     let start = offset + 1
 
+    const progressTrigger = () => {
+      if (isAbort) return
+      if (!callback) return
+      callback(start ? (start / members.length) * 100 : 100)
+    }
+
+    progressTrigger()
+
+    if (!start) return
     ;(async () => {
       while (start <= members.length - 1) {
         await delaySync()
@@ -76,6 +86,8 @@ export const useSearchTable = () => {
         members.splice(start, initialSize, ...memberData)
 
         start += initialSize
+
+        progressTrigger()
       }
     })()
 
