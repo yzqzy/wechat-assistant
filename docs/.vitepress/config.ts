@@ -1,81 +1,85 @@
-import { defineConfig } from 'vitepress'
+import { defineConfig } from "vitepress";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  base: '/wechat-assistant/',
-  title: '微信助手',
-  description: 'wechat assistant for wechat management',
-  head: [['link', { rel: 'icon', href: '/favicon.ico' }]],
+  base: "/wechat-assistant/",
+  title: "微信助手",
+  description: "wechat assistant for wechat management",
+  head: [["link", { rel: "icon", href: "/favicon.ico" }]],
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
-    logo: '/logo.png',
+    logo: "/logo.png",
 
     nav: [
-      { text: '指南', link: '/guide' },
+      { text: "指南", link: "/guide" },
       {
-        text: '相关链接',
+        text: "相关链接",
         items: [
           {
             items: [
               {
-                text: 'wxhelper',
-                link: 'https://github.com/ttttupup/wxhelper'
+                text: "wxhelper",
+                link: "https://github.com/ttttupup/wxhelper",
               },
               {
-                text: 'wechatsdk',
-                link: 'https://github.com/WeChatAPIs/wechatAPI'
+                text: "wechatsdk",
+                link: "https://github.com/WeChatAPIs/wechatAPI",
               },
               {
-                text: 'Injector',
-                link: 'https://github.com/nefarius/Injector'
+                text: "Injector",
+                link: "https://github.com/nefarius/Injector",
               },
-              { text: 'WeChatMsg', link: 'https://github.com/LC044/WeChatMsg' }
-            ]
-          }
-        ]
-      }
+              { text: "WeChatMsg", link: "https://github.com/LC044/WeChatMsg" },
+            ],
+          },
+        ],
+      },
+      {
+        text: "微信助手 Pro",
+        link: "https://wxbot.dev",
+      },
     ],
 
     sidebar: [
       {
-        text: '指南',
+        text: "指南",
         items: [
-          { text: '微信助手', link: '/guide' },
-          { text: '快速开始', link: '/getting-started' },
-          { text: '功能介绍', link: '/features' },
-          { text: '已支持版本', link: '/supported-versions' },
-          { text: '联系我们', link: '/contact' }
-        ]
+          { text: "微信助手", link: "/guide" },
+          { text: "快速开始", link: "/getting-started" },
+          { text: "功能介绍", link: "/features" },
+          { text: "已支持版本", link: "/supported-versions" },
+          { text: "联系我们", link: "/contact" },
+        ],
       },
       {
-        text: '使用技巧',
+        text: "使用技巧",
         items: [
-          { text: '常见问题', link: '/faq' },
-          { text: '聊天记录迁移', link: '/chat-history-migration' }
-        ]
+          { text: "常见问题", link: "/faq" },
+          { text: "聊天记录迁移", link: "/chat-history-migration" },
+        ],
       },
       {
-        text: '开发指南',
+        text: "开发指南",
         items: [
-          { text: '如何开发', link: '/developer' },
-          { text: '数据库阐述', link: '/database' }
-        ]
-      }
+          { text: "如何开发", link: "/developer" },
+          { text: "数据库阐述", link: "/database" },
+        ],
+      },
     ],
 
-    socialLinks: [{ icon: 'github', link: 'https://github.com/yzqzy' }],
+    socialLinks: [{ icon: "github", link: "https://github.com/yzqzy" }],
 
     footer: {
-      message: 'Released under the MIT License.',
-      copyright: 'Copyright © 2024-present heora'
+      message: "Released under the MIT License.",
+      copyright: "Copyright © 2024-present heora",
     },
 
     lastUpdated: {
-      text: 'Updated at',
+      text: "Updated at",
       formatOptions: {
-        dateStyle: 'short',
-        timeStyle: 'medium'
-      }
-    }
-  }
-})
+        dateStyle: "short",
+        timeStyle: "medium",
+      },
+    },
+  },
+});
